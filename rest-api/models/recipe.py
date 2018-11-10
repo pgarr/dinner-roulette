@@ -11,10 +11,10 @@ class RecipeModel(db.Model):
     def __init__(self, name):
         self.name = name
 
-    def json(self):
+    def json_with_lazy(self):
         return {'name': self.name, "ingredients": [ingredient.json() for ingredient in self.ingredients.all()]}
 
-    def lazy_json(self):
+    def json(self):
         return {'name': self.name}
 
     @classmethod

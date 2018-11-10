@@ -11,7 +11,7 @@ class Recipe(Resource):
     def get(self, name):
         recipe = RecipeModel.find_by_name(name)
         if recipe:
-            return recipe.json()
+            return recipe.json_with_lazy()
         return {'message': 'Recipe not found'}, 404
 
     def post(self, name):
@@ -37,8 +37,9 @@ class Recipe(Resource):
             recipe.ingredients.append(association)
             db.session.commit()
 
-        return recipe.json(), 201
+        return recipe.json_with_lazy(), 201
+
 
 class RecipeList(Resource):
     def get(self):
-        return {'recipes': [recipe.lazy_json() for recipe in RecipeModel.query.all()]}
+        return {'recipes': [recipe.json() for recipe in RecipeModel.query.all()]}

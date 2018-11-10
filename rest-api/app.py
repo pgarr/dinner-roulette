@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 
+from resources.ingredient import IngredientList
 from resources.recipe import Recipe, RecipeList
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ def create_tables():
 
 api.add_resource(Recipe, '/recipe/<string:name>')
 api.add_resource(RecipeList, '/recipes')
+api.add_resource(IngredientList, '/ingredients')
 
 if __name__ == '__main__':
     from db import db
