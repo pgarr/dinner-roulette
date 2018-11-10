@@ -6,13 +6,16 @@ class RecipeModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    ingredients = db.relationship('RecipeIngredientModel')
+    ingredients = db.relationship('RecipeIngredientModel', lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
 
     def json(self):
-        return {'name': self.name, "ingredients": [ingredient.json() for ingredient in self.ingredients]}
+        return {'name': self.name, "ingredients": [ingredient.json() for ingredient in self.ingredients.all()]}
+
+    def lazy_json(self):
+        return {'name': self.name}
 
     @classmethod
     def find_by_id(cls, id_):

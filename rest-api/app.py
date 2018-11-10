@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 
-from resources.recipe import Recipe
+from resources.recipe import Recipe, RecipeList
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -16,6 +16,7 @@ def create_tables():
 
 
 api.add_resource(Recipe, '/recipe/<string:name>')
+api.add_resource(RecipeList, '/recipes')
 
 if __name__ == '__main__':
     from db import db

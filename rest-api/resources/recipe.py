@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, request
 
 from db import db
 from models.ingredient import IngredientModel
@@ -7,11 +7,6 @@ from models.recipe_ingredient import RecipeIngredientModel
 
 
 class Recipe(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('ingredients',
-                        type=list,
-                        location='json'
-                        )
 
     def get(self, name):
         recipe = RecipeModel.find_by_name(name)
@@ -23,7 +18,7 @@ class Recipe(Resource):
         if RecipeModel.find_by_name(name):
             return {'message': "An recipe with name '{}' already exist.".format(name)}, 400
 
-        data = Recipe.parser.parse_args()
+        data = request.get_json()
 
         recipe = RecipeModel(name)
 
@@ -43,3 +38,7 @@ class Recipe(Resource):
             db.session.commit()
 
         return recipe.json(), 201
+
+class RecipeList(Resource):
+    def get(self):
+        return {'recipes': [recipe.lazy_json() for recipe in RecipeModel.query.all()]}
