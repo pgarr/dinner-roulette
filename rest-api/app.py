@@ -18,8 +18,8 @@ def create_tables():
 
 api.add_resource(Recipe, '/recipe/<string:name>')
 api.add_resource(RecipeList, '/recipes')
-api.add_resource(IngredientList, '/ingredients')
 api.add_resource(Ingredient, '/ingredient/<string:name>')
+api.add_resource(IngredientList, '/ingredients')
 
 if __name__ == '__main__':
     from db import db

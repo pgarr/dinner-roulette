@@ -7,12 +7,14 @@ class RecipeModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     ingredients = db.relationship('RecipeIngredientModel', lazy='dynamic')
+    detail = db.relationship('RecipeDetailModel', uselist=False, back_populates='recipe')
 
     def __init__(self, name):
         self.name = name
 
     def json_with_lazy(self):
-        return {'name': self.name, "ingredients": [ingredient.json() for ingredient in self.ingredients.all()]}
+        return {'name': self.name, "ingredients": [ingredient.json() for ingredient in self.ingredients.all()],
+                "detail": self.detail.json()}
 
     def json(self):
         return {'name': self.name}

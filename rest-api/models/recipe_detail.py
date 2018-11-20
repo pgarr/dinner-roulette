@@ -7,9 +7,12 @@ class RecipeDetailModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.String(1000))
     description = db.Column(db.Text())
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    recipe = db.relationship('RecipeModel', back_populates='detail')
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, link, description):
+        self.link = link
+        self.description = description
 
     def json(self):
         return {'link': self.link, 'description': self.description}
