@@ -1,14 +1,10 @@
 from flask import Flask
-from flask_restful import Api
-
-from resources.ingredient import IngredientList, Ingredient
-from resources.recipe import Recipe, RecipeList
+from db import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = '1234'
-api = Api(app)
 
 
 @app.before_first_request
@@ -16,13 +12,6 @@ def create_tables():
     db.create_all()
 
 
-api.add_resource(Recipe, '/recipe/<string:name>')
-api.add_resource(RecipeList, '/recipes')
-api.add_resource(Ingredient, '/ingredient/<string:name>')
-api.add_resource(IngredientList, '/ingredients')
-
 if __name__ == '__main__':
-    from db import db
-
     db.init_app(app)
     app.run(port=5000, debug=True)
