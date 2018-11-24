@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, ValidationError, pre_load
+from marshmallow import Schema, fields, ValidationError
 
 
 def must_not_be_blank(data):
@@ -28,3 +28,5 @@ class RecipeSchema(Schema):
 
 recipe_schema = RecipeSchema()
 recipes_schema = RecipeSchema(many=True, only=("id", "name"))
+recipe_detail_schema = RecipeDetailSchema()
+recipe_ingredients_schema = RecipeIngredientSchema(many=True)
