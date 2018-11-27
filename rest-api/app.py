@@ -24,6 +24,12 @@ def new_recipe():
     return RecipeService.create(json_data)
 
 
+@app.route('/recipe/<int:pk>', methods=['PATCH'])
+def update_recipe(pk):
+    json_data = request.get_json()
+    return RecipeService.update_by_pk(pk, json_data)
+
+
 @app.before_first_request
 def create_tables():
     db.create_all()
