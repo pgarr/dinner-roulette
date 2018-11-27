@@ -10,7 +10,11 @@ app.secret_key = '1234'
 
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
-    return RecipeService.get_all()
+    ingredient = request.args.get('ingredient')
+    if ingredient:
+        return RecipeService.get_filtered(ingredient)
+    else:
+        return RecipeService.get_all()
 
 
 @app.route('/recipe/<int:pk>', methods=['GET'])

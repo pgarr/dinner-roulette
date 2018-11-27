@@ -91,3 +91,9 @@ class RecipeService:
 
         return jsonify({"message": "Recipe updated.",
                         "recipe": result.data}), 200
+
+    @classmethod
+    def get_filtered(cls, ingredient):
+        recipes = Recipe.query.filter(Recipe.ingredients.any(RecipeIngredient.name == ingredient)).all()
+        result = recipes_schema.dump(recipes)
+        return jsonify({'recipes': result.data})
