@@ -97,3 +97,14 @@ class RecipeService:
         recipes = Recipe.query.filter(Recipe.ingredients.any(RecipeIngredient.name == ingredient)).all()
         result = recipes_schema.dump(recipes)
         return jsonify({'recipes': result.data})
+
+    @classmethod
+    def delete_by_pk(cls, pk):
+        recipe = Recipe.query.get(pk)
+        if recipe:
+            db.session.delete(recipe)
+            db.session.commit()
+            return jsonify({"message": "Recipe deleted."}), 200
+        return jsonify({'message': 'Recipe could not be found.'}), 404
+
+

@@ -23,7 +23,7 @@ def get_recipe(pk):
 
 
 @app.route('/api/recipe', methods=['POST'])
-def new_recipe():
+def create_recipe():
     json_data = request.get_json()
     return RecipeService.create(json_data)
 
@@ -33,6 +33,10 @@ def update_recipe(pk):
     json_data = request.get_json()
     return RecipeService.update_by_pk(pk, json_data)
 
+
+@app.route('/api/recipe/<int:pk>', methods=['DELETE'])
+def delete_recipe(pk):
+    return RecipeService.delete_by_pk(pk)
 
 @app.before_first_request
 def create_tables():
