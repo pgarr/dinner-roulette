@@ -1,10 +1,8 @@
 from flask import jsonify
 
 from db import db
-from models.recipe import Recipe
-from models.recipe_detail import RecipeDetail
-from models.recipe_ingredient import RecipeIngredient
-from schemas import recipe_schema, recipes_schema, recipe_update_schema
+from models.recipe import Recipe, RecipeDetail, RecipeIngredient
+from schemas.recipe import recipe_schema, recipes_schema, recipe_update_schema
 
 
 class RecipeService:
@@ -106,5 +104,3 @@ class RecipeService:
             db.session.commit()
             return jsonify({"message": "Recipe deleted."}), 200
         return jsonify({'message': 'Recipe could not be found.'}), 404
-
-

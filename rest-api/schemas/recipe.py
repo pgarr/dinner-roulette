@@ -1,9 +1,6 @@
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields
 
-
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError('Data not provided.')
+from schemas.validators import must_not_be_blank
 
 
 class RecipeIngredientSchema(Schema):
@@ -11,6 +8,13 @@ class RecipeIngredientSchema(Schema):
     name = fields.Str(validate=must_not_be_blank)
     amount = fields.Int()
     unit = fields.Str()
+    calories = fields.Method("count_calories", dump_only=True)  # TODO: preprocess this from IngredientInfo
+
+    def count_calories(self, ingredient):
+        if ingredient.info:
+            for unit_multiplier in ingredient.info.unit_multipliers:
+                if unit_multiplier.unit == ingredient.unit:
+                    return unit_multiplier.multiplier * ingredient.info.calories_per_gram * ingredient.amount
 
 
 class RecipeDetailSchema(Schema):
