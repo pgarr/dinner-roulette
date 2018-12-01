@@ -64,7 +64,7 @@ def update_ingredient_info(pk):
 
 
 @app.route('/api/admin/ingredientinfo/<int:pk>', methods=['DELETE'])
-def update_ingredient_info(pk):
+def delete_ingredient_info(pk):
     return IngredientInfoService.delete_by_pk(pk)
 
 

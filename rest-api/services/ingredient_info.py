@@ -37,26 +37,48 @@ class IngredientInfoService:
         data, errors = ingredient_info_schema.load(json_data)
         if errors:
             return jsonify(errors), 422
-        ingredient_info = IngredientInfo(
+        ingredient_info_model = IngredientInfo(
             name=data['name'],
             calories_per_gram=data['calories_per_gram'],
             unit_multipliers=[]
         )
-        for multiplier in data['unit_multipliers']:
-            ingredient_unit_multiplier = IngredientUnitMultiplier(
-                unit=multiplier['unit'],
-                multiplier=multiplier['multiplier']
+        for data_unit_multiplier in data['unit_multipliers']:
+            ingredient_unit_multiplier_model = IngredientUnitMultiplier(
+                unit=data_unit_multiplier['unit'],
+                multiplier=data_unit_multiplier['multiplier']
             )
-            ingredient_info.unit_multipliers.append(ingredient_unit_multiplier)
-            db.session.add(ingredient_info)
+            ingredient_info_model.unit_multipliers.append(ingredient_unit_multiplier_model)
+            db.session.add(ingredient_info_model)
             db.session.commit()
-            result = ingredient_info_schema.dump(IngredientInfo.query.get(ingredient_info.id))
+            result = ingredient_info_schema.dump(IngredientInfo.query.get(ingredient_info_model.id))
             return jsonify({"message": "Created new ingredient info.",
                             "ingredient info": result.data}), 201
 
     @classmethod
     def update_by_pk(cls, pk, json_data):
-        return jsonify({"message": "Not implemented."}), 501  # TODO: implement
+        if not json_data:
+            return jsonify({'message': 'No input data provided'}), 400
+        ingredient_info_model = IngredientInfo.query.get(pk)
+        if not ingredient_info_model:
+            return jsonify({'message': 'Ingredient info could not be found.'}), 404
+        data, errors = ingredient_info_schema.load(json_data)
+        if errors:
+            return jsonify(errors), 422
+        ingredient_info_model.name = data['name']
+        ingredient_info_model.calories_per_gram = data['calories_per_gram']
+        ingredient_info_model.unit_multipliers = []
+        for data_unit_multiplier in data['unit_multipliers']:
+            ingredient_unit_multiplier_model = IngredientUnitMultiplier(
+                unit=data_unit_multiplier['unit'],
+                multiplier=data_unit_multiplier['multiplier']
+            )
+            ingredient_info_model.unit_multipliers.append(ingredient_unit_multiplier_model)
+        db.session.add(ingredient_info_model)
+        db.session.commit()
+
+        result = ingredient_info_schema.dump(IngredientInfo.query.get(ingredient_info_model.id))
+        return jsonify({"message": "Ingredient info updated.",
+                        "ingredient info": result.data}), 200
 
     @classmethod
     def delete_by_pk(cls, pk):
