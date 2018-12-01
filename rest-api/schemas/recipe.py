@@ -8,7 +8,7 @@ class RecipeIngredientSchema(Schema):
     name = fields.Str(validate=must_not_be_blank)
     amount = fields.Int()
     unit = fields.Str()
-    calories = fields.Method("count_calories", dump_only=True)  # TODO: preprocess this from IngredientInfo
+    calories = fields.Method("count_calories", dump_only=True)
 
     def count_calories(self, ingredient):
         if ingredient.info:

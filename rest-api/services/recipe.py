@@ -2,7 +2,7 @@ from flask import jsonify
 
 from db import db
 from models.recipe import Recipe, RecipeDetail, RecipeIngredient
-from schemas.recipe import recipe_schema, recipes_schema, recipe_update_schema
+from schemas.recipe import recipe_schema, recipes_schema
 
 
 class RecipeService:

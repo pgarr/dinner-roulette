@@ -1,13 +1,12 @@
 from flask import Flask, request
 
+from config import Config
 from db import db
 from services.ingredient_info import IngredientInfoService
 from services.recipe import RecipeService
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = '1234'
+app.config.from_object(Config)
 
 
 @app.route('/api/recipes', methods=['GET'])
