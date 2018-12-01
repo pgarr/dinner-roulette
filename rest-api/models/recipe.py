@@ -28,5 +28,5 @@ class RecipeIngredient(db.Model):
     amount = db.Column(db.Integer)
     unit = db.Column(db.String(20))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
-    info = db.relationship("IngredientInfo", uselist=False, primaryjoin="RecipeIngredient.name==IngredientInfo.name",
-                           lazy="joined", )
+    info = db.relationship("IngredientInfo", uselist=False, foreign_keys=[name],
+                           primaryjoin="RecipeIngredient.name==IngredientInfo.name", lazy="joined")

@@ -1,4 +1,5 @@
 from flask import Flask, request
+
 from db import db
 from services.ingredient_info import IngredientInfoService
 from services.recipe import RecipeService
@@ -50,11 +51,6 @@ def get_ingredient_info(pk):
     return IngredientInfoService.get_by_pk(pk)
 
 
-@app.route('/api/admin/ingredientinfo/<string:name>', methods=['GET'])
-def get_ingredient_info(name):
-    return IngredientInfoService.get_by_name(name)
-
-
 @app.route('/api/admin/ingredientinfo', methods=['POST'])
 def create_ingredient_info():
     json_data = request.get_json()
@@ -65,6 +61,11 @@ def create_ingredient_info():
 def update_ingredient_info(pk):
     json_data = request.get_json()
     return IngredientInfoService.update_by_pk(pk, json_data)
+
+
+@app.route('/api/admin/ingredientinfo/<int:pk>', methods=['DELETE'])
+def update_ingredient_info(pk):
+    return IngredientInfoService.delete_by_pk(pk)
 
 
 @app.before_first_request

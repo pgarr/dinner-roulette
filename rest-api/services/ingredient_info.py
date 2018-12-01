@@ -39,14 +39,15 @@ class IngredientInfoService:
             return jsonify(errors), 422
         ingredient_info = IngredientInfo(
             name=data['name'],
-            calories_per_gram=data['calories_per_gram']
+            calories_per_gram=data['calories_per_gram'],
+            unit_multipliers=[]
         )
         for multiplier in data['unit_multipliers']:
             ingredient_unit_multiplier = IngredientUnitMultiplier(
                 unit=multiplier['unit'],
                 multiplier=multiplier['multiplier']
             )
-            ingredient_info.append(ingredient_unit_multiplier)
+            ingredient_info.unit_multipliers.append(ingredient_unit_multiplier)
             db.session.add(ingredient_info)
             db.session.commit()
             result = ingredient_info_schema.dump(IngredientInfo.query.get(ingredient_info.id))
@@ -55,4 +56,8 @@ class IngredientInfoService:
 
     @classmethod
     def update_by_pk(cls, pk, json_data):
-        pass  # TODO: implement
+        return jsonify({"message": "Not implemented."}), 501  # TODO: implement
+
+    @classmethod
+    def delete_by_pk(cls, pk):
+        return jsonify({"message": "Not implemented."}), 501  # TODO: implement
