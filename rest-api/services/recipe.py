@@ -52,6 +52,8 @@ class RecipeService:
 
     @classmethod
     def update_by_pk(cls, pk, json_data):
+        if not json_data:
+            return jsonify({'message': 'No input data provided'}), 400
         recipe = Recipe.query.get(pk)
         if not recipe:
             return jsonify({'message': 'Recipe could not be found.'}), 404
