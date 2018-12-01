@@ -60,4 +60,9 @@ class IngredientInfoService:
 
     @classmethod
     def delete_by_pk(cls, pk):
-        return jsonify({"message": "Not implemented."}), 501  # TODO: implement
+        ingredient = IngredientInfo.query.get(pk)
+        if ingredient:
+            db.session.delete(ingredient)
+            db.session.commit()
+            return jsonify({"message": "Ingredient info deleted."}), 200
+        return jsonify({'message': 'Ingredient info could not be found.'}), 404
