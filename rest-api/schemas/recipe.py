@@ -30,16 +30,7 @@ class RecipeSchema(Schema):
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, validate=must_not_be_blank)
 
 
-class RecipeUpdateSchema(Schema):
-    name = fields.Str(validate=must_not_be_blank)
-    detail = fields.Nested(RecipeDetailSchema, validate=must_not_be_blank)
-    update = fields.Nested(RecipeIngredientSchema, many=True)
-    add = fields.Nested(RecipeIngredientSchema, many=True)
-    delete = fields.List(fields.String)
-
-
 recipe_schema = RecipeSchema()
 recipes_schema = RecipeSchema(many=True, only=("id", "name"))
 recipe_detail_schema = RecipeDetailSchema()
 recipe_ingredients_schema = RecipeIngredientSchema(many=True)
-recipe_update_schema = RecipeUpdateSchema()
