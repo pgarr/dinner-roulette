@@ -109,5 +109,5 @@ venv.bak/
 # sqllite
 *.db
 
-# config
-config.py
+# logs dir
+/logs

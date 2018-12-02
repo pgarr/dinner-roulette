@@ -1,6 +1,9 @@
-from marshmallow import Schema, fields
+from marshmallow import ValidationError, Schema, fields
 
-from schemas.validators import must_not_be_blank
+
+def must_not_be_blank(data):
+    if not data:
+        raise ValidationError('Data not provided.')
 
 
 class RecipeIngredientSchema(Schema):
@@ -30,7 +33,22 @@ class RecipeSchema(Schema):
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, validate=must_not_be_blank)
 
 
+class IngredientUnitMultiplierSchema(Schema):
+    id = fields.Int(dump_only=True)
+    unit = fields.Str(validate=must_not_be_blank)
+    multiplier = fields.Float(validate=must_not_be_blank)
+
+
+class IngredientInfoSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(validate=must_not_be_blank)
+    calories_per_gram = fields.Int()
+    unit_multipliers = fields.Nested(IngredientUnitMultiplierSchema, many=True)
+
+
 recipe_schema = RecipeSchema()
 recipes_schema = RecipeSchema(many=True, only=("id", "name"))
 recipe_detail_schema = RecipeDetailSchema()
 recipe_ingredients_schema = RecipeIngredientSchema(many=True)
+ingredient_info_schema = IngredientInfoSchema()
+ingredient_infos_schema = IngredientInfoSchema(many=True)
