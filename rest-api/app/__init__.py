@@ -16,14 +16,14 @@ def create_app(config_class=Config):
 
     db.init_app(app)
 
-    from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
 
     if not app.debug and not app.testing:
         if not os.path.exists('logs'):
             os.mkdir('logs')
 
-        file_handler = RotatingFileHandler('logs/dinner-roulette.log', maxBytes=10240, backupCount=10)
+        file_handler = RotatingFileHandler('logs/dinner-roulette.log', maxBytes=102400, backupCount=100)
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
             '[in %(pathname)s:%(lineno)d]'))
