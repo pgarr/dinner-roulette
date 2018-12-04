@@ -38,15 +38,24 @@ def create_app(config_class=Config):
         if not os.path.exists('logs'):
             os.mkdir('logs')
 
+        # app.logger
         file_handler = RotatingFileHandler('logs/dinner-roulette.log', maxBytes=102400, backupCount=100)
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
             '[in %(pathname)s:%(lineno)d]'))
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
-
         app.logger.setLevel(logging.INFO)
         app.logger.info('API startup')
+
+        # sql.logger
+        sql_file_handler = RotatingFileHandler('logs/sql-queries.log', maxBytes=102400, backupCount=100)
+        sql_file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s '
+            '[in %(pathname)s:%(lineno)d]'))
+        logging.getLogger('sqlalchemy.engine').addHandler(sql_file_handler)
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
     return app
 
 

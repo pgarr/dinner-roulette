@@ -5,6 +5,7 @@ from app.models import Recipe, RecipeDetail, RecipeIngredient, IngredientInfo, I
 from app.schemas import recipe_schema, recipes_schema, ingredient_infos_schema, ingredient_info_schema
 
 
+# TODO: add log messages about creating/deleting/updating data
 class RecipeService:
     @classmethod
     def get_by_pk(cls, pk):
