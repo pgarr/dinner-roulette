@@ -1,9 +1,14 @@
-from flask import request
+from flask import request, jsonify
 from flask_jwt import jwt_required
 
 from app.api import bp
 from app.api.services import IngredientInfoService
 from app.api.services import RecipeService
+
+
+@bp.route('/', methods=['GET'])
+def connection():
+    return jsonify({'message': 'API is online!'}), 200
 
 
 @bp.route('/recipes', methods=['GET'])
