@@ -1,4 +1,3 @@
-import json
 import unittest
 
 from app import create_app, db
@@ -21,9 +20,3 @@ class TestAppSetUp(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
-
-    def test_connection(self):
-        with self.app.test_client() as c:
-            r = c.get('/api/')
-            self.assertEqual(r.status_code, 200)
-            self.assertEqual(json.loads(r.get_data()), {'message': 'API is online!'})
