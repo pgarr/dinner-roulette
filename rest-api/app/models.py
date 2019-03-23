@@ -1,16 +1,31 @@
-from app import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app import db, login
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.column(db.String(128))
+    password_hash = db.Column(db.String(128))
+    recipes = db.relationship('Recipe', backref='author', lazy='dynamic')
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+@login.user_loader
+def load_user(id_):
+    return User.query.get(int(id_))
 
 
 class Recipe(db.Model):
@@ -20,6 +35,10 @@ class Recipe(db.Model):
     name = db.Column(db.String(100), nullable=False)
     detail = db.relationship("RecipeDetail", uselist=False, back_populates="recipe", cascade="all, delete-orphan")
     ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Recipe {}>'.format(self.name)
 
 
 class RecipeDetail(db.Model):
@@ -31,6 +50,9 @@ class RecipeDetail(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
     recipe = db.relationship("Recipe", back_populates="detail")
 
+    def __repr__(self):
+        return '<RecipeDetail from {}>'.format(self.recipe_id)
+
 
 class RecipeIngredient(db.Model):
     __tablename__ = 'recipe_ingredient'
@@ -40,3 +62,6 @@ class RecipeIngredient(db.Model):
     amount = db.Column(db.Integer)
     unit = db.Column(db.String(20))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+
+    def __repr__(self):
+        return '<RecipeIngredient {} from {}>'.format(self.name, self.recipe_id)
