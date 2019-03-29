@@ -1,8 +1,19 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, URL, NumberRange, Optional
 
 from app.models import User
+
+
+class RecipeForm(FlaskForm):
+    recipe_name = StringField('Recipe title', validators=[DataRequired()])
+    time = IntegerField('Preparation time', validators=[Optional(), NumberRange(1, 999)])
+    difficulty = IntegerField('Preparation difficulty (1-5)',
+                              validators=[Optional(), NumberRange(1, 5)])  # TODO: Powiązać z ładnym selectorem
+    preparation = TextAreaField('Preparation')
+    link = StringField('Website', validators=[Optional(), URL()])
+    # TODO: dynamicznie dodawane ingredientsy
+    submit = SubmitField('Add')
 
 
 class LoginForm(FlaskForm):

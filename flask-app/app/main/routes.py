@@ -4,14 +4,33 @@ from werkzeug.urls import url_parse
 
 from app import db
 from app.main import bp
-from app.main.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.main.forms import LoginForm, RegistrationForm, RecipeForm
+from app.models import User, Recipe
 
 
 @bp.route('/')
 @bp.route('/index')
 def index():
-    return render_template('index.html', title='Home Page')
+    recipes = Recipe.query.all()
+    return render_template('index.html', title='Home Page', recipes=recipes)
+
+
+@bp.route('/recipe/<int:pk>', methods=['GET'])
+def recipe(pk):
+    rcp = Recipe.query.get(pk)
+    if not rcp:
+        return redirect(url_for('main.index'))  # TODO: powinien być jakiś błąd
+    return render_template('recipe.html', title=rcp.name, recipe=rcp)
+
+
+@bp.route('/new', methods=['GET', 'POST'])
+def new():
+    form = RecipeForm()
+    if form.validate_on_submit():
+        # TODO: dodaj przepis
+        flash('Recipe added!')
+        return redirect(url_for('main.index'))  # TODO: powinno wyświetlać ten przepis
+    return render_template('new-recipe.html', title='New Recipe', form=form)
 
 
 @bp.route('/login', methods=['GET', 'POST'])

@@ -9,11 +9,13 @@
     <body>
         <div>
             Cookbook:
-            <a href="{{ url_for('main.index') }}">Home</a>
+            <a href="{{ url_for('main.index') }}">Recipe List</a>
+            <a href="{{ url_for('main.new') }}">Add Recipe</a>
             {% if current_user.is_anonymous %}
                 <a href="{{ url_for('main.login') }}">Login</a>
             {% else %}
                 <a href="{{ url_for('main.logout') }}">Logout</a>
+                <span>{{ current_user.username }}</span>
             {% endif %}
         </div>
         <hr>
