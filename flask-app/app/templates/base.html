@@ -16,6 +16,7 @@
             {% else %}
                 <a href="{{ url_for('main.logout') }}">Logout</a>
                 <span>{{ current_user.username }}</span>
+                <span>{{ current_user.id }}</span>
             {% endif %}
         </div>
         <hr>
