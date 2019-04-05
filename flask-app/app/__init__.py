@@ -53,7 +53,7 @@ def create_app(config_class=Config):
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
-        app.logger.info('API startup')
+        app.logger.info('App startup')
 
         # sql.logger
         sql_file_handler = RotatingFileHandler('logs/sql-queries.log', maxBytes=102400, backupCount=100)
