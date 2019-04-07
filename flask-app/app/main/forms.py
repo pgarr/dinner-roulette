@@ -22,7 +22,9 @@ class RecipeForm(FlaskForm):
     ingredients = FieldList(FormField(IngredientForm), min_entries=1)
     preparation = TextAreaField('Preparation')
     link = StringField('Website', validators=[Optional(), URL()])
-    # TODO: dynamicznie dodawane ingredientsy
+    add_ingredient = SubmitField('+')
+    remove_ingredient = SubmitField('-')
+    # TODO: naciśnięcie przycisku powoduje walidację pól. Kiedy coś jest niewłaściwe, to każe poprawić zanim doda/usunie
     submit = SubmitField('Add')
 
 

@@ -51,6 +51,8 @@
                 </tr>
             {% endfor %}
         </table>
+        {{ form.add_ingredient }}
+        {{ form.remove_ingredient }}
         {% for error in form.ingredients.errors %}
                 <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
