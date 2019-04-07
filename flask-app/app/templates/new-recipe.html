@@ -25,6 +25,35 @@
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+
+        <h3>Ingredients</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Unit</th>
+            </tr>
+            {% for i in form.ingredients %}
+                {{ i.hidden_tag() }}
+                {% for error in i.ingredient_name.errors %}
+                    [{{ error }}]
+                {% endfor %}
+                {% for error in i.amount.errors %}
+                    [{{ error }}]
+                {% endfor %}
+                {% for error in i.unit.errors %}
+                    [{{ error }}]
+                {% endfor %}
+                <tr>
+                    <td>{{ i.ingredient_name }}</td>
+                    <td>{{ i.amount }}</td>
+                    <td>{{ i.unit }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% for error in form.ingredients.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
         <p>
             {{ form.link.label }}<br>
             {{ form.link(size=10) }}<br>

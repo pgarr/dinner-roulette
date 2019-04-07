@@ -5,7 +5,7 @@ from werkzeug.urls import url_parse
 from app import db
 from app.main import bp
 from app.main.forms import LoginForm, RegistrationForm, RecipeForm
-from app.models import User, Recipe, RecipeDetail
+from app.models import User, Recipe, RecipeDetail, RecipeIngredient
 
 
 @bp.route('/')
@@ -40,8 +40,13 @@ def new():
             author=current_user,
             ingredients=[]
         )
-        # TODO: dodaj ingredientsy
-        # TODO: dopisać użytkownika który to utworzył
+        for i in form.ingredients:
+            recipe_ingredient_model = RecipeIngredient(
+                name=i.ingredient_name.data,
+                amount=i.amount.data,
+                unit=i.unit.data
+            )
+            recipe_model.ingredients.append(recipe_ingredient_model)
         db.session.add(recipe_model)
         db.session.commit()
         flash('Recipe added!')

@@ -1,15 +1,25 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, SelectField, \
+    FormField, FieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, URL, NumberRange, Optional
 
 from app.models import User
 
 
+class IngredientForm(FlaskForm):
+    ingredient_name = StringField('Ingredient name', validators=[DataRequired()])
+    amount = IntegerField('Ingredient amount', validators=[Optional(), NumberRange(1, 999)])
+    unit = StringField('Ingredient unit', validators=[Optional()])  # TODO: selector będzie lepszy
+
+
 class RecipeForm(FlaskForm):
     recipe_name = StringField('Recipe title', validators=[DataRequired()])
     time = IntegerField('Preparation time', validators=[Optional(), NumberRange(1, 999)])
+    # TODO: Powiązać z ładnym selectorem
     difficulty = IntegerField('Preparation difficulty (1-5)',
-                              validators=[Optional(), NumberRange(1, 5)])  # TODO: Powiązać z ładnym selectorem
+                              validators=[Optional(), NumberRange(1, 5)])
+    # difficulty = SelectField('Preparation difficulty', choices=[(c, c) for c in [1, 2, 3, 4, 5]])
+    ingredients = FieldList(FormField(IngredientForm), min_entries=1)
     preparation = TextAreaField('Preparation')
     link = StringField('Website', validators=[Optional(), URL()])
     # TODO: dynamicznie dodawane ingredientsy
