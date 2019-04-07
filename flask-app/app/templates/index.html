@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Difficulty
+            </th>
+            <th>
+                Attributes
+            </th>
+        </tr>
+
+        {% for recipe in recipes %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('main.recipe', pk=recipe.id) }}">{{ recipe.name }}</a>
+                </td>
+                <td>
+                    {{ recipe.time }}
+                </td>
+                <td>
+                    {{ recipe.difficulty }} / 5
+                </td>
+                <td>
+                    implement
+                </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+{% endblock %}
