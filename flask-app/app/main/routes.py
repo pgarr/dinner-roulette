@@ -27,7 +27,13 @@ def recipe(pk):
 @login_required
 def new():
     form = RecipeForm()
-    if form.validate_on_submit():
+    if form.add_ingredient.data:
+        form.ingredients.append_entry()
+        # return render_template('new-recipe.html', title='New Recipe', form=form)
+    elif form.remove_ingredient.data:
+        form.ingredients.pop_entry()
+        # return render_template('new-recipe.html', title='New Recipe', form=form)
+    elif form.submit.data and form.validate_on_submit():
         recipe_detail_model = RecipeDetail(
             link=form.link.data,
             description=form.preparation.data
@@ -41,12 +47,13 @@ def new():
             ingredients=[]
         )
         for i in form.ingredients:
-            recipe_ingredient_model = RecipeIngredient(
-                name=i.ingredient_name.data,
-                amount=i.amount.data,
-                unit=i.unit.data
-            )
-            recipe_model.ingredients.append(recipe_ingredient_model)
+            if i.ingredient_name.data:
+                recipe_ingredient_model = RecipeIngredient(
+                    name=i.ingredient_name.data,
+                    amount=i.amount.data,
+                    unit=i.unit.data
+                )
+                recipe_model.ingredients.append(recipe_ingredient_model)
         db.session.add(recipe_model)
         db.session.commit()
         flash('Recipe added!')
