@@ -20,7 +20,7 @@
         {% for recipe in recipes %}
             <tr>
                 <td>
-                    <a href="{{ url_for('main.recipe', pk=recipe.id) }}">{{ recipe.name }}</a>
+                    <a href="{{ url_for('main.get_recipe', pk=recipe.id) }}">{{ recipe.title }}</a>
                 </td>
                 <td>
                     {{ recipe.time }}

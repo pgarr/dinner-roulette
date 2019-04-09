@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>{{ recipe.name }}</h2>
+    <h2>{{ recipe.title }}</h2>
 
         <table>
             <tr>
@@ -21,7 +21,7 @@
             {% for ingredient in recipe.ingredients %}
                 <tr>
                     <td>
-                        {{ ingredient.name }}
+                        {{ ingredient.title }}
                     </td>
                     <td>
                         {{ ingredient.time }}
@@ -36,8 +36,8 @@
             {% endfor %}
         </table>
 
-        <h3>Preparition</h3>
-        <p>{{ recipe.detail.description }}</p>
+        <h3>Preparation</h3>
+        <p>{{ recipe.detail.preparation }}</p>
 
         <h3>More</h3>
 <a href="{{ recipe.detail.link }}">{{ recipe.detail.link }}</a>

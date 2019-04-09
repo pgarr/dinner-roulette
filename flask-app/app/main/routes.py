@@ -16,48 +16,67 @@ def index():
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
-def recipe(pk):
-    rcp = Recipe.query.get(pk)
-    if not rcp:
+def get_recipe(pk):
+    recipe = Recipe.query.get(pk)
+    if not recipe:
         return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
-    return render_template('recipe.html', title=rcp.name, recipe=rcp)
+    return render_template('recipe.html', title=recipe.title, recipe=recipe)
 
 
 @bp.route('/new', methods=['GET', 'POST'])
 @login_required
 def new():
-    form = RecipeForm()
+    recipe_model = Recipe(detail=RecipeDetail(), ingredients=[])
+    form = RecipeForm(obj=recipe_model)
     if form.add_ingredient.data:
         form.ingredients.append_entry()
-        # return render_template('new-recipe.html', title='New Recipe', form=form)
     elif form.remove_ingredient.data:
         form.ingredients.pop_entry()
-        # return render_template('new-recipe.html', title='New Recipe', form=form)
     elif form.submit.data and form.validate_on_submit():
-        recipe_detail_model = RecipeDetail(
-            link=form.link.data,
-            description=form.preparation.data
-        )
-        recipe_model = Recipe(
-            name=form.recipe_name.data,
-            time=form.time.data,
-            difficulty=form.difficulty.data,
-            detail=recipe_detail_model,
-            author=current_user,
-            ingredients=[]
-        )
-        for i in form.ingredients:
-            if i.ingredient_name.data:
-                recipe_ingredient_model = RecipeIngredient(
-                    name=i.ingredient_name.data,
-                    amount=i.amount.data,
-                    unit=i.unit.data
-                )
-                recipe_model.ingredients.append(recipe_ingredient_model)
+        form.populate_obj(recipe_model)  # TODO: nie działa :D
+
+        # recipe_detail_model = RecipeDetail(
+        #     link=form.link.data,
+        #     description=form.preparation.data
+        # )
+        # recipe_model = Recipe(
+        #     name=form.recipe_name.data,
+        #     time=form.time.data,
+        #     difficulty=form.difficulty.data,
+        #     detail=recipe_detail_model,
+        #     author=current_user,
+        #     ingredients=[]
+        # )
+        # for i in form.ingredients:
+        #     if i.ingredient_name.data:
+        #         recipe_ingredient_model = RecipeIngredient(
+        #             name=i.ingredient_name.data,
+        #             amount=i.amount.data,
+        #             unit=i.unit.data
+        #         )
+        #         recipe_model.ingredients.append(recipe_ingredient_model)
         db.session.add(recipe_model)
         db.session.commit()
         flash('Recipe added!')
-        return redirect(url_for('.recipe', pk=recipe_model.id))
+        return redirect(url_for('.get_recipe', pk=recipe_model.id))
+    return render_template('new-recipe.html', title='New Recipe', form=form)
+
+
+@bp.route('/edit/<int:pk>', methods=['GET', 'POST'])
+@login_required
+def edit(pk):
+    recipe_model = Recipe.query.get(pk)
+    form = RecipeForm(obj=recipe_model)
+    if form.add_ingredient.data:
+        form.ingredients.append_entry()
+    elif form.remove_ingredient.data:
+        form.ingredients.pop_entry()
+    elif form.submit.data and form.validate_on_submit():
+        form.populate_obj(recipe_model)
+        db.session.add(recipe_model)
+        db.session.commit()
+        flash('Recipe updated!')
+        return redirect(url_for('.get_recipe', pk=recipe_model.id))
     return render_template('new-recipe.html', title='New Recipe', form=form)
 
 
