@@ -32,16 +32,16 @@ class Recipe(db.Model):
     __tablename__ = 'recipe'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     time = db.Column(db.Integer)
     difficulty = db.Column(db.Integer)
-    # attributes = db.relationship # one to many - attribute table
+    # TODO: attributes = db.relationship # one to many - attribute table
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     detail = db.relationship("RecipeDetail", uselist=False, back_populates="recipe", cascade="all, delete-orphan")
     ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return '<Recipe {}>'.format(self.name)
+        return '<Recipe {}>'.format(self.title)
 
 
 class RecipeDetail(db.Model):
@@ -49,7 +49,7 @@ class RecipeDetail(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.String(1000))
-    description = db.Column(db.Text)
+    preparation = db.Column(db.Text)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
     recipe = db.relationship("Recipe", back_populates="detail")
 
@@ -61,10 +61,10 @@ class RecipeIngredient(db.Model):
     __tablename__ = 'recipe_ingredient'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.Integer)
     unit = db.Column(db.String(20))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
 
     def __repr__(self):
-        return '<RecipeIngredient {} from {}>'.format(self.name, self.recipe_id)
+        return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)

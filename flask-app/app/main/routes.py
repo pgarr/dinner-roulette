@@ -5,7 +5,8 @@ from werkzeug.urls import url_parse
 from app import db
 from app.main import bp
 from app.main.forms import LoginForm, RegistrationForm, RecipeForm
-from app.models import User, Recipe, RecipeDetail, RecipeIngredient
+from app.main.services import init_recipe, save_recipe_from_form, get_recipe
+from app.models import User, Recipe
 
 
 @bp.route('/')
@@ -16,48 +17,42 @@ def index():
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
-def recipe(pk):
-    rcp = Recipe.query.get(pk)
-    if not rcp:
+def get(pk):
+    recipe = get_recipe(pk)
+    if not recipe:
         return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
-    return render_template('recipe.html', title=rcp.name, recipe=rcp)
+    return render_template('recipe.html', title=recipe.title, recipe=recipe)
 
 
 @bp.route('/new', methods=['GET', 'POST'])
 @login_required
 def new():
-    form = RecipeForm()
+    recipe_model = init_recipe()
+    form = RecipeForm(obj=recipe_model)
     if form.add_ingredient.data:
         form.ingredients.append_entry()
-        # return render_template('new-recipe.html', title='New Recipe', form=form)
     elif form.remove_ingredient.data:
         form.ingredients.pop_entry()
-        # return render_template('new-recipe.html', title='New Recipe', form=form)
     elif form.submit.data and form.validate_on_submit():
-        recipe_detail_model = RecipeDetail(
-            link=form.link.data,
-            description=form.preparation.data
-        )
-        recipe_model = Recipe(
-            name=form.recipe_name.data,
-            time=form.time.data,
-            difficulty=form.difficulty.data,
-            detail=recipe_detail_model,
-            author=current_user,
-            ingredients=[]
-        )
-        for i in form.ingredients:
-            if i.ingredient_name.data:
-                recipe_ingredient_model = RecipeIngredient(
-                    name=i.ingredient_name.data,
-                    amount=i.amount.data,
-                    unit=i.unit.data
-                )
-                recipe_model.ingredients.append(recipe_ingredient_model)
-        db.session.add(recipe_model)
-        db.session.commit()
+        save_recipe_from_form(form, recipe_model)
         flash('Recipe added!')
-        return redirect(url_for('.recipe', pk=recipe_model.id))
+        return redirect(url_for('.get', pk=recipe_model.id))
+    return render_template('new-recipe.html', title='New Recipe', form=form)
+
+
+@bp.route('/edit/<int:pk>', methods=['GET', 'POST'])
+@login_required  # TODO: tylko autor
+def edit(pk):
+    recipe_model = get_recipe(pk)
+    form = RecipeForm(obj=recipe_model)
+    if form.add_ingredient.data:
+        form.ingredients.append_entry()
+    elif form.remove_ingredient.data:
+        form.ingredients.pop_entry()
+    elif form.submit.data and form.validate_on_submit():
+        save_recipe_from_form(form, recipe_model)
+        flash('Recipe updated!')
+        return redirect(url_for('.get', pk=recipe_model.id))
     return render_template('new-recipe.html', title='New Recipe', form=form)
 
 
