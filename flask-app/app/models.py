@@ -35,7 +35,7 @@ class Recipe(db.Model):
     title = db.Column(db.String(100), nullable=False)
     time = db.Column(db.Integer)
     difficulty = db.Column(db.Integer)
-    # attributes = db.relationship # one to many - attribute table
+    # TODO: attributes = db.relationship # one to many - attribute table
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     detail = db.relationship("RecipeDetail", uselist=False, back_populates="recipe", cascade="all, delete-orphan")
     ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
