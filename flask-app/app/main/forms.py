@@ -8,18 +8,18 @@ from app.models import User
 
 
 class IngredientForm(FlaskForm):
-    title = StringField('Ingredient name', validators=[Optional()])
+    title = StringField('Ingredient name', validators=[Optional(), Length(max=100)])
     amount = IntegerField('Ingredient amount', validators=[Optional(), NumberRange(1, 999)])
-    unit = StringField('Ingredient unit', validators=[Optional()])  # TODO: selector będzie lepszy
+    unit = StringField('Ingredient unit', validators=[Optional(), Length(max=20)])  # TODO: selector będzie lepszy
 
 
 class RecipeDetailForm(FlaskForm):
     link = StringField('Website', validators=[Optional(), URL()])
-    preparation = TextAreaField('Preparation', validators=[Optional()])
+    preparation = TextAreaField('Preparation', validators=[Optional(), Length(max=10000)])
 
 
 class RecipeForm(FlaskForm):
-    title = StringField('Recipe title', validators=[Length(min=3)])
+    title = StringField('Recipe title', validators=[Length(min=3, max=200)])
     time = IntegerField('Preparation time', validators=[Optional(), NumberRange(1, 999)])
     difficulty = IntegerField('Preparation difficulty (1-5)',
                               validators=[Optional(), NumberRange(1, 5)])  # TODO: Powiązać z ładnym selectorem
