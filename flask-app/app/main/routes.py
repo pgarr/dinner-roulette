@@ -20,6 +20,7 @@ def index():
 def get(pk):
     recipe = get_recipe(pk)
     if not recipe:
+        flash('Recipe does not exist!')
         return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
     return render_template('recipe.html', title=recipe.title, recipe=recipe)
 
@@ -44,21 +45,29 @@ def new():
 @login_required  # TODO: tylko autor
 def edit(pk):
     recipe_model = get_recipe(pk)
-    form = RecipeForm(obj=recipe_model)
-    if form.add_ingredient.data:
-        form.ingredients.append_entry()
-    elif form.remove_ingredient.data:
-        form.ingredients.pop_entry()
-    elif form.submit.data and form.validate_on_submit():
-        save_recipe_from_form(form, recipe_model)
-        flash('Recipe updated!')
-        return redirect(url_for('.get', pk=recipe_model.id))
-    return render_template('new-recipe.html', title='New Recipe', form=form)
+    if not recipe_model:
+        flash('Recipe does not exist!')
+        return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
+    if current_user == recipe_model.author:
+        form = RecipeForm(obj=recipe_model)
+        if form.add_ingredient.data:
+            form.ingredients.append_entry()
+        elif form.remove_ingredient.data:
+            form.ingredients.pop_entry()
+        elif form.submit.data and form.validate_on_submit():
+            save_recipe_from_form(form, recipe_model)
+            flash('Recipe updated!')
+            return redirect(url_for('.get', pk=recipe_model.id))
+        return render_template('new-recipe.html', title='Edit Recipe', form=form)
+    else:
+        flash('You are not allowed to do this!')
+        return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        flash('Recipe does not exist!')
         return redirect(url_for('.index'))
     form = LoginForm()
     if form.validate_on_submit():
