@@ -1,3 +1,5 @@
+from flask_login import current_user
+
 from app import db
 from app.models import Recipe, RecipeDetail, RecipeIngredient
 
@@ -31,4 +33,5 @@ def save_recipe_from_form(form, model):
                 unit=i.unit.data
             )
             model.ingredients.append(recipe_ingredient_model)
+    model.author = current_user
     save_recipe(model)
