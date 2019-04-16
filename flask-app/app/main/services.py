@@ -15,7 +15,7 @@ def save_recipe(model):
 
 
 def get_recipe(pk):
-    return Recipe.query.get(pk)
+    return Recipe.query.get_or_404(pk)
 
 
 def save_recipe_from_form(form, model):
