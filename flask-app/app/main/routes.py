@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import abort, render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 
 from app.main import bp
@@ -52,8 +52,6 @@ def edit(pk):
             return redirect(url_for('.get', pk=recipe_model.id))
         return render_template('new-recipe.html', title='Edit Recipe', form=form)
     else:
-        flash('You are not allowed to do this!')
-        return redirect(url_for('.index'))  # TODO: powinien być jakiś błąd
-
+        abort(401)
 
 
