@@ -2,7 +2,9 @@
 
 {% block content %}
     <h2>{{ recipe.title }}</h2>
-
+    {% if current_user == recipe.author %}
+         <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
+    {% endif %}
         <table>
             <tr>
                 <h3>Ingredients</h3>
