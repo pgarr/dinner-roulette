@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>New Recipe</h1>
+    {% if title %}
+        <h1>{{ title }} - Cookbook</h1>
+    {% else %}
+        <h1>Cookbook</h1>
+    {% endif %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
         {{ form.detail.hidden_tag() }}
