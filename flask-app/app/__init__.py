@@ -16,6 +16,7 @@ login.login_view = 'auth.login'
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.app_context().push()
 
     db.init_app(app)
     login.init_app(app)
@@ -29,8 +30,8 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    # from app.api import bp as api_bp
-    # app.register_blueprint(api_bp, url_prefix='/api')
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
 
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
