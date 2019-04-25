@@ -3,8 +3,8 @@ from flask_login import current_user, login_required
 
 from app.main import bp
 from app.main.forms import RecipeForm
-from app.main.services import init_recipe, save_recipe_from_form, get_recipe
-from app.models import Recipe
+from app.services import init_recipe, get_recipe, save_recipe
+from app.models import Recipe, RecipeIngredient
 
 
 @bp.route('/')
@@ -23,7 +23,7 @@ def get(pk):
 @bp.route('/new', methods=['GET', 'POST'])
 @login_required
 def new():
-    recipe_model = init_recipe()
+    recipe_model = init_recipe(author=current_user)
     form = RecipeForm(obj=recipe_model)
     if form.add_ingredient.data:
         form.ingredients.append_entry()
@@ -55,3 +55,19 @@ def edit(pk):
         abort(401)
 
 
+def save_recipe_from_form(form, model):
+    model.title = form.title.data
+    model.time = form.time.data
+    model.difficulty = form.difficulty.data
+    model.detail.link = form.detail.link.data
+    model.detail.preparation = form.detail.preparation.data
+    model.ingredients = []
+    for i in form.ingredients:
+        if i.title.data:
+            recipe_ingredient_model = RecipeIngredient(
+                title=i.title.data,
+                amount=i.amount.data,
+                unit=i.unit.data
+            )
+            model.ingredients.append(recipe_ingredient_model)
+    save_recipe(model)
