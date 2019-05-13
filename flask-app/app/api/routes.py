@@ -74,10 +74,6 @@ def save_recipe_from_schema(data, model):
     model.detail.preparation = data['detail']['preparation']
     model.ingredients = []
     for data_ingredient in data['ingredients']:
-        recipe_ingredient_model = RecipeIngredient(
-            title=data_ingredient['title'],
-            amount=data_ingredient['amount'],
-            unit=data_ingredient['unit']
-        )
+        recipe_ingredient_model = RecipeIngredient(**data_ingredient)
         model.ingredients.append(recipe_ingredient_model)
     save_recipe(model)
