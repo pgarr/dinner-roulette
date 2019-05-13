@@ -62,14 +62,6 @@ def create_app(config_class=Config):
         app.logger.setLevel(logging.INFO)
         app.logger.info('App startup')
 
-        # sql.logger
-        sql_file_handler = RotatingFileHandler('logs/sql-queries.log', maxBytes=102400, backupCount=100)
-        sql_file_handler.setFormatter(logging.Formatter(
-            '%(asctime)s %(levelname)s: %(message)s '
-            '[in %(pathname)s:%(lineno)d]'))
-        logging.getLogger('sqlalchemy.engine').addHandler(sql_file_handler)
-        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
     return app
 
 
