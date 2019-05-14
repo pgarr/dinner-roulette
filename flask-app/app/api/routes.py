@@ -67,11 +67,12 @@ def update_recipe(pk):
 
 def save_recipe_from_schema(data, model):
     # TODO: brak danego klucza oznacza KeyError exception
-    model.title = data['title']
-    model.time = data['time']
-    model.difficulty = data['difficulty']
-    model.detail.link = data['detail']['link']
-    model.detail.preparation = data['detail']['preparation']
+
+    model.title = data.get('title')
+    model.time = data.get('time')
+    model.difficulty = data.get('difficulty')
+    model.detail.link = data.get('detail').get('link')
+    model.detail.preparation = data.get('detail').get('preparation')
     model.ingredients = []
     for data_ingredient in data['ingredients']:
         recipe_ingredient_model = RecipeIngredient(**data_ingredient)
