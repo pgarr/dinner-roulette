@@ -1,14 +1,9 @@
 from marshmallow import ValidationError, Schema, fields
 
 
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError('Data not provided.')
-
-
 class RecipeIngredientSchema(Schema):
     id = fields.Int(dump_only=True)
-    title = fields.Str(validate=must_not_be_blank)
+    title = fields.Str(required=True)
     amount = fields.Int()
     unit = fields.Str()
 
@@ -21,11 +16,11 @@ class RecipeDetailSchema(Schema):
 
 class RecipeSchema(Schema):
     id = fields.Int(dump_only=True)
-    title = fields.Str(validate=must_not_be_blank)
+    title = fields.Str(required=True)
     time = fields.Int()
     difficulty = fields.Int()
-    detail = fields.Nested(RecipeDetailSchema, validate=must_not_be_blank)
-    ingredients = fields.Nested(RecipeIngredientSchema, many=True, validate=must_not_be_blank)
+    detail = fields.Nested(RecipeDetailSchema, required=True)
+    ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
 
 
 recipe_schema = RecipeSchema()
