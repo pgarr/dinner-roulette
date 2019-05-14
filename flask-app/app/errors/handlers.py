@@ -29,3 +29,4 @@ def forbidden_error(error):
     if wants_json_response():
         return api_error_response(401)
     return render_template('errors/401.html'), 401
+
