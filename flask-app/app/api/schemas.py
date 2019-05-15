@@ -1,10 +1,10 @@
-from marshmallow import ValidationError, Schema, fields
+from marshmallow import Schema, fields
 
 
 class RecipeIngredientSchema(Schema):
     id = fields.Int(dump_only=True)
     title = fields.Str(required=True)
-    amount = fields.Int()
+    amount = fields.Float()
     unit = fields.Str()
 
 
