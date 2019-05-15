@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, IntegerField, FormField, \
-    FieldList
+    FieldList, FloatField
 from wtforms.validators import URL, NumberRange, Optional, Length
 
 
 class IngredientForm(FlaskForm):
     title = StringField('Ingredient name', validators=[Optional(), Length(max=100)])
-    amount = IntegerField('Ingredient amount', validators=[Optional(), NumberRange(1, 999)])
-    unit = StringField('Ingredient unit', validators=[Optional(), Length(max=20)])  # TODO: selector będzie lepszy
+    amount = FloatField('Ingredient amount', validators=[Optional(), NumberRange(1, 999)])
+    unit = StringField('Ingredient unit', validators=[Optional(), Length(max=20)])  # TODO: w formularzu dać podpowiedzi z istniejących
 
 
 class RecipeDetailForm(FlaskForm):
