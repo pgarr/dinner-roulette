@@ -31,13 +31,12 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('This e-mail address is already registered.')
 
 
-class ResetPasswordRequestForm(FlaskForm):
+class ResetPasswordRequestForm(FlaskForm):  # TODO: use
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
 
 
-class ResetPasswordForm(FlaskForm):
+class ResetPasswordForm(FlaskForm):  # TODO: use
     password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(),
-                                                             EqualTo('password')])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Request Password Reset')
