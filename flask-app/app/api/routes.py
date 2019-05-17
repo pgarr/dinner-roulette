@@ -52,7 +52,7 @@ def update_recipe(pk):
     if not json_data:
         return bad_request('No input data provided')
     recipe_model = get_recipe(pk)
-    if current_identity == recipe_model.author:
+    if current_identity == recipe_model.author or current_identity.admin:
         data, errors = recipe_schema.load(json_data)
         if errors:
             return jsonify(errors), 422
