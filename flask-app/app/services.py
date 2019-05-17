@@ -2,7 +2,7 @@ from app import db
 from app.models import Recipe, RecipeDetail, RecipeIngredient
 
 
-def init_recipe(author=None):
+def init_recipe(author):
     return Recipe(detail=RecipeDetail(), ingredients=[RecipeIngredient()], author=author)
 
 
