@@ -40,7 +40,7 @@ def new():
 @login_required
 def edit(pk):
     recipe_model = get_recipe(pk)
-    if current_user == recipe_model.author:
+    if current_user == recipe_model.author or current_user.admin:
         form = RecipeForm(obj=recipe_model)
         if form.add_ingredient.data:
             form.ingredients.append_entry()
