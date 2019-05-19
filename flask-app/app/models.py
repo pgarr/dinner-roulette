@@ -13,7 +13,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     admin = db.Column(db.Boolean, default=False)
     password_hash = db.Column(db.String(128))
-    recipes = db.relationship('Recipe', backref='author', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -41,8 +40,16 @@ class RecipeMixin(object):
     # TODO: attributes = db.relationship # one to many - attribute table
 
     @declared_attr
-    def user_id(cls):
+    def author_id(cls):
         return db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    @declared_attr
+    def author_id(cls):
+        return db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    @declared_attr
+    def author(cls):
+        return db.relationship("User")
 
     def __repr__(self):
         return '<Recipe {}>'.format(self.title)
