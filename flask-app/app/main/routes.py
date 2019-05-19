@@ -3,7 +3,8 @@ from flask_login import current_user, login_required
 
 from app.main import bp
 from app.main.forms import RecipeForm
-from app.services import init_waiting_recipe, get_recipe, save_recipe, get_all_recipes, get_waiting_recipe
+from app.services import init_waiting_recipe, get_recipe, save_recipe, get_all_recipes, get_waiting_recipe, \
+    clone_recipe_to_waiting
 
 
 @bp.route('/')
@@ -49,8 +50,10 @@ def new():
 @bp.route('/edit/<int:pk>', methods=['GET', 'POST'])
 @login_required
 def edit(pk):
-    recipe_model = get_recipe(pk)
-    if current_user == recipe_model.author or current_user.admin:
+    edited_model = get_recipe(pk)
+    # TODO: czy jak już są zgłoszone zmiany, to czy nie powinno edytować tych zgłoszonych zmian?
+    if current_user == edited_model.author or current_user.admin:
+        recipe_model = clone_recipe_to_waiting(edited_model)
         form = RecipeForm(obj=recipe_model)
         if form.add_ingredient.data:
             form.ingredients.append_entry()
@@ -59,7 +62,8 @@ def edit(pk):
         elif form.submit.data and form.validate_on_submit():
             save_recipe_from_form(form, recipe_model)
             flash('Recipe updated!')
-            return redirect(url_for('.get', pk=recipe_model.id))
+            flash('Changes will be seen for other users after administrator acceptance.')
+            return redirect(url_for('.get_waiting', pk=recipe_model.id))
         return render_template('new-recipe.html', title='Edit Recipe', form=form)
     else:
         abort(401)

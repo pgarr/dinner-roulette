@@ -92,3 +92,4 @@ class WaitingRecipe(RecipeMixin, db.Model):
 
     ingredient_class = WaitingRecipeIngredient
     ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
+    # TODO: przenieść do mixin
