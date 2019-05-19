@@ -1,11 +1,11 @@
 from sqlalchemy.orm import load_only
 
 from app import db
-from app.models import Recipe, RecipeIngredient
+from app.models import Recipe, WaitingRecipe, WaitingRecipeIngredient
 
 
-def init_recipe(author):  # TODO: kwargs
-    return Recipe(ingredients=[RecipeIngredient()], author=author)
+def init_waiting_recipe(author):  # TODO: kwargs
+    return WaitingRecipe(ingredients=[WaitingRecipeIngredient()], author=author)
 
 
 def save_recipe(model):
@@ -16,6 +16,10 @@ def save_recipe(model):
 
 def get_recipe(pk):
     return Recipe.query.get_or_404(pk)
+
+
+def get_waiting_recipe(pk):
+    return WaitingRecipe.query.get_or_404(pk)
 
 
 def get_all_recipes():

@@ -5,7 +5,7 @@ from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
 from app.models import RecipeIngredient
-from app.services import get_recipe, save_recipe, init_recipe, get_all_recipes
+from app.services import get_recipe, save_recipe, init_waiting_recipe, get_all_recipes
 
 
 @bp.route('/', methods=['GET'])
@@ -37,7 +37,7 @@ def create_recipe():
     data, errors = recipe_schema.load(json_data)
     if errors:
         return jsonify(errors), 422
-    recipe_model = init_recipe(current_identity)
+    recipe_model = init_waiting_recipe(current_identity)
     save_recipe_from_schema(data, recipe_model)
     recipe_model = get_recipe(recipe_model.id)
     result = recipe_schema.dump(recipe_model)

@@ -29,7 +29,19 @@ def load_user(id_):
     return User.query.get(int(id_))
 
 
+class IngredientMixin(object):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float)
+    unit = db.Column(db.String(20))
+
+    def __repr__(self):
+        return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)
+
+
 class RecipeMixin(object):
+    ingredient_class = IngredientMixin
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     time = db.Column(db.Integer)
@@ -44,33 +56,16 @@ class RecipeMixin(object):
         return db.Column(db.Integer, db.ForeignKey('user.id'))
 
     @declared_attr
-    def author_id(cls):
-        return db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    @declared_attr
     def author(cls):
         return db.relationship("User")
 
     def __repr__(self):
         return '<Recipe {}>'.format(self.title)
 
-    # TODO: add_ingredient method
-
-
-class IngredientMixin(object):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
-    amount = db.Column(db.Float)
-    unit = db.Column(db.String(20))
-
-    def __repr__(self):
-        return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)
-
-
-class Recipe(RecipeMixin, db.Model):
-    __tablename__ = 'recipe'
-
-    ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+    def add_ingredient(self, **kwargs):
+        if not self.ingredients:
+            self.ingredients = []
+        self.ingredients.append(self.ingredient_class(**kwargs))
 
 
 class RecipeIngredient(IngredientMixin, db.Model):
@@ -79,13 +74,21 @@ class RecipeIngredient(IngredientMixin, db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
 
 
-class WaitingRecipe(RecipeMixin, db.Model):
-    __tablename__ = 'waiting_recipe'
+class Recipe(RecipeMixin, db.Model):
+    __tablename__ = 'recipe'
 
-    ingredients = db.relationship('WaitingRecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+    ingredient_class = RecipeIngredient
+    ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
 
 
 class WaitingRecipeIngredient(IngredientMixin, db.Model):
     __tablename__ = 'waiting_recipe_ingredient'
 
     recipe_id = db.Column(db.Integer, db.ForeignKey('waiting_recipe.id'))
+
+
+class WaitingRecipe(RecipeMixin, db.Model):
+    __tablename__ = 'waiting_recipe'
+
+    ingredient_class = WaitingRecipeIngredient
+    ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
