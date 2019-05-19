@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy.ext.declarative import declared_attr
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
@@ -29,43 +30,55 @@ def load_user(id_):
     return User.query.get(int(id_))
 
 
-class Recipe(db.Model):
-    __tablename__ = 'recipe'
-
+class RecipeMixin(object):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     time = db.Column(db.Integer)
     difficulty = db.Column(db.Integer)
+    link = db.Column(db.String(1000))
+    preparation = db.Column(db.Text)
+
     # TODO: attributes = db.relationship # one to many - attribute table
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    detail = db.relationship("RecipeDetail", uselist=False, back_populates="recipe", cascade="all, delete-orphan")
-    ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+
+    @declared_attr
+    def user_id(cls):
+        return db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return '<Recipe {}>'.format(self.title)
 
-
-class RecipeDetail(db.Model):
-    __tablename__ = 'recipe_detail'
-
-    id = db.Column(db.Integer, primary_key=True)
-    link = db.Column(db.String(1000))
-    preparation = db.Column(db.Text)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
-    recipe = db.relationship("Recipe", back_populates="detail")
-
-    def __repr__(self):
-        return '<RecipeDetail from {}>'.format(self.recipe_id)
+    # TODO: add_ingredient method
 
 
-class RecipeIngredient(db.Model):
-    __tablename__ = 'recipe_ingredient'
-
+class IngredientMixin(object):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.Float)
     unit = db.Column(db.String(20))
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
 
     def __repr__(self):
         return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)
+
+
+class Recipe(RecipeMixin, db.Model):
+    __tablename__ = 'recipe'
+
+    ingredients = db.relationship('RecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+
+
+class RecipeIngredient(IngredientMixin, db.Model):
+    __tablename__ = 'recipe_ingredient'
+
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+
+
+class WaitingRecipe(RecipeMixin, db.Model):
+    __tablename__ = 'waiting_recipe'
+
+    ingredients = db.relationship('WaitingRecipeIngredient', lazy="dynamic", cascade="all, delete-orphan")
+
+
+class WaitingRecipeIngredient(IngredientMixin, db.Model):
+    __tablename__ = 'waiting_recipe_ingredient'
+
+    recipe_id = db.Column(db.Integer, db.ForeignKey('waiting_recipe.id'))

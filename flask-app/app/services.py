@@ -1,9 +1,9 @@
 from app import db
-from app.models import Recipe, RecipeDetail, RecipeIngredient
+from app.models import Recipe, RecipeIngredient
 
 
-def init_recipe(author):
-    return Recipe(detail=RecipeDetail(), ingredients=[RecipeIngredient()], author=author)
+def init_recipe(author):  # TODO: kwargs
+    return Recipe(ingredients=[RecipeIngredient()], author=author)
 
 
 def save_recipe(model):
@@ -16,4 +16,5 @@ def get_recipe(pk):
     return Recipe.query.get_or_404(pk)
 
 
-
+def get_all_recipes():
+    return Recipe.query.all()

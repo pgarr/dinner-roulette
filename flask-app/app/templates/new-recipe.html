@@ -8,7 +8,6 @@
     {% endif %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        {{ form.detail.hidden_tag() }}
         <p>
             {{ form.title.label }}<br>
             {{ form.title(size=150) }}<br>
@@ -62,16 +61,16 @@
                 <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
         <p>
-            {{ form.detail.link.label }}<br>
-            {{ form.detail.link(size=10) }}<br>
-            {% for error in form.detail.link.errors %}
+            {{ form.link.label }}<br>
+            {{ form.link(size=10) }}<br>
+            {% for error in form.link.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.detail.preparation.label }}<br>
-            {{ form.detail.preparation(size=150) }}<br>
-            {% for error in form.detail.preparation.errors %}
+            {{ form.preparation.label }}<br>
+            {{ form.preparation(size=150) }}<br>
+            {% for error in form.preparation.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
