@@ -4,8 +4,8 @@ from flask_jwt import jwt_required, current_identity
 from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
-from app.services import get_recipe, save_recipe, init_recipe
-from app.models import Recipe, RecipeIngredient
+from app.models import RecipeIngredient
+from app.services import get_recipe, save_recipe, init_recipe, get_all_recipes
 
 
 @bp.route('/', methods=['GET'])
@@ -15,7 +15,7 @@ def connection():
 
 @bp.route('/recipes', methods=['GET'])
 def recipes():
-    recipe_models = Recipe.query.all()
+    recipe_models = get_all_recipes()
     result = recipes_schema.dump(recipe_models)
     return jsonify({'recipes': result.data})
 
@@ -66,13 +66,11 @@ def update_recipe(pk):
 
 
 def save_recipe_from_schema(data, model):
-    # TODO: brak danego klucza oznacza KeyError exception
-
     model.title = data.get('title')
     model.time = data.get('time')
     model.difficulty = data.get('difficulty')
-    model.detail.link = data.get('detail').get('link')
-    model.detail.preparation = data.get('detail').get('preparation')
+    model.link = data.get('link')
+    model.preparation = data.get('preparation')
     model.ingredients = []
     for data_ingredient in data['ingredients']:
         recipe_ingredient_model = RecipeIngredient(**data_ingredient)
