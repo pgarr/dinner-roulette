@@ -19,5 +19,5 @@ class RecipeSchema(Schema):
 
 
 recipe_schema = RecipeSchema()
-recipes_schema = RecipeSchema(many=True, only=("id", "title"))
+recipes_schema = RecipeSchema(many=True, only=("id", "title", "time", "difficulty"))
 recipe_ingredients_schema = RecipeIngredientSchema(many=True)
