@@ -1,3 +1,5 @@
+from sqlalchemy.orm import load_only
+
 from app import db
 from app.models import Recipe, RecipeIngredient
 
@@ -17,4 +19,4 @@ def get_recipe(pk):
 
 
 def get_all_recipes():
-    return Recipe.query.all()
+    return Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
