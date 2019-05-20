@@ -51,11 +51,14 @@ def new():
 @login_required
 def edit(pk):
     edited_model = get_recipe(pk)
-    # TODO: czy jak już są zgłoszone zmiany, to czy nie powinno edytować tych zgłoszonych zmian?
     if current_user == edited_model.author or current_user.admin:
-        recipe_model = clone_recipe_to_waiting(edited_model)
+        if edited_model.waiting_updates:
+            flash('Recipe already has changes waiting for acceptance!')
+            recipe_model = edited_model.waiting_updates
+        else:
+            recipe_model = clone_recipe_to_waiting(edited_model)
         form = RecipeForm(obj=recipe_model)
-        if form.add_ingredient.data:
+        if form.add_ingredient.data:  # TODO: edit powoduje dodanie 1 pustego wiersza. Zbadać
             form.ingredients.append_entry()
         elif form.remove_ingredient.data:
             form.ingredients.pop_entry()
