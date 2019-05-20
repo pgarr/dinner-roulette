@@ -79,6 +79,7 @@ class Recipe(RecipeMixin, db.Model):
 
     ingredient_class = RecipeIngredient
     ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
+    waiting_updates = db.relationship("WaitingRecipe", uselist=False, back_populates="updated_recipe")
 
 
 class WaitingRecipeIngredient(IngredientMixin, db.Model):
@@ -93,3 +94,5 @@ class WaitingRecipe(RecipeMixin, db.Model):
     ingredient_class = WaitingRecipeIngredient
     ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
     # TODO: przenieść do mixin
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    updated_recipe = db.relationship("Recipe", back_populates="waiting_updates")
