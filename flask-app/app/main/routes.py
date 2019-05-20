@@ -1,4 +1,4 @@
-from flask import abort, render_template, flash, redirect, url_for
+from flask import abort, render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from app.main import bp
@@ -53,8 +53,9 @@ def edit(pk):
     edited_model = get_recipe(pk)
     if current_user == edited_model.author or current_user.admin:
         if edited_model.waiting_updates:
-            flash('Recipe already has changes waiting for acceptance!')
             recipe_model = edited_model.waiting_updates
+            if request.method == 'GET':
+                flash('Recipe already has changes waiting for acceptance!')
         else:
             recipe_model = clone_recipe_to_waiting(edited_model)
         form = RecipeForm(obj=recipe_model)
