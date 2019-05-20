@@ -7,8 +7,7 @@ from app.services import clone_recipe_to_waiting
 class TestServices(TestCase):
 
     def test_clone_recipe_to_waiting_empty(self):
-        recipe_model = Recipe(ingredients=[])
-        print(recipe_model.ingredients)
+        recipe_model = Recipe()
         waiting_model = clone_recipe_to_waiting(recipe_model)
 
         self.assertFalse(waiting_model.title)
