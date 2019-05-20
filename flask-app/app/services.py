@@ -14,7 +14,8 @@ def clone_recipe_to_waiting(recipe_model):
                                   difficulty=recipe_model.difficulty,
                                   link=recipe_model.link,
                                   preparation=recipe_model.preparation,
-                                  author=recipe_model.author)
+                                  author=recipe_model.author,
+                                  updated_recipe=recipe_model)
     for i in recipe_model.ingredients:
         waiting_model.add_ingredient(title=i.title, amount=i.amount, unit=i.unit)
     return waiting_model
