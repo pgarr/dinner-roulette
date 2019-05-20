@@ -22,4 +22,4 @@ class RecipeForm(FlaskForm):
     ingredients = FieldList(FormField(IngredientForm), min_entries=1)
     add_ingredient = SubmitField('+')
     remove_ingredient = SubmitField('-')
-    submit = SubmitField('Add')
+    submit = SubmitField('Submit')
