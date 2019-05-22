@@ -39,5 +39,10 @@ def get_all_recipes():
     return Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
 
 
-def get_all_waiting_recipes():
-    return WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+def get_all_waiting_recipes(user):
+    if user.admin:
+        waiting_recipes = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+    else:
+        waiting_recipes = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(
+            load_only("id", "title", "time", "difficulty")).all()
+    return waiting_recipes

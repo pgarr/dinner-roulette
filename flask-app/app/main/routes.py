@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app.main import bp
 from app.main.forms import RecipeForm
 from app.services import init_waiting_recipe, get_recipe, save_recipe, get_all_recipes, get_waiting_recipe, \
-    clone_recipe_to_waiting
+    clone_recipe_to_waiting, get_all_waiting_recipes
 
 
 @bp.route('/')
@@ -28,6 +28,13 @@ def get_waiting(pk):
         return render_template('recipe.html', title=recipe_model.title, recipe=recipe_model)
     else:
         abort(401)
+
+
+@bp.route('/waiting', methods=['GET'])
+@login_required
+def get_waiting_list():
+    recipes_models = get_all_waiting_recipes(user=current_user)
+    return render_template('index.html', title='Waiting Recipes', recipes=recipes_models)
 
 
 @bp.route('/new', methods=['GET', 'POST'])
