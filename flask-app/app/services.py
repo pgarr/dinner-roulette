@@ -4,7 +4,7 @@ from app import db
 from app.models import Recipe, WaitingRecipe
 
 
-def init_waiting_recipe(**kwargs):  # TODO: kwargs
+def init_waiting_recipe(**kwargs):
     return WaitingRecipe(**kwargs)
 
 
@@ -37,3 +37,7 @@ def get_waiting_recipe(pk):
 
 def get_all_recipes():
     return Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+
+
+def get_all_waiting_recipes():
+    return WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
