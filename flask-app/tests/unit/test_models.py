@@ -46,6 +46,26 @@ class TestAbstractRecipe(object):
         self.assertEqual(recipe_model.ingredients[0].amount, None)
         self.assertEqual(recipe_model.ingredients[0].unit, None)
 
+    def test_clear_empty_ingredients_with_empty(self):
+        recipe_model = self.recipe_cls(ingredients=[self.ingredient_cls(title='test1'), self.ingredient_cls(title=''),
+                                                    self.ingredient_cls(title=None),
+                                                    self.ingredient_cls(title='test2'),
+                                                    self.ingredient_cls(title=None)])
+        recipe_model.clear_empty_ingredients()
+
+        self.assertEqual(recipe_model.ingredients.count(), 2)
+        self.assertEqual(recipe_model.ingredients[0].title, 'test1')
+        self.assertEqual(recipe_model.ingredients[1].title, 'test2')
+
+    def test_clear_empty_ingredients_without_empty(self):
+        recipe_model = self.recipe_cls(ingredients=[self.ingredient_cls(title='test1'),
+                                                    self.ingredient_cls(title='test2')])
+        recipe_model.clear_empty_ingredients()
+
+        self.assertEqual(recipe_model.ingredients.count(), 2)
+        self.assertEqual(recipe_model.ingredients[0].title, 'test1')
+        self.assertEqual(recipe_model.ingredients[1].title, 'test2')
+
 
 class TestWaitingRecipe(TestAbstractRecipe, TestCase):
     recipe_cls = Recipe
