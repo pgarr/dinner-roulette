@@ -5,9 +5,15 @@
     {% if current_user == recipe.author or current_user.admin %}
          <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
     {% endif %}
+
+    <h3>Time</h3>
+     <p>{{ recipe.time }}</p>
+
+    <h3>Difficulty</h3>
+    <p>{{ recipe.difficulty }}</p>
+
     <h3>Ingredients</h3>
     <table>
-
         <tr>
             <th>
                 Name
