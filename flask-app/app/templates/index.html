@@ -20,7 +20,11 @@
         {% for recipe in recipes %}
             <tr>
                 <td>
-                    <a href="{{ url_for('main.get', pk=recipe.id) }}">{{ recipe.title }}</a>
+                    {% if waiting %}
+                        <a href="{{ url_for('main.get_waiting', pk=recipe.id) }}">{{ recipe.title }}</a>
+                    {% else %}
+                        <a href="{{ url_for('main.get', pk=recipe.id) }}">{{ recipe.title }}</a>
+                    {% endif %}
                 </td>
                 <td>
                     {{ recipe.time }}

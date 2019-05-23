@@ -2,12 +2,21 @@
 
 {% block content %}
     <h2>{{ recipe.title }}</h2>
-    {% if current_user == recipe.author or current_user.admin %}
-         <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
+    {% if waiting %}
+        {% if current_user == recipe.author or current_user.admin %}
+            <a href="{{ url_for('main.edit_waiting', pk=recipe.id) }}">Edit</a>
+        {% endif %}
+        {% if current_user.admin %}
+            <a href="{{ url_for('main.accept', pk=recipe.id) }}">Accept</a>
+        {% endif %}
+    {% else %}
+        {% if current_user == recipe.author or current_user.admin %}
+            <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
+        {% endif %}
     {% endif %}
 
     <h3>Time</h3>
-     <p>{{ recipe.time }}</p>
+    <p>{{ recipe.time }}</p>
 
     <h3>Difficulty</h3>
     <p>{{ recipe.difficulty }}</p>

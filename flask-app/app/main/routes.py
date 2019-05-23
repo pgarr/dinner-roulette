@@ -25,7 +25,8 @@ def get(pk):
 def get_waiting(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
-        return render_template('recipe.html', title=waiting_model.title, recipe=waiting_model)
+        flash('This recipe is pending approval by the administrator.')  # TODO: move from flash to recipe.html
+        return render_template('recipe.html', title=waiting_model.title, recipe=waiting_model, waiting=True)
     else:
         abort(401)
 
@@ -34,7 +35,7 @@ def get_waiting(pk):
 @login_required
 def get_waiting_list():
     waitings_models = get_all_waiting_recipes(user=current_user)
-    return render_template('index.html', title='Waiting Recipes', recipes=waitings_models)
+    return render_template('index.html', title='Waiting Recipes', recipes=waitings_models, waiting=True)
 
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
@@ -72,9 +73,8 @@ def edit(pk):
     recipe_model = get_recipe(pk)
     if current_user == recipe_model.author or current_user.admin:
         if recipe_model.waiting_updates:
-            waiting_model = recipe_model.waiting_updates
-            if request.method == 'GET':
-                flash('Recipe already has changes waiting for acceptance!')
+            flash('Recipe already has changes waiting for acceptance!')
+            return redirect(url_for('.edit_waiting', pk=recipe_model.waiting_updates.id))
         else:
             waiting_model = clone_recipe_to_waiting(recipe_model)
         form = RecipeForm(obj=waiting_model)
@@ -86,6 +86,25 @@ def edit(pk):
             save_recipe_from_form(form, waiting_model)
             flash('Recipe updated!')
             flash('Changes will be seen for other users after administrator acceptance.')
+            return redirect(url_for('.get_waiting', pk=waiting_model.id))
+        return render_template('new-recipe.html', title='Edit Recipe', form=form)
+    else:
+        abort(401)
+
+
+@bp.route('/waiting/<int:pk>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_waiting(pk):
+    waiting_model = get_waiting_recipe(pk)
+    if current_user == waiting_model.author or current_user.admin:
+        form = RecipeForm(obj=waiting_model)
+        if form.add_ingredient.data:
+            form.ingredients.append_entry()
+        elif form.remove_ingredient.data:
+            form.ingredients.pop_entry()
+        elif form.submit.data and form.validate_on_submit():
+            save_recipe_from_form(form, waiting_model)
+            flash('Pending changes saved!')
             return redirect(url_for('.get_waiting', pk=waiting_model.id))
         return render_template('new-recipe.html', title='Edit Recipe', form=form)
     else:
