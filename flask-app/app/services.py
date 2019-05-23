@@ -21,8 +21,32 @@ def clone_recipe_to_waiting(recipe_model):
     return waiting_model
 
 
+def accept_waiting(waiting_model):
+    recipe_model = _push_updates_to_recipe(waiting_model)
+    db.session.add(recipe_model)
+    db.session.delete(waiting_model)
+    db.session.commit()
+    return recipe_model
+
+
+def _push_updates_to_recipe(waiting_model):
+    if waiting_model.updated_recipe:
+        recipe_model = waiting_model.updated_recipe
+    else:
+        recipe_model = Recipe(author=waiting_model.author)
+    recipe_model.title = waiting_model.title
+    recipe_model.time = waiting_model.time
+    recipe_model.difficulty = waiting_model.difficulty
+    recipe_model.link = waiting_model.link
+    recipe_model.preparation = waiting_model.preparation
+    recipe_model.ingredients = []
+    for i in waiting_model.ingredients:
+        recipe_model.add_ingredient(title=i.title, amount=i.amount, unit=i.unit)
+    return recipe_model
+
+
 def save_recipe(model):
-    model.ingredients = list(filter(lambda ingredient: ingredient.title, model.ingredients))
+    model.clear_empty_ingredients()
     db.session.add(model)
     db.session.commit()
 

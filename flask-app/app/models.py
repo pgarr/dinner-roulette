@@ -67,6 +67,9 @@ class RecipeMixin(object):
             self.ingredients = []
         self.ingredients.append(self.ingredient_class(**kwargs))
 
+    def clear_empty_ingredients(self):
+        self.ingredients = list(filter(lambda ingredient: ingredient.title, self.ingredients))
+
 
 class RecipeIngredient(IngredientMixin, db.Model):
     __tablename__ = 'recipe_ingredient'
