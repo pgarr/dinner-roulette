@@ -4,6 +4,7 @@ from logging.handlers import RotatingFileHandler, SMTPHandler
 
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -13,6 +14,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
+mail = Mail()
 
 
 def create_app(config_class=Config):
@@ -23,6 +25,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
+    mail.init_app(app)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -47,7 +50,7 @@ def create_app(config_class=Config):
             mail_handler = SMTPHandler(
                 mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                 fromaddr='no-reply@' + app.config['MAIL_SERVER'],
-                toaddrs=app.config['ADMINS'], subject='Microblog Failure',
+                toaddrs=app.config['ADMINS'], subject='Dinner-roulette Failure',
                 credentials=auth, secure=secure)
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
@@ -63,7 +66,7 @@ def create_app(config_class=Config):
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
-        app.logger.info('App startup')
+        app.logger.info('dinner-roulette startup')
 
     return app
 

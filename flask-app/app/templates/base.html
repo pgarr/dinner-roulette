@@ -16,7 +16,7 @@
             {% else %}
                 <a href="{{ url_for('auth.logout') }}">Logout</a>
                 <span>{{ current_user.username }}</span>
-                <span>{{ current_user.id }}</span>
+                <a href="{{ url_for('main.get_waiting_list') }}">Pending recipes</a>
             {% endif %}
         </div>
         <hr>

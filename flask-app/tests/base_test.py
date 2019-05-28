@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 from app import create_app, db
 from config import Config
@@ -9,7 +9,7 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 
-class TestAppSetUp(unittest.TestCase):
+class TestAppSetUp(TestCase):
     def setUp(self):
         self.app = create_app(TestConfig)
         self.app_context = self.app.app_context()
