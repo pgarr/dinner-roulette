@@ -1,4 +1,4 @@
-from flask import abort, render_template, flash, redirect, url_for, request
+from flask import abort, render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 
 from app.main import bp
@@ -25,7 +25,7 @@ def get(pk):
 def get_waiting(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
-        flash('This recipe is pending approval by the administrator.')  # TODO: move from flash to recipe.html
+        flash('This recipe is pending approval by the administrator.')
         return render_template('recipe.html', title=waiting_model.title, recipe=waiting_model, waiting=True)
     else:
         abort(401)
