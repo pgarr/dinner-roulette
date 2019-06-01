@@ -1,0 +1,109 @@
+<html>
+
+<head>
+
+    <title>New Recipe - Cookbook</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <a class="navbar-brand" href="">Cookbook</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerBasic">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerBasic">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">Recipe List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/new">Add Recipe</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/logout">Logout</a>
+                </li>
+                <span>test</span>
+                <li class="nav-item">
+                    <a class="nav-link" href="/waiting">Pending recipes</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <hr>
+
+    <h1>New Recipe - Cookbook</h1>
+    <form action="" method="post">
+        <input id="csrf_token" name="csrf_token" type="hidden"
+            value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPJrRg.XoOk3K3KksUbSfrJB6xRfStSrzw">
+        <p>
+            <label for="title">Recipe title</label><br>
+            <input id="title" name="title" size="150" type="text" value=""><br>
+
+        </p>
+        <p>
+            <label for="time">Preparation time</label><br>
+            <input id="time" name="time" size="10" type="text" value=""><br>
+
+        </p>
+        <p>
+            <label for="difficulty">Preparation difficulty (1-5)</label><br>
+            <input id="difficulty" name="difficulty" size="10" type="text" value=""><br>
+
+        </p>
+
+        <h3>Ingredients</h3>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Unit</th>
+                </tr>
+
+                <input id="ingredients-0-csrf_token" name="ingredients-0-csrf_token" type="hidden"
+                    value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPJrRg.XoOk3K3KksUbSfrJB6xRfStSrzw">
+
+                <tr>
+                    <td><input id="ingredients-0-title" name="ingredients-0-title" type="text" value=""></td>
+                    <td><input id="ingredients-0-amount" name="ingredients-0-amount" type="text" value=""></td>
+                    <td><input id="ingredients-0-unit" name="ingredients-0-unit" type="text" value=""></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <input id="add_ingredient" name="add_ingredient" type="submit" value="+">
+        <input id="remove_ingredient" name="remove_ingredient" type="submit" value="-">
+
+        <p>
+            <label for="link">Website</label><br>
+            <input id="link" name="link" size="10" type="text" value=""><br>
+
+        </p>
+        <p>
+            <label for="preparation">Preparation</label><br>
+            <textarea id="preparation" name="preparation" size="150"></textarea><br>
+
+        </p>
+        <p><input id="submit" name="submit" type="submit" value="Submit"></p>
+    </form>
+
+</body>
+
+</html>
