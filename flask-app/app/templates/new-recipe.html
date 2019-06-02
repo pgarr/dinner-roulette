@@ -1,79 +1,124 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if title %}
-        <h1>{{ title }} - Cookbook</h1>
-    {% else %}
-        <h1>Cookbook</h1>
-    {% endif %}
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-            {{ form.title(size=150) }}<br>
-            {% for error in form.title.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.time.label }}<br>
-            {{ form.time(size=10) }}<br>
-            {% for error in form.time.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.difficulty.label }}<br>
-            {{ form.difficulty(size=10) }}<br>
-            {% for error in form.difficulty.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+    <div class="container">
+        <div class="row header-top-margin">
+            <div class="col-12">
+                {% if title %}
+                    <h1>{{ title }} - Cookbook</h1>
+                {% else %}
+                    <h1>Cookbook</h1>
+                {% endif %}
+            </div>
+        </div>
 
-        <h3>Ingredients</h3>
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Unit</th>
-            </tr>
-            {% for i in form.ingredients %}
-                {{ i.hidden_tag() }}
-                {% for error in i.title.errors %}
-                    [{{ error }}]
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+             <div class="form-row header-top-margin">
+                 <div class="col-12">
+                    {{ form.title.label }}
+                    {{ form.title(class_="form-control") }}
+                    {% for error in form.title.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-row header-top-margin">
+                <div class="col-4">
+                    {{ form.time.label }}
+                    {{ form.time(class_="form-control") }}
+                    {% for error in form.time.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                <div class="col-4">
+                    {{ form.difficulty.label }}
+                    {{ form.difficulty(class_="form-control") }}
+                    {% for error in form.difficulty.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-row header-top-margin">
+                <div class="col-12">
+                    <h3>Ingredients</h3>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-6">
+                    <label>Name</label>
+                </div>
+                <div class="col-2">
+                    <label>Amount</label>
+                </div>
+                <div class="col-2">
+                    <label>Unit</label>
+                </div>
+            </div>
+
+                {% for i in form.ingredients %}
+                    {{ i.hidden_tag() }}
+
+                    <div class="form-row ingredients-top-margin">
+                        <div class="col-6">
+                            {{ i.title(class_="form-control") }}
+                            {% for error in i.title.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-2">
+                            {{ i.amount(class_="form-control") }}
+                            {% for error in i.amount.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-2">
+                            {{ i.unit(class_="form-control") }}
+                            {% for error in i.unit.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endfor %}
-                {% for error in i.amount.errors %}
-                    [{{ error }}]
-                {% endfor %}
-                {% for error in i.unit.errors %}
-                    [{{ error }}]
-                {% endfor %}
-                <tr>
-                    <td>{{ i.title }}</td>
-                    <td>{{ i.amount }}</td>
-                    <td>{{ i.unit }}</td>
-                </tr>
+
+            {% for error in form.ingredients.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </table>
-        {{ form.add_ingredient }}
-        {{ form.remove_ingredient }}
-        {% for error in form.ingredients.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-        <p>
-            {{ form.link.label }}<br>
-            {{ form.link(size=10) }}<br>
-            {% for error in form.link.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.preparation.label }}<br>
-            {{ form.preparation(size=150) }}<br>
-            {% for error in form.preparation.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+
+            <div class="form-row ingredients-top-margin">
+                <div class="col-12">
+                    {{ form.add_ingredient(class_="btn btn-success") }}
+                    {{ form.remove_ingredient(class_="btn btn-danger") }}
+                </div>
+            </div>
+
+            <div class="form-row header-top-margin">
+                <div class="col-12">
+                    {{ form.link.label }}
+                    {{ form.link(class_="form-control") }}
+                    {% for error in form.link.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-row header-top-margin">
+                <div class="col-12">
+                    {{ form.preparation.label }}
+                    {{ form.preparation(class_="form-control preparation-text-area") }}
+                    {% for error in form.preparation.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-row header-top-margin">
+                {{ form.submit(class_="btn btn-secondary") }}
+            </div>
+        </form>
+    </div>
 {% endblock %}

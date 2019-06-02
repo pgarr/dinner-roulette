@@ -1,3 +1,12 @@
 .header-top-margin {
     margin-top: 25px;
 }
+
+.ingredients-top-margin {
+    margin-top: 2px;
+}
+
+.preparation-text-area {
+    height: 400px;
+}
+
