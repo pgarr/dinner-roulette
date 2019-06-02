@@ -13,7 +13,7 @@ class IngredientForm(FlaskForm):
 
 class RecipeForm(FlaskForm):
     title = StringField('Recipe title', validators=[Length(min=3, max=200)])
-    time = IntegerField('Preparation time', validators=[Optional(), NumberRange(1, 999)])
+    time = IntegerField('Preparation time (minutes)', validators=[Optional(), NumberRange(1, 999)])
     difficulty = IntegerField('Preparation difficulty (1-5)',
                               validators=[Optional(), NumberRange(1, 5)])  # TODO: Powiązać z ładnym selectorem
     # difficulty = SelectField('Preparation difficulty', choices=[(c, c) for c in [1, 2, 3, 4, 5]])
