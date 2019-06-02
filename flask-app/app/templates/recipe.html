@@ -28,10 +28,20 @@
 
         <div class="row">
             <div class=col-1>
-                <p>Time: {{ recipe.time }}'</p>
+                <p>
+                    <i class="fas fa-clock"></i> {{ recipe.time }}'
+                </p>
             </div>
-            <div class=col-2>
-                <p>Difficulty: {{ recipe.difficulty }}</p>
+            <div class=col-3>
+                <p>
+                    Difficulty:
+                    {% for i in range(recipe.difficulty) %}
+                        <i class="fas fa-star"></i>
+                    {% endfor %}
+                    {% for i in range(5-recipe.difficulty) %}
+                        <i class="far fa-star"></i>
+                    {% endfor %}
+                </p>
             </div>
         </div>
 
