@@ -16,9 +16,11 @@
                         <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
                     {% endif %}
                 </div>
+            {% else %}
+                 <div class="col-1"></div>
             {% endif %}
 
-            <div class="col-md-2">
+            <div class="col-md-2 author">
                 <p>Author: {{ recipe.author.username}}</p>
             </div>
         </div>
@@ -27,12 +29,12 @@
         {% endif %}
 
         <div class="row">
-            <div class=col-1>
+            <div class="col-lg-1 col-md-2">
                 <p>
                     <i class="fas fa-clock"></i> {{ recipe.time }}'
                 </p>
             </div>
-            <div class=col-3>
+            <div class="col-lg-3 col-md-4">
                 <p>
                     Difficulty:
                     {% for i in range(recipe.difficulty) %}
