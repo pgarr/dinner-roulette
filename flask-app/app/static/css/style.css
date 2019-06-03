@@ -1,9 +1,38 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.author {
+    text-align: right;
+}
+
+.btn {
+    margin-left: 5px;
+}
+
+.form-check {
+    margin-left: 5px;
+}
+
 .header-top-margin {
     margin-top: 25px;
 }
 
 .ingredients-top-margin {
     margin-top: 2px;
+}
+
+.light-badge {
+    font-weight: lighter;
+    margin-left: 15px;
+}
+
+.navbar {
+    margin-bottom: 4rem;
+}
+
+.navitem {
+    padding: 0 18px;
 }
 
 .preparation-text-area {

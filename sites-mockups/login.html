@@ -3,10 +3,20 @@
 <head>
 
     <title>Sign In - Cookbook</title>
+
+    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="css\styles.css">
 
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/80de793713.js"></script>
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+
+    <!-- Bootstrap scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -19,58 +29,79 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-        <a class="navbar-brand" href="">Cookbook</a>
+            <a class="navbar-brand" href="/index">Cookbook</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerBasic">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerBasic">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarTogglerBasic">
+            <div class="collapse navbar-collapse" id="navbarTogglerBasic">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/new"><i class="fas fa-plus" aria-hidden="true"></i> Add Recipe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Login</a>
+                    </li>
 
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/index">Recipe List</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/new">Add Recipe</a>
-                </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/auth/login">Login</a>
-                </li>
-
-            </ul>
-
+    <div class="container">
+        <div class="row header-top-margin">
+            <div class="col-12">
+                <h1>Sign In</h1>
+            </div>
         </div>
-    </nav>
 
-    <hr>
+        <form action="" method="post" novalidate="">
+            <input id="csrf_token" name="csrf_token" type="hidden"
+                value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPVboQ.O3DryXsLhY5yQHH5AWXx9DWXJQk">
 
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate="">
-        <input id="csrf_token" name="csrf_token" type="hidden"
-            value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPJq-w.01JtU3fYh64uGY9zV7FY7SgQ4fk">
-        <p>
-            <label for="username">Username</label><br>
-            <input id="username" name="username" required="" size="32" type="text" value=""><br>
+            <div class="form-row header-top-margin">
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" required="" size="32" type="text" value=""
+                        class="form-control">
+                    <div>
+                        Cannot be empty
+                    </div>
+                </div>
+            </div>
 
-        </p>
-        <p>
-            <label for="password">Password</label><br>
-            <input id="password" name="password" required="" size="32" type="password" value=""><br>
-        </p>
-        <p><input id="remember_me" name="remember_me" type="checkbox" value="y"> <label for="remember_me">Remember
-                Me</label></p>
-        <p><input id="submit" name="submit" type="submit" value="Sign In"></p>
-    </form>
-    <p>New User? <a href="/auth/register">Click to Register!</a></p>
-    <p>
-        Forgot Your Password?
-        <a href="/auth/reset_password_request">Click to Reset It</a>
-    </p>
+            <div class="form-row header-top-margin">
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <label for="password">Password</label><br>
+                    <input id="password" name="password" required="" size="32" type="password" value=""
+                        class="form-control">
+                    <div>
+                        Cannot be empty
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-check">
+                    <input id="remember_me" name="remember_me" type="checkbox" value="" class="form-check-input">
+                    <label for="remember_me">Remember Me</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <input id="submit" name="submit" type="submit" value="Sign In" class="btn btn-secondary">
+            </div>
+        </form>
+
+        <div class="row header-top-margin">
+            <a href="/auth/register" class="badge badge-secondary light-badge">New User?</a>
+            <a href="/auth/reset_password_request" class="badge badge-secondary light-badge">Forgot Your Password?</a>
+        </div>
+    </div>
 
 </body>
 
