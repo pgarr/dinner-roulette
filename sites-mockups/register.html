@@ -4,10 +4,20 @@
 
     <title>Register - Cookbook</title>
 
+
+    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="css\styles.css">
 
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/80de793713.js"></script>
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+
+    <!-- Bootstrap scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -20,61 +30,78 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-        <a class="navbar-brand" href="">Cookbook</a>
+            <a class="navbar-brand" href="/index">Cookbook</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerBasic">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerBasic">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarTogglerBasic">
+            <div class="collapse navbar-collapse" id="navbarTogglerBasic">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/new"><i class="fas fa-plus" aria-hidden="true"></i> Add Recipe</a>
+                    </li>
 
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/index">Recipe List</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/new">Add Recipe</a>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/auth/login">Login</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">Login</a>
+                    </li>
 
-            </ul>
+                </ul>
+            </div>
+        </nav>
+    </div>
 
+    <div class="container">
+        <div class="row header-top-margin">
+            <div class="col-12">
+                <h1>Register</h1>
+            </div>
         </div>
-    </nav>
 
-    <hr>
+        <form action="" method="post">
+            <input id="csrf_token" name="csrf_token" type="hidden"
+                value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPVoJA.4J5Xn4sv69iyUBv9bCuvRKtcJEQ">
 
-    <h1>Register</h1>
-    <form action="" method="post">
-        <input id="csrf_token" name="csrf_token" type="hidden"
-            value="IjgzNTU0N2UxMjA4NDcxMjBkOTQ0YTg2NzVhM2FkMjk1NmQzMDk2Njci.XPJr1w.6y2cXXjTSW5VDbcZ9luys_Qqu3E">
-        <p>
-            <label for="username">Username</label><br>
-            <input id="username" name="username" required="" size="32" type="text" value=""><br>
+            <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <input id="username" name="username" required="" size="32" type="text" value=""
+                        class="form-control">
+                </div>
+            </div>
 
-        </p>
-        <p>
-            <label for="email">Email</label><br>
-            <input id="email" name="email" required="" size="64" type="text" value=""><br>
-        </p>
-        <p>
-            <label for="password">Password</label><br>
-            <input id="password" name="password" required="" size="32" type="password" value=""><br>
+            <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-lg-8 col-md-10 col-sm-12">
+                    <input id="email" name="email" required="" size="64" type="text" value="" class="form-control">
+                </div>
+            </div>
 
-        </p>
-        <p>
-            <label for="password2">Repeat Password</label><br>
-            <input id="password2" name="password2" required="" size="32" type="password" value=""><br>
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <input id="password" name="password" required="" size="32" type="password" value=""
+                        class="form-control">
+                </div>
+            </div>
 
-        </p>
-        <p><input id="submit" name="submit" type="submit" value="Register"></p>
-    </form>
+            <div class="form-group row">
+                <label for="password2" class="col-sm-2 col-form-label">Repeat Password</label>
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <input id="password2" name="password2" required="" size="32" type="password" value=""
+                        class="form-control">
+                </div>
+            </div>
 
+            <div class="form-row  header-top-margin">
+                <input id="submit" name="submit" type="submit" value="Register" class="btn btn-secondary">
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>
