@@ -1,57 +1,89 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>{{ recipe.title }}</h2>
-    {% if waiting %}
-        {% if current_user == recipe.author or current_user.admin %}
-            <a href="{{ url_for('main.edit_waiting', pk=recipe.id) }}">Edit</a>
-        {% endif %}
-        {% if current_user.admin %}
+    <div class="container">
+        <div class="row header-top-margin">
+
+            <div class="col-md-9 col-sm-11">
+                <h2>{{ recipe.title }}</h2>
+            </div>
+
+            {% if current_user == recipe.author or current_user.admin %}
+                <div class="col-1">
+                    {% if waiting %}
+                        <a href="{{ url_for('main.edit_waiting', pk=recipe.id) }}">Edit</a>
+                    {% else %}
+                        <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                 <div class="col-1"></div>
+            {% endif %}
+
+            <div class="col-md-2 author">
+                <p>Author: {{ recipe.author.username}}</p>
+            </div>
+        </div>
+        {% if waiting and current_user.admin %}
             <a href="{{ url_for('main.accept', pk=recipe.id) }}">Accept</a>
         {% endif %}
-    {% else %}
-        {% if current_user == recipe.author or current_user.admin %}
-            <a href="{{ url_for('main.edit', pk=recipe.id) }}">Edit</a>
-        {% endif %}
-    {% endif %}
 
-    <h3>Time</h3>
-    <p>{{ recipe.time }}</p>
+        <div class="row">
+            <div class="col-lg-1 col-md-2">
+                <p>
+                    <i class="fas fa-clock"></i> {{ recipe.time }}'
+                </p>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <p>
+                    Difficulty:
+                    {% for i in range(recipe.difficulty) %}
+                        <i class="fas fa-star"></i>
+                    {% endfor %}
+                    {% for i in range(5-recipe.difficulty) %}
+                        <i class="far fa-star"></i>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
 
-    <h3>Difficulty</h3>
-    <p>{{ recipe.difficulty }}</p>
+        <div class="row">
 
-    <h3>Ingredients</h3>
-    <table>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Amount
-            </th>
-            <th>
-                Unit
-            </th>
-        </tr>
-        {% for ingredient in recipe.ingredients %}
-            <tr>
-                <td>
-                    {{ ingredient.title }}
-                </td>
-                <td>
-                    {{ ingredient.amount }}
-                </td>
-                <td>
-                    {{ ingredient.unit }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <h3>Ingredients</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Name
+                            </th>
+                            <th scope="col">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ingredient in recipe.ingredients %}
+                            <tr>
+                                <th scope="row">
+                                    {{ ingredient.title }}
+                                </th>
+                                <td>
+                                    {{ ingredient.amount }} {{ ingredient.unit }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <h3>Preparation</h3>
-    <p>{{ recipe.preparation }}</p>
-
-    <h3>Source</h3>
-    <a href="{{ recipe.link }}">{{ recipe.link }}</a>
+            <div class="col-lg-8 col-md-6">
+                <h3>Preparation</h3>
+                <p>{{ recipe.preparation }}</p>
+                {% if recipe.link %}
+                    <a href="{{ recipe.link }}">source</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
