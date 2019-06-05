@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-06-04 19:00+0200\n"
+"POT-Creation-Date: 2019-06-05 20:21+0200\n"
 "PO-Revision-Date: 2019-06-04 19:02+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pl\n"
@@ -21,153 +21,260 @@ msgstr ""
 
 #: app/__init__.py:18
 msgid "Please log in to access this page."
-msgstr ""
+msgstr "Zaloguj się, by mieć dostęp do tej strony."
 
 #: app/auth/email.py:9
 msgid "[Dinner-roulette] Reset Your Password"
-msgstr ""
+msgstr "[Dinner-roulette] Zresetuj swoje hasło"
 
 #: app/auth/forms.py:10 app/auth/forms.py:17
 msgid "Username"
-msgstr ""
+msgstr "Nazwa użytkownika"
 
 #: app/auth/forms.py:11 app/auth/forms.py:19 app/auth/forms.py:40
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: app/auth/forms.py:12
 msgid "Remember Me"
-msgstr ""
+msgstr "Zapamiętaj mnie"
 
-#: app/auth/forms.py:13 app/auth/routes.py:29
+#: app/auth/forms.py:13 app/auth/routes.py:29 app/templates/auth/login.html:7
 msgid "Sign In"
-msgstr ""
+msgstr "Zaloguj się"
 
 #: app/auth/forms.py:18 app/auth/forms.py:35
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: app/auth/forms.py:20 app/auth/forms.py:41
 msgid "Repeat Password"
-msgstr ""
+msgstr "Powtórz hasło"
 
 #: app/auth/forms.py:21 app/auth/routes.py:50
+#: app/templates/auth/register.html:7
 msgid "Register"
-msgstr ""
+msgstr "Zarejestruj się"
 
 #: app/auth/forms.py:26 app/auth/forms.py:31
 msgid "Please use a different email address."
-msgstr ""
+msgstr "Użyj innego adresu e-mail"
 
 #: app/auth/forms.py:36 app/auth/forms.py:42
 msgid "Request Password Reset"
-msgstr ""
+msgstr "Zażądaj zresetowania hasła"
 
 #: app/auth/routes.py:16
 msgid "You are already logged in!"
-msgstr ""
+msgstr "Jesteś już zalogowany!"
 
 #: app/auth/routes.py:22
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Błędna nazwa użytkownika lub hasło"
 
 #: app/auth/routes.py:48
 msgid "Congratulations, you are now a registered user!"
-msgstr ""
+msgstr "Gratulacje, jesteś teraz zarejestrowanym użytkownikiem!"
 
 #: app/auth/routes.py:62
 msgid "Check your email for the instructions to reset your password"
-msgstr ""
+msgstr "Sprawdź swoją skrzynkę e-mail, aby zresetować hasło"
 
-#: app/auth/routes.py:65
+#: app/auth/routes.py:65 app/templates/auth/reset_password_request.html:7
 msgid "Reset Password"
-msgstr ""
+msgstr "Zresetuj hasło"
 
 #: app/auth/routes.py:79
 msgid "Your password has been reset."
-msgstr ""
+msgstr "Twoje hasło zostało zresetowane"
 
 #: app/main/forms.py:9
 msgid "Ingredient name"
-msgstr ""
+msgstr "Składnik"
 
 #: app/main/forms.py:10
 msgid "Ingredient amount"
-msgstr ""
+msgstr "Ilość"
 
 #: app/main/forms.py:11
 msgid "Ingredient unit"
-msgstr ""
+msgstr "Jednostka"
 
 #: app/main/forms.py:16
 msgid "Recipe title"
-msgstr ""
+msgstr "Nazwa przepisu"
 
 #: app/main/forms.py:17
 msgid "Preparation time (minutes)"
-msgstr ""
+msgstr "Czas przygotowania (minuty)"
 
 #: app/main/forms.py:18
 msgid "Preparation difficulty (1-5)"
-msgstr ""
+msgstr "Trudność przygotowania (1-5)"
 
 #: app/main/forms.py:21
 msgid "Website"
-msgstr ""
+msgstr "Strona internetowa"
 
-#: app/main/forms.py:22
+#: app/main/forms.py:22 app/templates/recipe.html:81
 msgid "Preparation"
-msgstr ""
+msgstr "Przygotowanie"
 
 #: app/main/forms.py:26
 msgid "Submit"
-msgstr ""
+msgstr "Zatwierdź"
 
 #: app/main/routes.py:15
 msgid "Home Page"
-msgstr ""
+msgstr "Strona domowa"
 
 #: app/main/routes.py:29
 msgid "This recipe is pending approval by the administrator."
-msgstr ""
+msgstr "Ten przepis oczekuje na zatwierdzenie przez administratora."
 
 #: app/main/routes.py:39
 msgid "Waiting Recipes"
-msgstr ""
+msgstr "Oczekujące przepisy"
 
 #: app/main/routes.py:48
 msgid "Recipe accepted!"
-msgstr ""
+msgstr "Przepis zaakceptowany!"
 
 #: app/main/routes.py:65
 msgid "Recipe added!"
-msgstr ""
+msgstr "Przepis dodany!"
 
 #: app/main/routes.py:66
 msgid "Recipe will be seen for other users after administrator acceptance."
 msgstr ""
+"Przepis będzie widoczny dla innych użytkowników po zatwierdzeniu przez "
+"administratora."
 
 #: app/main/routes.py:68
 msgid "New Recipe"
-msgstr ""
+msgstr "Nowy przepis"
 
 #: app/main/routes.py:77
 msgid "Recipe already has changes waiting for acceptance!"
-msgstr ""
+msgstr "Przepis ma już zmiany oczekujące na zatwierdzenie!"
 
 #: app/main/routes.py:88
 msgid "Recipe updated!"
-msgstr ""
+msgstr "Przepis zaktualizowany!"
 
 #: app/main/routes.py:89
 msgid "Changes will be seen for other users after administrator acceptance."
 msgstr ""
+"Zmiany będą widoczne dla innych użytkowników po zatwierdzeniu przez "
+"administratora."
 
 #: app/main/routes.py:91 app/main/routes.py:110
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Edytuj przepis"
 
 #: app/main/routes.py:108
 msgid "Pending changes saved!"
+msgstr "Oczekujące zmiany zostały zaktualizowane!"
+
+#: app/templates/base.html:6
+msgid "Welcome to Cookbook"
 msgstr ""
+
+#: app/templates/base.html:38
+msgid "Add Recipe"
+msgstr "Dodaj przepis"
+
+#: app/templates/base.html:43
+msgid "Login"
+msgstr "Zaloguj się"
+
+#: app/templates/base.html:52
+msgid "Pending recipes"
+msgstr "Oczekujące przepisy"
+
+#: app/templates/base.html:54
+msgid "Logout"
+msgstr "Wyloguj się"
+
+#: app/templates/index.html:12 app/templates/new-recipe.html:51
+#: app/templates/recipe.html:58
+msgid "Name"
+msgstr "Nazwa"
+
+#: app/templates/index.html:15
+msgid "Time"
+msgstr "Czas"
+
+#: app/templates/index.html:18
+msgid "Difficulty"
+msgstr "Trudność"
+
+#: app/templates/index.html:21
+msgid "Attributes"
+msgstr "Cechy"
+
+#: app/templates/new-recipe.html:45 app/templates/recipe.html:53
+msgid "Ingredients"
+msgstr "Składniki"
+
+#: app/templates/new-recipe.html:54 app/templates/recipe.html:61
+msgid "Amount"
+msgstr "Ilość"
+
+#: app/templates/new-recipe.html:57
+msgid "Unit"
+msgstr "Jednostka"
+
+#: app/templates/recipe.html:14 app/templates/recipe.html:16
+msgid "Edit"
+msgstr "Edytuj"
+
+#: app/templates/recipe.html:24
+msgid "Author:"
+msgstr "Autor:"
+
+#: app/templates/recipe.html:28
+msgid "Accept"
+msgstr "Akceptuj"
+
+#: app/templates/recipe.html:39
+msgid "Difficulty:"
+msgstr "Trudność:"
+
+#: app/templates/recipe.html:84
+msgid "source"
+msgstr "źródło"
+
+#: app/templates/auth/login.html:47
+msgid "New User?"
+msgstr "Nowy użytkownik?"
+
+#: app/templates/auth/login.html:48
+msgid "Forgot Your Password?"
+msgstr "Zapomniałeś hasła?"
+
+#: app/templates/auth/reset_password.html:7
+msgid "Reset Your Password"
+msgstr "Zresetuj swoje hasło"
+
+#: app/templates/errors/401.html:5
+msgid "You are not allowed to do this"
+msgstr "Nie masz uprawnień, by to zrobić"
+
+#: app/templates/errors/401.html:6 app/templates/errors/404.html:6
+#: app/templates/errors/500.html:7
+msgid "Back"
+msgstr "Wstecz"
+
+#: app/templates/errors/404.html:5
+msgid "File Not Found"
+msgstr "Nie odnaleziono pliku"
+
+#: app/templates/errors/500.html:5
+msgid "An unexpected error has occurred"
+msgstr "Wystąpił nieoczekiwany błąd"
+
+#: app/templates/errors/500.html:6
+msgid "The administrator has been notified. Sorry for the inconvenience!"
+msgstr "Administrator został powiadomiony. Przepraszamy za niedogodności!"
 
