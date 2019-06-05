@@ -4,14 +4,14 @@
     <div class="container">
         <div class="row header-top-margin">
             <div class="col-12">
-                <h1>Register</h1>
+                <h1>{{ _('Register') }}</h1>
             </div>
         </div>
 
         <form action="" method="post">
             {{ form.hidden_tag() }}
 
-            <div class="form-group row">
+            <div class="form-group row header-top-margin">
                 {{ form.username.label(class_="col-sm-2 col-form-label") }}
                 <div class="col-lg-4 col-md-8 col-sm-12">
                     {{ form.username(class_="form-control") }}

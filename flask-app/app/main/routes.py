@@ -5,13 +5,14 @@ from app.main import bp
 from app.main.forms import RecipeForm
 from app.services import init_waiting_recipe, get_recipe, save_recipe, get_all_recipes, get_waiting_recipe, \
     clone_recipe_to_waiting, get_all_waiting_recipes, accept_waiting
+from flask_babel import _
 
 
 @bp.route('/')
 @bp.route('/index')
 def index():
     recipes_models = get_all_recipes()
-    return render_template('index.html', title='Home Page', recipes=recipes_models)
+    return render_template('index.html', title=_('Home Page'), recipes=recipes_models)
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
@@ -25,7 +26,7 @@ def get(pk):
 def get_waiting(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
-        flash('This recipe is pending approval by the administrator.')
+        flash(_('This recipe is pending approval by the administrator.'))
         return render_template('recipe.html', title=waiting_model.title, recipe=waiting_model, waiting=True)
     else:
         abort(401)
@@ -35,7 +36,7 @@ def get_waiting(pk):
 @login_required
 def get_waiting_list():
     waitings_models = get_all_waiting_recipes(user=current_user)
-    return render_template('index.html', title='Waiting Recipes', recipes=waitings_models, waiting=True)
+    return render_template('index.html', title=_('Waiting Recipes'), recipes=waitings_models, waiting=True)
 
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
@@ -44,7 +45,7 @@ def accept(pk):
     if current_user.admin:
         waiting_model = get_waiting_recipe(pk)
         recipe_model = accept_waiting(waiting_model)
-        flash('Recipe accepted!')
+        flash(_('Recipe accepted!'))
         return redirect(url_for('.get', pk=recipe_model.id))
     else:
         abort(401)
@@ -61,10 +62,10 @@ def new():
         form.ingredients.pop_entry()
     elif form.submit.data and form.validate_on_submit():
         save_recipe_from_form(form, waiting_model)
-        flash('Recipe added!')
-        flash('Recipe will be seen for other users after administrator acceptance.')
+        flash(_('Recipe added!'))
+        flash(_('Recipe will be seen for other users after administrator acceptance.'))
         return redirect(url_for('.get_waiting', pk=waiting_model.id))
-    return render_template('new-recipe.html', title='New Recipe', form=form)
+    return render_template('new-recipe.html', title=_('New Recipe'), form=form)
 
 
 @bp.route('/edit/<int:pk>', methods=['GET', 'POST'])
@@ -73,7 +74,7 @@ def edit(pk):
     recipe_model = get_recipe(pk)
     if current_user == recipe_model.author or current_user.admin:
         if recipe_model.waiting_updates:
-            flash('Recipe already has changes waiting for acceptance!')
+            flash(_('Recipe already has changes waiting for acceptance!'))
             return redirect(url_for('.edit_waiting', pk=recipe_model.waiting_updates.id))
         else:
             waiting_model = clone_recipe_to_waiting(recipe_model)
@@ -84,10 +85,10 @@ def edit(pk):
             form.ingredients.pop_entry()
         elif form.submit.data and form.validate_on_submit():
             save_recipe_from_form(form, waiting_model)
-            flash('Recipe updated!')
-            flash('Changes will be seen for other users after administrator acceptance.')
+            flash(_('Recipe updated!'))
+            flash(_('Changes will be seen for other users after administrator acceptance.'))
             return redirect(url_for('.get_waiting', pk=waiting_model.id))
-        return render_template('new-recipe.html', title='Edit Recipe', form=form)
+        return render_template('new-recipe.html', title=_('Edit Recipe'), form=form)
     else:
         abort(401)
 
@@ -104,9 +105,9 @@ def edit_waiting(pk):
             form.ingredients.pop_entry()
         elif form.submit.data and form.validate_on_submit():
             save_recipe_from_form(form, waiting_model)
-            flash('Pending changes saved!')
+            flash(_('Pending changes saved!'))
             return redirect(url_for('.get_waiting', pk=waiting_model.id))
-        return render_template('new-recipe.html', title='Edit Recipe', form=form)
+        return render_template('new-recipe.html', title=_('Edit Recipe'), form=form)
     else:
         abort(401)
 
