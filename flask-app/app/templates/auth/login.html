@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row header-top-margin">
             <div class="col-12">
-                <h1>Sign In</h1>
+                <h1>{{ _('Sign In') }}</h1>
             </div>
         </div>
 
@@ -44,8 +44,8 @@
         </form>
 
         <div class="row header-top-margin">
-            <a href="{{ url_for('auth.register') }}" class="badge badge-secondary light-badge">{{ _(New User?) }}</a>
-            <a href="{{ url_for('auth.reset_password_request') }}" class="badge badge-secondary light-badge">{{ _(Forgot Your Password?) }}</a>
+            <a href="{{ url_for('auth.register') }}" class="badge badge-secondary light-badge">{{ _('New User?') }}</a>
+            <a href="{{ url_for('auth.reset_password_request') }}" class="badge badge-secondary light-badge">{{ _('Forgot Your Password?') }}</a>
         </div>
     </div>
 {% endblock %}
