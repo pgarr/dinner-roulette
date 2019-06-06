@@ -17,3 +17,4 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = [os.environ.get('MAIL_ADDRESS')]
     LANGUAGES = ['en', 'pl']
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
