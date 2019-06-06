@@ -18,3 +18,4 @@ class Config:
     ADMINS = [os.environ.get('MAIL_ADDRESS')]
     LANGUAGES = ['en', 'pl']
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
+    APP_ADMINS = os.environ.get('APP_ADMINS').split(",")

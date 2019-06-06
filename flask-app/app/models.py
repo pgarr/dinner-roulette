@@ -18,6 +18,10 @@ class User(UserMixin, db.Model):
     admin = db.Column(db.Boolean, default=False)
     password_hash = db.Column(db.String(128))
 
+    @property
+    def admin(self):
+        return self.username in current_app.config['APP_ADMINS']
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -45,13 +49,6 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id_):
     return User.query.get(int(id_))
-
-
-def set_admin(name):
-    user = User.query.filter(User.username == name)
-    user.admin = True
-    db.session.add(user)
-    db.session.commit()
 
 
 class IngredientMixin(object):
