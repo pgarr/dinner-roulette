@@ -85,10 +85,6 @@
                     </div>
                 {% endfor %}
 
-            {% for error in form.ingredients.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-
             <div class="form-row ingredients-top-margin">
                 <div class="col-12">
                     {{ form.add_ingredient(class_="btn btn-success") }}
