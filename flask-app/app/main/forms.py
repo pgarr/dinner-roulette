@@ -7,7 +7,7 @@ from wtforms.validators import URL, NumberRange, Optional, Length
 
 class IngredientForm(FlaskForm):
     title = StringField(_l('Ingredient name'), validators=[Optional(), Length(max=100)])
-    amount = FloatField(_l('Ingredient amount'), validators=[Optional(), NumberRange(1, 999)])
+    amount = FloatField(_l('Ingredient amount'), validators=[Optional(), NumberRange(0, 999)])
     unit = StringField(_l('Ingredient unit'),
                        validators=[Optional(), Length(max=20)])  # TODO: w formularzu dać podpowiedzi z istniejących
 
