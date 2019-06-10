@@ -69,7 +69,9 @@
                                     {{ ingredient.title }}
                                 </th>
                                 <td>
-                                    {{ ingredient.amount }} {{ ingredient.unit }}
+                                    {% if ingredient.amount %}
+                                        {{ (ingredient.amount|round(1)|string).rstrip('0').rstrip('.') }} {{ ingredient.unit }}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
