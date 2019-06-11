@@ -14,7 +14,7 @@ db.session.add(user)
 user2 = User(username="test2", email="test2@test.com")
 user2.set_password("test")
 db.session.add(user2)
-admin = User(username="admin", email="admin@test.com", admin=True)
+admin = User(username="admin", email="admin@test.com")
 admin.set_password("admin")
 db.session.add(admin)
 
