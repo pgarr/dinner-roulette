@@ -4,7 +4,6 @@ from flask_jwt import jwt_required, current_identity
 from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
-from app.models import RecipeIngredient
 from app.services import get_recipe, save_recipe, init_waiting_recipe, get_all_recipes, get_waiting_recipe, \
     get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting
 
