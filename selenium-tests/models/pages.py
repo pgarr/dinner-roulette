@@ -1,7 +1,8 @@
 from selenium.common.exceptions import NoSuchElementException
 
+from models.objects import RecipeRow, IngredientRow
 from utils.errors import NotLoggedInError, UserLoggedInError
-from models.locators import BasePageLocators, LoginPageLocators
+from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators
 
 
 class BasePage:
@@ -9,10 +10,11 @@ class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
+        self._url = 'http://127.0.0.1:5000'
 
     @property
     def url(self):
-        return 'http://127.0.0.1:5000'
+        return self._url
 
     @property
     def title(self):
@@ -80,6 +82,22 @@ class HomePage(BasePage):
     def url(self):
         return super().url + '/index'
 
+    @property
+    def recipes(self):
+        rows_container = self.driver.find_element(*HomePageLocators.RECIPES_LIST)
+        rows = rows_container.find_elements(*HomePageLocators.RECIPE_ROW)
+        recipes = []
+        for row in rows:
+            recipes.append(RecipeRow(row))
+        return recipes
+
+
+class WaitingRecipesPage(HomePage):
+
+    @property
+    def url(self):
+        return self._url + '/waiting'
+
 
 class LoginPage(BasePage):
 
@@ -116,3 +134,65 @@ class LoginPage(BasePage):
         self.password_field.send_keys(password)
         self.submit_button.click()
         return HomePage(self.driver)
+
+
+class RecipePage(BasePage):
+
+    @property
+    def url(self):
+        return super().url + '/recipe/id'  # TODO: numer
+
+    @property
+    def recipe_title(self):
+        return self.driver.find_element(*RecipePageLocators.TITLE_HEADER).text
+
+    @property
+    def author_name(self):
+        text = self.driver.find_element(*RecipePageLocators.AUTHOR_NAME_PTAG).text
+        return text.replace('Author: ', '')
+
+    @property
+    def preparation_time(self):
+        text = self.driver.find_element(*RecipePageLocators.TIME_PTAG).text
+        return int(text.replace("'", ''))
+
+    @property
+    def difficulty(self):
+        return len(self.driver.find_elements(*RecipePageLocators.DIFFICULTY_STAR))
+
+    @property
+    def preparation(self):
+        return self.driver.find_element(*RecipePageLocators.PREPARATION_PTAG).text
+
+    @property
+    def ingredients(self):
+        rows_container = self.driver.find_element(*RecipePageLocators.INGREDIENTS_LIST)
+        rows = rows_container.find_elements(*RecipePageLocators.INGREDIENT_ROW)
+        ingredients = []
+        for row in rows:
+            ingredients.append(IngredientRow(row))
+        return ingredients
+
+    @property
+    def edit_link(self):
+        return self.driver.find_element(*RecipePageLocators.EDIT_LINK)
+
+    @property
+    def source_link(self):
+        return self.driver.find_element(*RecipePageLocators.SOURCE_LINK)
+
+
+class WaitingRecipePage(RecipePage):
+    pass
+
+
+class NewRecipePage(BasePage):
+    pass
+
+
+class EditRecipePage(BasePage):
+    pass
+
+
+class EditWaitingRecipePage(EditRecipePage):
+    pass
