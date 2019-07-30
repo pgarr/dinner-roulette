@@ -2,7 +2,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from models.pages import HomePage
-from suites.test_basic.base_test import BaseTest
+from suites.base_test import BaseTest
 
 
 class LoggingUserTest(BaseTest):
