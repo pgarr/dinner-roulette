@@ -1,8 +1,9 @@
+import re
+
 from selenium.common.exceptions import NoSuchElementException
 
-from models.objects import RecipeRow, IngredientRow
-from utils.errors import NotLoggedInError, UserLoggedInError
 from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators
+from utils.errors import NotLoggedInError, UserLoggedInError
 
 
 class BasePage:
@@ -77,6 +78,23 @@ class BasePage:
 
 
 class HomePage(BasePage):
+    class RecipeRow:
+        def __init__(self, row):
+            self._row = row
+            self.index = int(self._row.find_element(*HomePageLocators.RECIPE_INDEX_CELL).text)
+            self._tds = self._row.find_elements(
+                *HomePageLocators.ROW_CELLS)  # TODO: remove and change childs do css selector
+            self.link = self._tds[0].find_element(*HomePageLocators.RECIPE_LINK)
+            self.time = int(self._tds[1].text.replace("'", ""))
+            self.difficulty = len(self._tds[2].find_elements(*HomePageLocators.DIFFICULTY_STAR))
+            self.name = self.link.text
+
+        def go_to_details(self):
+            self.link.click()
+
+        def __repr__(self):
+            return "RecipeRow: id: %d, name: %s, time: %d, difficulty: %d" % (
+                self.index, self.name, self.time, self.difficulty)
 
     @property
     def url(self):
@@ -88,7 +106,7 @@ class HomePage(BasePage):
         rows = rows_container.find_elements(*HomePageLocators.RECIPE_ROW)
         recipes = []
         for row in rows:
-            recipes.append(RecipeRow(row))
+            recipes.append(self.RecipeRow(row))
         return recipes
 
 
@@ -137,6 +155,19 @@ class LoginPage(BasePage):
 
 
 class RecipePage(BasePage):
+    class IngredientRow:
+        def __init__(self, row):
+            self._row = row
+            self.name = self._row.find_element_by_tag_name(*RecipePageLocators.INGREDIENT_NAME).text
+            self.amount, self.unit = self._decode_amount()
+
+        def _decode_amount(self):
+            text = self._row.find_element_by_tag_name(*RecipePageLocators.INGREDIENT_AMOUNT).text
+            match = re.match(r'(?P<amount>\d*) ?(?P<unit>[a-zA-Z]*)', text)
+            return int(match.group('amount')), match.group('unit')
+
+        def __repr__(self):
+            return "IngredientRow: name: %s, amount: %d, unit: %s" % (self.name, self.amount, self.unit)
 
     @property
     def url(self):
@@ -170,7 +201,7 @@ class RecipePage(BasePage):
         rows = rows_container.find_elements(*RecipePageLocators.INGREDIENT_ROW)
         ingredients = []
         for row in rows:
-            ingredients.append(IngredientRow(row))
+            ingredients.append(self.IngredientRow(row))
         return ingredients
 
     @property
@@ -180,6 +211,10 @@ class RecipePage(BasePage):
     @property
     def source_link(self):
         return self.driver.find_element(*RecipePageLocators.SOURCE_LINK)
+
+    def edit(self):
+        self.edit_link.click()
+        return EditRecipePage(self.driver)
 
 
 class WaitingRecipePage(RecipePage):

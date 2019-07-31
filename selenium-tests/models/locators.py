@@ -18,6 +18,10 @@ class BasePageLocators:
 class HomePageLocators:
     RECIPES_LIST = (By.TAG_NAME, 'tbody')
     RECIPE_ROW = (By.TAG_NAME, 'tr')
+    ROW_CELLS = (By.TAG_NAME, 'td')  # inside RECIPE_ROW
+    DIFFICULTY_STAR = (By.CSS_SELECTOR, '.fas.fa-star')  # in ROW_CELLS
+    RECIPE_LINK =(By.TAG_NAME, 'a')  # inside ROW_CELLS
+    RECIPE_INDEX_CELL=(By.TAG_NAME, 'th')  # inside ROW_CELLS
 
 
 class LoginPageLocators:
@@ -37,5 +41,7 @@ class RecipePageLocators:
     DIFFICULTY_STAR = (By.CSS_SELECTOR, '.fas.fa-star')
     INGREDIENTS_LIST = (By.TAG_NAME, 'tbody')
     INGREDIENT_ROW = (By.TAG_NAME, 'tr')
+    INGREDIENT_NAME = (By.TAG_NAME, 'th')  # inside INGREDIENT_ROW
+    INGREDIENT_AMOUNT = (By.TAG_NAME, 'td')  # inside INGREDIENT_ROW
     PREPARATION_PTAG = (By.XPATH, '/html/body/div[2]/div[3]/div[2]/p')
     SOURCE_LINK = (By.CSS_SELECTOR, 'a:contains("source")')
