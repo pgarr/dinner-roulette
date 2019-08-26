@@ -1,5 +1,7 @@
+import os
 from unittest import TestCase
 
+from dotenv import load_dotenv
 from selenium import webdriver
 
 from utils.aut import Aut
@@ -7,6 +9,8 @@ from utils.aut import Aut
 
 class BaseTest(TestCase):
     def setUp(self):
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        load_dotenv(os.path.join(basedir, '.env'))
         # run aut
         self.aut = Aut()
         self.aut.run(10)

@@ -1,3 +1,4 @@
+import os
 import re
 
 from selenium.common.exceptions import NoSuchElementException
@@ -11,7 +12,7 @@ class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
-        self._url = 'http://127.0.0.1:5000'
+        self._url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
 
     @property
     def url(self):

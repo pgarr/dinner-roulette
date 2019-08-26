@@ -1,3 +1,5 @@
+import os
+
 from app import create_app, db
 from app.models import User
 from tests.test_config import TestConfig
@@ -20,4 +22,4 @@ db.session.add(admin)
 
 db.session.commit()
 
-app.run(port=5000, debug=False)
+app.run(port=os.environ.get('AUT_PORT'), debug=False)

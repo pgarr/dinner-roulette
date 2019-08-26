@@ -1,5 +1,5 @@
 from models.pages import HomePage
-from suites.base_test import BaseTest
+from base_test import BaseTest
 
 
 class RecipesListTest(BaseTest):

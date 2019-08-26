@@ -1,3 +1,4 @@
+import os
 import subprocess
 import time
 
@@ -6,9 +7,9 @@ import requests
 
 class Aut:
     def __init__(self):
-        self.python = 'D:\\pgarr\\Documents\\projects\\dinner-roulette\\flask-app\\venv\\Scripts\\python.exe'
-        self.runner = 'D:\\pgarr\\Documents\\projects\\dinner-roulette\\flask-app\\run_test_app.py'
-        self.url = 'http://127.0.0.1:5000'
+        self.python = os.environ.get('PYTHON_AUT_DIR')
+        self.runner = os.environ.get('AUT_DIR')
+        self.url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
         self.process = None
 
     def run(self, timeout=30):
