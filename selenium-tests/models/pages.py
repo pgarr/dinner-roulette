@@ -83,7 +83,7 @@ class HomePage(BasePage):
             self._row = row
             self.index = int(self._row.find_element(*HomePageLocators.RECIPE_INDEX_CELL).text)
             self._tds = self._row.find_elements(
-                *HomePageLocators.ROW_CELLS)  # TODO: remove and change childs do css selector
+                *HomePageLocators.ROW_CELLS)  # TODO: remove and change childs to css selector
             self.link = self._tds[0].find_element(*HomePageLocators.RECIPE_LINK)
             self.time = int(self._tds[1].text.replace("'", ""))
             self.difficulty = len(self._tds[2].find_elements(*HomePageLocators.DIFFICULTY_STAR))
