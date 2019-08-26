@@ -1,6 +1,6 @@
 from app import create_app, db
 from app.models import User
-from tests.base_test import TestConfig
+from tests.test_config import TestConfig
 
 app = create_app(TestConfig)
 db.session.remove()
