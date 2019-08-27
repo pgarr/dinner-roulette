@@ -3,7 +3,9 @@ import re
 
 from selenium.common.exceptions import NoSuchElementException
 
-from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators
+from models.elements import TextFieldElement
+from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators, \
+    WaitingRecipePageLocators, NewRecipePageLocators
 from utils.errors import NotLoggedInError, UserLoggedInError
 
 
@@ -78,13 +80,19 @@ class BasePage:
         return HomePage(self.driver)
 
 
+class BasePageUrlRegex(BasePage):
+
+    def is_url_correct(self):
+        match = re.match(self.url, self.driver.current_url)
+        return True if match else False
+
+
 class HomePage(BasePage):
     class RecipeRow:
         def __init__(self, row):
             self._row = row
             self.index = int(self._row.find_element(*HomePageLocators.RECIPE_INDEX_CELL).text)
-            self._tds = self._row.find_elements(
-                *HomePageLocators.ROW_CELLS)  # TODO: remove and change childs to css selector
+            self._tds = self._row.find_elements(*HomePageLocators.ROW_CELLS)
             self.link = self._tds[0].find_element(*HomePageLocators.RECIPE_LINK)
             self.time = int(self._tds[1].text.replace("'", ""))
             self.difficulty = len(self._tds[2].find_elements(*HomePageLocators.DIFFICULTY_STAR))
@@ -99,12 +107,11 @@ class HomePage(BasePage):
 
     @property
     def url(self):
-        return super().url + '/index'
+        return self._url + '/index'
 
     @property
     def recipes(self):
-        rows_container = self.driver.find_element(*HomePageLocators.RECIPES_LIST)
-        rows = rows_container.find_elements(*HomePageLocators.RECIPE_ROW)
+        rows = self.driver.find_elements(*HomePageLocators.RECIPE_ROW)
         recipes = []
         for row in rows:
             recipes.append(self.RecipeRow(row))
@@ -122,7 +129,7 @@ class LoginPage(BasePage):
 
     @property
     def url(self):
-        return super().url + '/auth/login'
+        return self._url + '/auth/login'
 
     @property
     def username_field(self):
@@ -155,15 +162,15 @@ class LoginPage(BasePage):
         return HomePage(self.driver)
 
 
-class RecipePage(BasePage):
+class RecipePage(BasePageUrlRegex):
     class IngredientRow:
         def __init__(self, row):
             self._row = row
-            self.name = self._row.find_element_by_tag_name(*RecipePageLocators.INGREDIENT_NAME).text
+            self.name = self._row.find_element(*RecipePageLocators.INGREDIENT_NAME).text
             self.amount, self.unit = self._decode_amount()
 
         def _decode_amount(self):
-            text = self._row.find_element_by_tag_name(*RecipePageLocators.INGREDIENT_AMOUNT).text
+            text = self._row.find_element(*RecipePageLocators.INGREDIENT_AMOUNT).text
             match = re.match(r'(?P<amount>\d*) ?(?P<unit>[a-zA-Z]*)', text)
             return int(match.group('amount')), match.group('unit')
 
@@ -172,7 +179,7 @@ class RecipePage(BasePage):
 
     @property
     def url(self):
-        return super().url + '/recipe/id'  # TODO: numer
+        return self._url + '/recipe/(?P<id>\d+)'
 
     @property
     def recipe_title(self):
@@ -198,8 +205,7 @@ class RecipePage(BasePage):
 
     @property
     def ingredients(self):
-        rows_container = self.driver.find_element(*RecipePageLocators.INGREDIENTS_LIST)
-        rows = rows_container.find_elements(*RecipePageLocators.INGREDIENT_ROW)
+        rows = self.driver.find_elements(*RecipePageLocators.INGREDIENT_ROW)
         ingredients = []
         for row in rows:
             ingredients.append(self.IngredientRow(row))
@@ -219,16 +225,92 @@ class RecipePage(BasePage):
 
 
 class WaitingRecipePage(RecipePage):
-    pass
+
+    @property
+    def url(self):
+        return self._url + '/waiting/(?P<id>\d+)'
+
+    @property
+    def accept_link(self):
+        return self.driver.find_element(*WaitingRecipePageLocators.ACCEPT_LINK)
+
+    def accept(self):
+        self.accept_link.click()
+        return RecipePage(self.driver)
 
 
 class NewRecipePage(BasePage):
-    pass
+    class IngredientRow:
+        def __init__(self, driver, row_id):
+            self.name = TextFieldElement(driver,
+                                         self._make_locator(row_id, *NewRecipePageLocators.INGREDIENT_NAME_FIELD))
+            self.amount = TextFieldElement(driver,
+                                           self._make_locator(row_id, *NewRecipePageLocators.INGREDIENT_AMOUNT_FIELD))
+            self.unit = TextFieldElement(driver,
+                                         self._make_locator(row_id, *NewRecipePageLocators.INGREDIENT_UNIT_FIELD))
+
+        def _make_locator(self, row_id, method, text):
+            numbered_text = text % row_id
+            return method, numbered_text
+
+        def __repr__(self):
+            return "IngredientRow: name: %s, amount: %d, unit: %s" % (self.name, self.amount, self.unit)
+
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.name = TextFieldElement(self.driver, NewRecipePageLocators.NAME_TEXT_FIELD)
+        self.time = TextFieldElement(self.driver, NewRecipePageLocators.TIME_TEXT_FIELD)
+        self.difficulty = TextFieldElement(self.driver, NewRecipePageLocators.DIFFICULTY_TEXT_FIELD)
+        self.source = TextFieldElement(self.driver, NewRecipePageLocators.SOURCE_TEXT_FIELD)
+        self.preparation = TextFieldElement(self.driver, NewRecipePageLocators.PREPARATION_TEXT_FIELD)
+
+    @property
+    def url(self):
+        return self._url + '/new'
+
+    @property
+    def ingredients(self):
+        rows = len(self.driver.find_elements(*NewRecipePageLocators.INGREDIENT_ROW)) - 1
+        ingredients = []
+        for i in range(rows):
+            ingredients.append(self.IngredientRow(self.driver, i))
+        return ingredients
+
+    @property
+    def add_ingredient_button(self):
+        return self.driver.find_element(*NewRecipePageLocators.ADD_INGREDIENT_BUTTON)
+
+    @property
+    def remove_ingredient_button(self):
+        return self.driver.find_element(*NewRecipePageLocators.REMOVE_INGREDIENT_BUTTON)
+
+    @property
+    def confirm_button(self):
+        return self.driver.find_element(*NewRecipePageLocators.CONFIRM_BUTTON)
+
+    def confirm(self):
+        self.confirm_button.click()
+        return WaitingRecipePage(self.driver)
+
+    def add_ingredient(self):
+        self.add_ingredient_button.click()
+
+    def remove_ingredient(self):
+        self.remove_ingredient_button.click()
 
 
-class EditRecipePage(BasePage):
-    pass
+class EditRecipePage(BasePageUrlRegex, NewRecipePage):
+
+    @property
+    def url(self):
+        return self._url + '/edit/(?P<id>\d+)'
+
+    # def is_url_correct(self):
+    #     return super(BasePageUrlRegex).is_url_correct()  # should not be needed based on C3 MRO algorithm
 
 
 class EditWaitingRecipePage(EditRecipePage):
-    pass
+
+    @property
+    def url(self):
+        return self._url + '/waiting/(?P<id>\d+)/edit'

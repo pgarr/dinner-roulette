@@ -16,12 +16,11 @@ class BasePageLocators:
 
 
 class HomePageLocators:
-    RECIPES_LIST = (By.TAG_NAME, 'tbody')
-    RECIPE_ROW = (By.TAG_NAME, 'tr')
+    RECIPE_ROW = (By.CSS_SELECTOR, 'table > tbody > tr')
     ROW_CELLS = (By.TAG_NAME, 'td')  # inside RECIPE_ROW
     DIFFICULTY_STAR = (By.CSS_SELECTOR, '.fas.fa-star')  # in ROW_CELLS
-    RECIPE_LINK =(By.TAG_NAME, 'a')  # inside ROW_CELLS
-    RECIPE_INDEX_CELL=(By.TAG_NAME, 'th')  # inside ROW_CELLS
+    RECIPE_LINK = (By.TAG_NAME, 'a')  # inside ROW_CELLS
+    RECIPE_INDEX_CELL = (By.TAG_NAME, 'th')  # inside ROW_CELLS
 
 
 class LoginPageLocators:
@@ -39,9 +38,27 @@ class RecipePageLocators:
     EDIT_LINK = (By.CSS_SELECTOR, 'a:contains("Edit")')
     TIME_PTAG = (By.XPATH, '/html/body/div[2]/div[2]/div[1]/p')
     DIFFICULTY_STAR = (By.CSS_SELECTOR, '.fas.fa-star')
-    INGREDIENTS_LIST = (By.TAG_NAME, 'tbody')
-    INGREDIENT_ROW = (By.TAG_NAME, 'tr')
+    INGREDIENT_ROW = (By.CSS_SELECTOR, 'table > tbody > tr')
     INGREDIENT_NAME = (By.TAG_NAME, 'th')  # inside INGREDIENT_ROW
     INGREDIENT_AMOUNT = (By.TAG_NAME, 'td')  # inside INGREDIENT_ROW
     PREPARATION_PTAG = (By.XPATH, '/html/body/div[2]/div[3]/div[2]/p')
     SOURCE_LINK = (By.CSS_SELECTOR, 'a:contains("source")')
+
+
+class WaitingRecipePageLocators:
+    ACCEPT_LINK = (By.CSS_SELECTOR, 'a:contains("Accept")')
+
+
+class NewRecipePageLocators:
+    SOURCE_TEXT_FIELD = (By.ID, 'link')
+    DIFFICULTY_TEXT_FIELD = (By.ID, 'difficulty')
+    TIME_TEXT_FIELD = (By.ID, 'time')
+    NAME_TEXT_FIELD = (By.ID, 'title')
+    ADD_INGREDIENT_BUTTON = (By.ID, 'add_ingredient')
+    REMOVE_INGREDIENT_BUTTON = (By.ID, 'remove_ingredient')
+    CONFIRM_BUTTON = (By.ID, 'submit')
+    PREPARATION_TEXT_FIELD = (By.ID, 'preparation')
+    INGREDIENT_ROW = (By.CSS_SELECTOR, '.ingredients-top-margin')
+    INGREDIENT_NAME_FIELD = (By.ID, 'ingredients-%d-title')
+    INGREDIENT_AMOUNT_FIELD = (By.ID, 'ingredients-%d-amount')
+    INGREDIENT_UNIT_FIELD = (By.ID, 'ingredients-%d-unit')
