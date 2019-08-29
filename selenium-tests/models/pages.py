@@ -22,7 +22,7 @@ class BasePage:
 
     @property
     def title(self):
-        return self.driver.title
+        return "Base Page"
 
     @property
     def home_button(self):
@@ -71,6 +71,14 @@ class BasePage:
     def is_url_correct(self):
         return self.driver.current_url == self.url
 
+    def is_title_correct(self):
+        current_title = self.driver.title
+        if current_title == self.title:
+            return True
+        else:
+            print("Current title: %s" % current_title)
+            return False
+
     def go_to_login_page(self):
         self.login_button.click()
         return LoginPage(self.driver)
@@ -82,8 +90,16 @@ class BasePage:
 
 class BasePageUrlRegex(BasePage):
 
+    @property
+    def url(self):
+        raise ValueError("Url is dynamic!")
+
+    @property
+    def url_regex(self):
+        return self._url
+
     def is_url_correct(self):
-        match = re.match(self.url, self.driver.current_url)
+        match = re.match(self.url_regex, self.driver.current_url)
         return True if match else False
 
 
@@ -110,6 +126,10 @@ class HomePage(BasePage):
         return self._url + '/index'
 
     @property
+    def title(self):
+        return "Home Page - Cookbook"
+
+    @property
     def recipes(self):
         rows = self.driver.find_elements(*HomePageLocators.RECIPE_ROW)
         recipes = []
@@ -124,12 +144,20 @@ class WaitingRecipesPage(HomePage):
     def url(self):
         return self._url + '/waiting'
 
+    @property
+    def title(self):
+        return "Waiting Recipes Page - Cookbook"
+
 
 class LoginPage(BasePage):
 
     @property
     def url(self):
         return self._url + '/auth/login'
+
+    @property
+    def title(self):
+        return "Sign In - Cookbook"
 
     @property
     def username_field(self):
@@ -178,8 +206,12 @@ class RecipePage(BasePageUrlRegex):
             return "IngredientRow: name: %s, amount: %d, unit: %s" % (self.name, self.amount, self.unit)
 
     @property
-    def url(self):
+    def url_regex(self):
         return self._url + '/recipe/(?P<id>\d+)'
+
+    @property
+    def title(self):
+        return "Recipe Page - Cookbook"
 
     @property
     def recipe_title(self):
@@ -227,8 +259,12 @@ class RecipePage(BasePageUrlRegex):
 class WaitingRecipePage(RecipePage):
 
     @property
-    def url(self):
+    def url_regex(self):
         return self._url + '/waiting/(?P<id>\d+)'
+
+    @property
+    def title(self):
+        return "Waiting Recipe Page - Cookbook"
 
     @property
     def accept_link(self):
@@ -269,6 +305,10 @@ class NewRecipePage(BasePage):
         return self._url + '/new'
 
     @property
+    def title(self):
+        return "New Recipe Page - Cookbook"
+
+    @property
     def ingredients(self):
         rows = len(self.driver.find_elements(*NewRecipePageLocators.INGREDIENT_ROW)) - 1
         ingredients = []
@@ -302,8 +342,12 @@ class NewRecipePage(BasePage):
 class EditRecipePage(BasePageUrlRegex, NewRecipePage):
 
     @property
-    def url(self):
+    def url_regex(self):
         return self._url + '/edit/(?P<id>\d+)'
+
+    @property
+    def title(self):
+        return "Edit Recipe Page - Cookbook"
 
     # def is_url_correct(self):
     #     return super(BasePageUrlRegex).is_url_correct()  # should not be needed based on C3 MRO algorithm
@@ -312,5 +356,9 @@ class EditRecipePage(BasePageUrlRegex, NewRecipePage):
 class EditWaitingRecipePage(EditRecipePage):
 
     @property
-    def url(self):
+    def url_regex(self):
         return self._url + '/waiting/(?P<id>\d+)/edit'
+
+    @property
+    def title(self):
+        return "Edit Waiting Recipe Page - Cookbook"
