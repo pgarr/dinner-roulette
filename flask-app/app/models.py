@@ -66,7 +66,7 @@ class RecipeMixin(object):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     time = db.Column(db.Integer)
-    difficulty = db.Column(db.Integer)
+    difficulty = db.Column(db.Integer, default=0)
     link = db.Column(db.String(1000))
     preparation = db.Column(db.Text)
 
