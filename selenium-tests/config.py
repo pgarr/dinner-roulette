@@ -1,0 +1,1 @@
+MAX_LOADING_TIME = 5  # sek

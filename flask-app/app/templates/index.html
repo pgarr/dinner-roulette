@@ -37,15 +37,19 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ recipe.time }}'
+                            {% if recipe.time %}
+                                {{ recipe.time }}'
+                            {% endif %}
                         </td>
                         <td>
-                            {% for i in range(recipe.difficulty) %}
-                                <i class="fas fa-star"></i>
-                            {% endfor %}
-                            {% for i in range(5-recipe.difficulty) %}
-                                <i class="far fa-star"></i>
-                            {% endfor %}
+                            {% if recipe.difficulty %}
+                                {% for i in range(recipe.difficulty) %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                                {% for i in range(5-recipe.difficulty) %}
+                                    <i class="far fa-star"></i>
+                                {% endfor %}
+                            {% endif %}
                         </td>
 <!--                        <td>-->
 <!--                            implement-->
