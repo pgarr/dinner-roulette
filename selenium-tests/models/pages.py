@@ -115,7 +115,10 @@ class HomePage(BasePage):
             self.index = int(self._row.find_element(*HomePageLocators.RECIPE_INDEX_CELL).text)
             self._tds = self._row.find_elements(*HomePageLocators.ROW_CELLS)
             self.link = self._tds[0].find_element(*HomePageLocators.RECIPE_LINK)
-            self.time = int(self._tds[1].text.replace("'", ""))
+            try:
+                self.time = int(self._tds[1].text.replace("'", ""))
+            except ValueError:
+                self.time = None
             self.difficulty = len(self._tds[2].find_elements(*HomePageLocators.DIFFICULTY_STAR))
             self.name = self.link.text
 

@@ -31,18 +31,22 @@
         <div class="row">
             <div class="col-lg-1 col-md-2">
                 <p>
-                    <i class="fas fa-clock"></i> {{ recipe.time }}'
+                    {% if recipe.time %}
+                        <i class="fas fa-clock"></i> {{ recipe.time }}'
+                    {% endif %}
                 </p>
             </div>
             <div class="col-lg-3 col-md-4">
                 <p>
                     {{ _('Difficulty:') }}
-                    {% for i in range(recipe.difficulty) %}
-                        <i class="fas fa-star"></i>
-                    {% endfor %}
-                    {% for i in range(5-recipe.difficulty) %}
-                        <i class="far fa-star"></i>
-                    {% endfor %}
+                    {% if recipe.difficulty %}
+                        {% for i in range(recipe.difficulty) %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for i in range(5-recipe.difficulty) %}
+                            <i class="far fa-star"></i>
+                        {% endfor %}
+                    {% endif %}
                 </p>
             </div>
         </div>
