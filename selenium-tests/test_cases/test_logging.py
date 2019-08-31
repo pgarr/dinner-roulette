@@ -10,16 +10,14 @@ class LoggingUserTest(BaseTest):
     def test_login(self):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
-        login_page = home_page.go_to_login_page()
+
+        home_page.go_to_login_page()
+        login_page = LoginPage(self.driver)
+
         self.assertTrue(login_page.is_title_correct())
         login_page.login('test', 'test')
 
-        wait = WebDriverWait(self.driver, MAX_LOADING_TIME)
-
-        try:
-            page_loaded = wait.until_not(lambda driver: login_page.is_title_correct())
-        except TimeoutException:
-            self.fail("Loading timeout expired")
+        self.wait_for_load(login_page)
 
         self.assertTrue(home_page.is_title_correct())
         self.assertEqual(home_page.user_name, 'test')
@@ -29,11 +27,7 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
         home_page.add_recipe_button.click()
 
-        wait = WebDriverWait(self.driver, MAX_LOADING_TIME)
-        try:
-            page_loaded = wait.until_not(lambda driver: home_page.is_title_correct())
-        except TimeoutException:
-            self.fail("Loading timeout expired")
+        self.wait_for_load(home_page)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
@@ -50,21 +44,13 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
         home_page.add_recipe_button.click()
 
-        wait = WebDriverWait(self.driver, MAX_LOADING_TIME)
-        try:
-            page_loaded = wait.until_not(lambda driver: home_page.is_title_correct())
-        except TimeoutException:
-            self.fail("Loading timeout expired")
+        self.wait_for_load(home_page)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
 
         login_page.login("test", "test")
-
-        try:
-            page_loaded = wait.until_not(lambda driver: login_page.is_title_correct())
-        except TimeoutException:
-            self.fail("Loading timeout expired")
+        self.wait_for_load(login_page)
 
         new_recipe_page = NewRecipePage(self.driver)
         self.assertTrue(new_recipe_page.is_title_correct())

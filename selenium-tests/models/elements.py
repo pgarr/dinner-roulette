@@ -3,12 +3,12 @@ class TextFieldElement:
 
     def __init__(self, driver, locator):
         self.driver = driver
-        self.obj = self.driver.find_element(*locator)
+        self.locator = locator
 
-    def __set__(self, value):
+    def set_text(self, value):
         """Sets the text to the value supplied"""
-        self.obj.send_keys(value)
+        self.driver.find_element(*self.locator).send_keys(value)
 
-    def __get__(self):
+    def get_text(self):
         """Gets the text in the field"""
-        return self.obj.text
+        return self.driver.find_element(*self.locator).text

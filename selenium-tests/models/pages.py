@@ -81,11 +81,16 @@ class BasePage:
 
     def go_to_login_page(self):
         self.login_button.click()
-        return LoginPage(self.driver)
 
     def go_to_home_page(self):
         self.home_button.click()
-        return HomePage(self.driver)
+
+    def go_to_waiting_page(self):
+        self.user_menu_dropdown.click()
+        self.waiting_recipes_button.click()
+
+    def go_to_new_recipe_page(self):
+        self.add_recipe_button.click()
 
 
 class BasePageUrlRegex(BasePage):
@@ -146,7 +151,7 @@ class WaitingRecipesPage(HomePage):
 
     @property
     def title(self):
-        return "Waiting Recipes Page - Cookbook"
+        return "Waiting Recipes - Cookbook"
 
 
 class LoginPage(BasePage):
@@ -187,7 +192,6 @@ class LoginPage(BasePage):
         self.username_field.send_keys(username)
         self.password_field.send_keys(password)
         self.submit_button.click()
-        return HomePage(self.driver)
 
 
 class RecipePage(BasePageUrlRegex):
@@ -253,7 +257,6 @@ class RecipePage(BasePageUrlRegex):
 
     def edit(self):
         self.edit_link.click()
-        return EditRecipePage(self.driver)
 
 
 class WaitingRecipePage(RecipePage):
@@ -272,7 +275,6 @@ class WaitingRecipePage(RecipePage):
 
     def accept(self):
         self.accept_link.click()
-        return RecipePage(self.driver)
 
 
 class NewRecipePage(BasePage):
@@ -290,7 +292,8 @@ class NewRecipePage(BasePage):
             return method, numbered_text
 
         def __repr__(self):
-            return "IngredientRow: name: %s, amount: %d, unit: %s" % (self.name, self.amount, self.unit)
+            return "IngredientRow: name: %s, amount: %d, unit: %s" % (
+            self.name.get_text(), self.amount.get_text(), self.unit.get_text())
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -306,7 +309,7 @@ class NewRecipePage(BasePage):
 
     @property
     def title(self):
-        return "New Recipe Page - Cookbook"
+        return "New Recipe - Cookbook"
 
     @property
     def ingredients(self):
@@ -328,9 +331,8 @@ class NewRecipePage(BasePage):
     def confirm_button(self):
         return self.driver.find_element(*NewRecipePageLocators.CONFIRM_BUTTON)
 
-    def confirm(self):
+    def submit(self):
         self.confirm_button.click()
-        return WaitingRecipePage(self.driver)
 
     def add_ingredient(self):
         self.add_ingredient_button.click()
