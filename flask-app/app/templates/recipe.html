@@ -38,8 +38,8 @@
             </div>
             <div class="col-lg-3 col-md-4">
                 <p>
-                    {{ _('Difficulty:') }}
                     {% if recipe.difficulty %}
+                        {{ _('Difficulty:') }}
                         {% for i in range(recipe.difficulty) %}
                             <i class="fas fa-star"></i>
                         {% endfor %}
