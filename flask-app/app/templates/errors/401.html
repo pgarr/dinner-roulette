@@ -2,7 +2,7 @@
 
 {% block content %}
      <div class="container">
-        <h1>{{ _('You are not allowed to do this') }}</h1>
+        <h1 class="error-msg">{{ _('You are not allowed to do this') }}</h1>
         <p><a href="{{ url_for('main.index') }}">{{ _('Back') }}</a></p>
      </div>
 {% endblock %}

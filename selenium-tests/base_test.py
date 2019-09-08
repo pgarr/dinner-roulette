@@ -32,8 +32,11 @@ class BaseTest(TestCase):
         self.driver.quit()
         self.aut.stop()
 
-    def wait_for_load(self, current_page: BasePage):
+    def wait_page_changes(self, current_page: BasePage, expected_page: BasePage):
         try:
             page_loaded = self.wait.until_not(lambda driver: current_page.is_title_correct())
         except TimeoutException:
             self.fail("Loading timeout expired")
+        self.assertTrue(expected_page.is_title_correct())
+        return expected_page
+

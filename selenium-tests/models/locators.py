@@ -62,3 +62,7 @@ class NewRecipePageLocators:
     INGREDIENT_NAME_FIELD = (By.ID, 'ingredients-%d-title')
     INGREDIENT_AMOUNT_FIELD = (By.ID, 'ingredients-%d-amount')
     INGREDIENT_UNIT_FIELD = (By.ID, 'ingredients-%d-unit')
+
+
+class ErrorPageLocators:
+    ERROR_MESSAGE = (By.CLASS_NAME, 'error-msg')

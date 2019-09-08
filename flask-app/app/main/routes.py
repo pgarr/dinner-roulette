@@ -18,7 +18,7 @@ def index():
 @bp.route('/recipe/<int:pk>', methods=['GET'])
 def get(pk):
     recipe_model = get_recipe(pk)
-    return render_template('recipe.html', title=recipe_model.title, recipe=recipe_model)
+    return render_template('recipe.html', title=_('Recipe'), recipe=recipe_model)
 
 
 @bp.route('/waiting/<int:pk>', methods=['GET'])
@@ -27,7 +27,7 @@ def get_waiting(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
         flash(_('This recipe is pending approval by the administrator.'))
-        return render_template('recipe.html', title=waiting_model.title, recipe=waiting_model, waiting=True)
+        return render_template('recipe.html', title=_('Waiting Recipe'), recipe=waiting_model, waiting=True)
     else:
         abort(401)
 
@@ -107,7 +107,7 @@ def edit_waiting(pk):
             save_recipe_from_form(form, waiting_model)
             flash(_('Pending changes saved!'))
             return redirect(url_for('.get_waiting', pk=waiting_model.id))
-        return render_template('new-recipe.html', title=_('Edit Recipe'), form=form)
+        return render_template('new-recipe.html', title=_('Edit Waiting Recipe'), form=form)
     else:
         abort(401)
 
