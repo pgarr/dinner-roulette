@@ -1,6 +1,7 @@
 import time
 
-from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage
+from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage, \
+    RecipePage
 from base_test import BaseTest
 
 
@@ -17,11 +18,11 @@ class RecipesVisibilityTest(BaseTest):
         self.wait_page_changes(login_page, home_page)
 
         home_page.go_to_waiting_page()
-        waiting_recipes_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+        waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
-        waiting_recipes_count = len(waiting_recipes_page.recipes)
-        waiting_recipes_page.go_to_new_recipe_page()
-        new_recipe_page = self.wait_page_changes(waiting_recipes_page, NewRecipePage(self.driver))
+        waiting_recipes_count = len(waiting_list_page.recipes)
+        waiting_list_page.go_to_new_recipe_page()
+        new_recipe_page = self.wait_page_changes(waiting_list_page, NewRecipePage(self.driver))
 
         new_recipe_page.name.set_text('Test')
         new_recipe_page.submit()
@@ -33,9 +34,9 @@ class RecipesVisibilityTest(BaseTest):
         self.assertEqual(len(home_page.recipes), recipes_count,
                          msg="After adding new recipe, recipes count is the same")
         home_page.go_to_waiting_page()
-        self.wait_page_changes(home_page, waiting_recipes_page)
+        self.wait_page_changes(home_page, waiting_list_page)
 
-        self.assertEqual(len(waiting_recipes_page.recipes), waiting_recipes_count + 1,
+        self.assertEqual(len(waiting_list_page.recipes), waiting_recipes_count + 1,
                          msg="After adding new recipe, waiting recipes count is higher by 1")
 
     def test_waiting_recipe_not_visible_for_other_user(self):
@@ -48,11 +49,11 @@ class RecipesVisibilityTest(BaseTest):
         self.wait_page_changes(login_page, home_page)
 
         home_page.go_to_waiting_page()
-        waiting_recipes_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+        waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
-        waiting_recipes_count = len(waiting_recipes_page.recipes)
-        waiting_recipes_page.logout()
-        self.wait_page_changes(waiting_recipes_page, home_page)
+        waiting_recipes_count = len(waiting_list_page.recipes)
+        waiting_list_page.logout()
+        self.wait_page_changes(waiting_list_page, home_page)
 
         home_page.go_to_login_page()
         self.wait_page_changes(home_page, login_page)
@@ -60,7 +61,7 @@ class RecipesVisibilityTest(BaseTest):
         login_page.login('test2', 'test')
         self.wait_page_changes(login_page, home_page)
         home_page.go_to_new_recipe_page()
-        new_recipe_page = self.wait_page_changes(waiting_recipes_page, NewRecipePage(self.driver))
+        new_recipe_page = self.wait_page_changes(waiting_list_page, NewRecipePage(self.driver))
 
         new_recipe_page.name.set_text('Test')
         new_recipe_page.submit()
@@ -77,12 +78,66 @@ class RecipesVisibilityTest(BaseTest):
         self.wait_page_changes(login_page, home_page)
 
         home_page.go_to_waiting_page()
-        self.wait_page_changes(home_page, waiting_recipes_page)
+        self.wait_page_changes(home_page, waiting_list_page)
 
-        self.assertEqual(len(waiting_recipes_page.recipes), waiting_recipes_count,
+        self.assertEqual(len(waiting_list_page.recipes), waiting_recipes_count,
                          msg="New waiting recipe is not visible for other user")
 
         self.driver.get(waiting_link)
         error_page = ErrorPage(self.driver)
         self.assertEqual(error_page.message, 'You are not allowed to do this',
                          msg="Waiting recipe can't be accessed by user different than author")
+
+    def test_accepted_new_recipe_is_in_recipes_list(self):
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+        recipes_count = len(home_page.recipes)
+        home_page.go_to_login_page()
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+
+        login_page.login('test', 'test')
+        self.wait_page_changes(login_page, home_page)
+
+        home_page.go_to_waiting_page()
+        waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+
+        waiting_recipes_count = len(waiting_list_page.recipes)
+        waiting_list_page.go_to_new_recipe_page()
+        new_recipe_page = self.wait_page_changes(waiting_list_page, NewRecipePage(self.driver))
+
+        new_recipe_page.name.set_text('Test')
+        new_recipe_page.submit()
+        waiting_recipe_page = self.wait_page_changes(new_recipe_page, WaitingRecipePage(self.driver))
+
+        waiting_link = self.driver.current_url
+        waiting_recipe_page.logout()
+        self.wait_page_changes(waiting_recipe_page, home_page)
+
+        home_page.go_to_login_page()
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+
+        login_page.login('admin', 'admin')
+        self.wait_page_changes(login_page, home_page)
+
+        self.driver.get(waiting_link)
+        self.assertTrue(waiting_recipe_page.is_title_correct())
+        waiting_recipe_page.accept()
+
+        recipe_page = self.wait_page_changes(waiting_recipe_page, RecipePage(self.driver))
+        recipe_page.logout()
+        self.wait_page_changes(recipe_page, home_page)
+
+        home_page.go_to_login_page()
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+
+        login_page.login('test', 'test')
+        self.wait_page_changes(login_page, home_page)
+
+        self.assertEqual(len(home_page.recipes), recipes_count + 1,
+                         msg="After accepting new recipe, recipes count is higher by 1")
+
+        home_page.go_to_waiting_page()
+        self.wait_page_changes(home_page, waiting_list_page)
+
+        self.assertEqual(len(waiting_list_page.recipes), waiting_recipes_count,
+                         msg="After accepting new recipe, waiting recipes count is same as before adding this recipe")
