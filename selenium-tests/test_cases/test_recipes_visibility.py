@@ -1,8 +1,6 @@
-import time
-
-from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage, \
-    RecipePage
 from base_test import BaseTest
+from models.pages import HomePage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage, \
+    RecipePage
 
 
 class RecipesVisibilityTest(BaseTest):
@@ -11,11 +9,8 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
         recipes_count = len(home_page.recipes)
-        home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
-        login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('test', 'test')
 
         home_page.go_to_waiting_page()
         waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -42,24 +37,16 @@ class RecipesVisibilityTest(BaseTest):
     def test_waiting_recipe_not_visible_for_other_user(self):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
-        home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
-        login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('test', 'test')
 
         home_page.go_to_waiting_page()
         waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         waiting_recipes_count = len(waiting_list_page.recipes)
-        waiting_list_page.logout()
-        self.wait_page_changes(waiting_list_page, home_page)
 
-        home_page.go_to_login_page()
-        self.wait_page_changes(home_page, login_page)
+        self.smart_login('test2', 'test')
 
-        login_page.login('test2', 'test')
-        self.wait_page_changes(login_page, home_page)
         home_page.go_to_new_recipe_page()
         new_recipe_page = self.wait_page_changes(waiting_list_page, NewRecipePage(self.driver))
 
@@ -68,14 +55,8 @@ class RecipesVisibilityTest(BaseTest):
         waiting_recipe_page = self.wait_page_changes(new_recipe_page, WaitingRecipePage(self.driver))
 
         waiting_link = self.driver.current_url
-        waiting_recipe_page.logout()
-        self.wait_page_changes(waiting_recipe_page, home_page)
 
-        home_page.go_to_login_page()
-        self.wait_page_changes(home_page, login_page)
-
-        login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('test', 'test')
 
         home_page.go_to_waiting_page()
         self.wait_page_changes(home_page, waiting_list_page)
@@ -92,11 +73,8 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
         recipes_count = len(home_page.recipes)
-        home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
-        login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('test', 'test')
 
         home_page.go_to_waiting_page()
         waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -110,28 +88,16 @@ class RecipesVisibilityTest(BaseTest):
         waiting_recipe_page = self.wait_page_changes(new_recipe_page, WaitingRecipePage(self.driver))
 
         waiting_link = self.driver.current_url
-        waiting_recipe_page.logout()
-        self.wait_page_changes(waiting_recipe_page, home_page)
 
-        home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
-
-        login_page.login('admin', 'admin')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('admin', 'admin')
 
         self.driver.get(waiting_link)
         self.assertTrue(waiting_recipe_page.is_title_correct())
         waiting_recipe_page.accept()
 
         recipe_page = self.wait_page_changes(waiting_recipe_page, RecipePage(self.driver))
-        recipe_page.logout()
-        self.wait_page_changes(recipe_page, home_page)
 
-        home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
-
-        login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        self.smart_login('test', 'test')
 
         self.assertEqual(len(home_page.recipes), recipes_count + 1,
                          msg="After accepting new recipe, recipes count is higher by 1")

@@ -7,11 +7,12 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from config import MAX_LOADING_TIME
-from models.pages import BasePage
+from models.pages import BasePage, LoginPage
 from utils.aut import Aut
 
 
 class BaseTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         basedir = os.path.abspath(os.path.dirname(__file__))
@@ -37,10 +38,35 @@ class BaseTest(TestCase):
     def tearDownClass(cls):
         cls._aut.stop()
 
-    def wait_page_changes(self, current_page: BasePage, expected_page: BasePage):
+    # helper methods:
+    def wait_page_changes(self, current_page: BasePage, expected_page: BasePage = None):
         try:
             page_loaded = self.wait.until_not(lambda driver: current_page.is_title_correct())
         except TimeoutException:
             self.fail("Loading timeout expired")
-        self.assertTrue(expected_page.is_title_correct())
-        return expected_page
+        if expected_page:
+            self.assertTrue(expected_page.is_title_correct())
+            return expected_page
+        else:
+            return None
+
+    def smart_login(self, login, password):
+        base_page = BasePage(self.driver)
+
+        if base_page.user_name != login:
+            try:
+                base_page.logout()
+                # wait until name is None
+                try:
+                    page_loaded = self.wait.until_not(lambda driver: base_page.user_name)
+                except TimeoutException:
+                    self.fail("Loading timeout expired")
+            except NoSuchElementException:
+                pass
+            base_page.go_to_login_page()
+            login_page = self.wait_page_changes(base_page, LoginPage(self.driver))
+
+            login_page.login(login, password)
+            self.wait_page_changes(current_page=login_page)
+
+            self.assertEqual(base_page.user_name, login)

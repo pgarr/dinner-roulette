@@ -6,7 +6,6 @@ from selenium.common.exceptions import NoSuchElementException
 from models.elements import TextFieldElement
 from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators, \
     WaitingRecipePageLocators, NewRecipePageLocators, ErrorPageLocators
-from utils.errors import NotLoggedInError, UserLoggedInError
 
 
 class BasePage:
@@ -54,7 +53,10 @@ class BasePage:
 
     @property
     def user_name(self):
-        return self.user_menu_dropdown.text
+        try:
+            return self.user_menu_dropdown.text
+        except NoSuchElementException:
+            return None
 
     def is_url_correct(self):
         return self.driver.current_url == self.url
