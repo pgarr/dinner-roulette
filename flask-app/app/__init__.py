@@ -9,6 +9,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+from app.backup import BackupScheduler
 from config import Config
 
 db = SQLAlchemy()
@@ -76,6 +77,10 @@ def create_app(config_class=Config):
 
         app.logger.setLevel(logging.INFO)
         app.logger.info('dinner-roulette startup')
+
+        # backup schedule
+        bs = BackupScheduler(db)
+        bs.start()
 
     return app
 

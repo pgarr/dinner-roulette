@@ -19,3 +19,4 @@ class Config:
     LANGUAGES = ['en', 'pl']
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
     APP_ADMINS = os.environ.get('APP_ADMINS').split(",")
+    BACKUP_SCHEDULE = os.environ.get('BACKUP_SCHEDULE') or 24 * 60 * 60
