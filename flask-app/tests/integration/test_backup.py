@@ -1,7 +1,6 @@
 import re
 
-from app import db
-from app.backup import BackupHandler
+from app import db, BackupScheduler
 from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
 from tests.base_test import TestAppSetUp
 
@@ -28,7 +27,7 @@ class TestBackup(TestAppSetUp):
                             ' \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 3, \"username\": \"admin\", \"email\":' \
                             ' \"admin@test\.com\", \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}\],'
 
-        self.bh = BackupHandler(db, 'mock', ['mock'])
+        self.bh = BackupScheduler(db)
 
     def test_backup_users_created_and_other_tables_are_empty(self):
         result = self.bh.dump_backup()
@@ -39,7 +38,7 @@ class TestBackup(TestAppSetUp):
         match = re.fullmatch(pattern, result)
         self.assertTrue(match)
 
-    def test_backup_users_created_and_populated_al_tables(self):
+    def test_backup_users_created_and_populated_all_tables(self):
         recipe_model = Recipe(title='test', time=1, difficulty=1, link='http://test.com', preparation='test',
                               author=self.user, ingredients=[RecipeIngredient(title='test1', amount=1, unit='kg'),
                                                              RecipeIngredient(title='test2', amount=1, unit='kg')])

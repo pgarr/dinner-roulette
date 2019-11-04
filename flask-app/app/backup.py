@@ -31,18 +31,20 @@ class BackupScheduler:
 
     def dump_backup_flask(self):
         """Dump all tables as dict (table name : list (row) of dicts(column_name : value)"""
-        tables = self.db.get_tables_for_bind()  # TODO: is unsorted (bad for testing)
+        tables = self.db.get_tables_for_bind()  # is unsorted (bad for testing)
         dmp = {}
         for table in tables:
             dmp[table.name] = [dict(row) for row in self.db.engine.execute(table.select())]
         return json.dumps(dmp)
 
     def send(self, dmp):
-        title_today = "Dump " + datetime.date.today().strftime("%B %d, %Y")
+        title = "Dump " if not self.app.debug and not self.app.testing else "Test "
+        title_today = title + datetime.date.today().strftime("%B %d, %Y")
+
         send_email(title_today, sender=self.app.config['ADMINS'][0], recipients=self.app.config['ADMINS'],
                    text_body=None,
                    html_body=None,
-                   attachment_tuple=("Dump.json", "application/json", dmp))  # TODO: create some body
+                   attachments=[("Dump.json", "application/json", dmp)])
 
     def send_async_dumps_periodically(self):
         with self.app.app_context():
@@ -50,9 +52,8 @@ class BackupScheduler:
                 self.app.logger.info("Backup: starting dump...")
                 dmp = self.dump_backup()
                 self.send(dmp)
-                self.app.logger.info("Backup: done, going to sleep...")
+                self.app.logger.info("Backup: sent, going to sleep...")
                 time.sleep(self.wait_time)
 
     def start(self):
-        Thread(target=self.send_async_dumps_periodically).start()
-        # TODO: ctrl + c does not work with this thread up
+        Thread(target=self.send_async_dumps_periodically, daemon=True).start()
