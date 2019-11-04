@@ -9,8 +9,6 @@ from sqlalchemy import MetaData
 
 from app.email import send_email
 
-4
-
 
 class BackupScheduler:
 
@@ -41,7 +39,7 @@ class BackupScheduler:
         title = "Dump " if not self.app.debug and not self.app.testing else "Test "
         title_today = title + datetime.date.today().strftime("%B %d, %Y")
 
-        send_email(title_today, sender=self.app.config['ADMINS'][0], recipients=self.app.config['ADMINS'],
+        send_email(subject=title_today, sender=self.app.config['ADMINS'][0], recipients=self.app.config['ADMINS'],
                    text_body=None,
                    html_body=None,
                    attachments=[("Dump.json", "application/json", dmp)])

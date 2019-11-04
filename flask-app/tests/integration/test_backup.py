@@ -1,6 +1,8 @@
+import datetime
 import re
+from unittest.mock import patch, Mock, ANY
 
-from app import db, BackupScheduler
+from app import db, BackupScheduler, backup
 from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
 from tests.base_test import TestAppSetUp
 
@@ -73,3 +75,15 @@ class TestBackup(TestAppSetUp):
                                       '\"unit\": \"g\", \"recipe_id\": 1}\]}'
         match = re.fullmatch(pattern, result)
         self.assertTrue(match)
+
+    def test_send_calls_send_email(self):
+        dmp = '{"mockup": "mockup"}'
+        backup.send_email = Mock()
+        fake_now = datetime.date(2019, 1, 1)
+        with patch("datetime.date") as dt:
+            dt.today.return_value = fake_now
+            self.bh.send(dmp)
+        dt.today.assert_called_once_with()
+        backup.send_email.assert_called_once_with(subject="Test January 01, 2019",
+                                                  attachments=[("Dump.json", "application/json", dmp)], html_body=None,
+                                                  recipients=ANY, sender=ANY, text_body=None)
