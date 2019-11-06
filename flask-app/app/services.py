@@ -1,3 +1,4 @@
+from flask import current_app
 from sqlalchemy.orm import load_only
 
 from app import db
@@ -24,8 +25,10 @@ def clone_recipe_to_waiting(recipe_model):
 def accept_waiting(waiting_model):
     recipe_model = _push_updates_to_recipe(waiting_model)
     db.session.add(recipe_model)
+    w_id = waiting_model.id
     db.session.delete(waiting_model)
     db.session.commit()
+    current_app.logger.info('ID %d waiting recipe accepted to ID %d recipe' % (w_id, recipe_model.id))
     return recipe_model
 
 
@@ -49,18 +52,25 @@ def save_recipe(model):
     model.clear_empty_ingredients()
     db.session.add(model)
     db.session.commit()
+    current_app.logger.info('%s saved - ID %d' % (type(model.__class__), model.id))
 
 
 def get_recipe(pk):
-    return Recipe.query.get_or_404(pk)
+    recipe = Recipe.query.get_or_404(pk)
+    current_app.logger.debug('Recipe got ID %d' % recipe.id)
+    return recipe
 
 
 def get_waiting_recipe(pk):
-    return WaitingRecipe.query.get_or_404(pk)
+    waiting_recipe = WaitingRecipe.query.get_or_404(pk)
+    current_app.logger.debug('Waiting recipe got ID %d' % waiting_recipe.id)
+    return waiting_recipe
 
 
 def get_all_recipes():
-    return Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+    recipes = Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+    current_app.logger.debug('Full list of recipes got')
+    return recipes
 
 
 def get_all_waiting_recipes(user):
@@ -69,4 +79,5 @@ def get_all_waiting_recipes(user):
     else:
         waiting_recipes = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(
             load_only("id", "title", "time", "difficulty")).all()
+    current_app.logger.debug('Full list of waiting recipes got for user %s' % user.username)
     return waiting_recipes

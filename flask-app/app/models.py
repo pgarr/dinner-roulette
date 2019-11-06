@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
         return self.username in current_app.config['APP_ADMINS']
 
     def set_password(self, password):
+        current_app.logger.info('Password changed for user %s' % self.username)
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
