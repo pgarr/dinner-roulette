@@ -73,6 +73,12 @@ def get_all_recipes():
     return recipes
 
 
+def get_user_recipes(author):
+    recipes = Recipe.query.filter(Recipe.author == author).options(load_only("id", "title", "time", "difficulty")).all()
+    current_app.logger.debug("List of %s's recipes got" % author.username)
+    return recipes
+
+
 def get_all_waiting_recipes(user):
     if user.admin:
         waiting_recipes = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
