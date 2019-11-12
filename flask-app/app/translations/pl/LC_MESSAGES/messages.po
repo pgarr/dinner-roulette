@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-09 23:04+0100\n"
+"POT-Creation-Date: 2019-11-12 20:06+0100\n"
 "PO-Revision-Date: 2019-06-04 19:02+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pl\n"
@@ -90,7 +90,7 @@ msgstr "Twoje hasło zostało zresetowane"
 
 #: app/main/forms.py:15
 msgid "Not a valid float value"
-msgstr ""
+msgstr "Niewłaściwa wartość liczbowa"
 
 #: app/main/forms.py:19
 msgid "Ingredient name"
@@ -132,13 +132,21 @@ msgstr "Zatwierdź"
 msgid "Home Page"
 msgstr "Strona domowa"
 
+#: app/main/routes.py:21
+msgid "Recipe"
+msgstr "Przepis"
+
 #: app/main/routes.py:29
 msgid "This recipe is pending approval by the administrator."
 msgstr "Ten przepis oczekuje na zatwierdzenie przez administratora."
 
+#: app/main/routes.py:30
+msgid "Waiting Recipe"
+msgstr "Oczekujacy przepis"
+
 #: app/main/routes.py:39
 msgid "My Recipes"
-msgstr ""
+msgstr "Moje przepisy"
 
 #: app/main/routes.py:46
 msgid "Waiting Recipes"
@@ -176,13 +184,17 @@ msgstr ""
 "Zmiany będą widoczne dla innych użytkowników po zatwierdzeniu przez "
 "administratora."
 
-#: app/main/routes.py:98 app/main/routes.py:117
+#: app/main/routes.py:98
 msgid "Edit Recipe"
 msgstr "Edytuj przepis"
 
 #: app/main/routes.py:115
 msgid "Pending changes saved!"
 msgstr "Oczekujące zmiany zostały zaktualizowane!"
+
+#: app/main/routes.py:117
+msgid "Edit Waiting Recipe"
+msgstr "Edytuj oczekujący przepis"
 
 #: app/templates/base.html:6
 msgid "Welcome to Cookbook"
