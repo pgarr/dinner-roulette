@@ -17,7 +17,7 @@ class LoggingUserTest(BaseTest):
         self.assertTrue(login_page.is_title_correct())
         login_page.login('test', 'test')
 
-        self.wait_for_load(login_page)
+        self.wait_for_change_page(login_page)
 
         self.assertTrue(home_page.is_title_correct())
         self.assertEqual(home_page.user_name, 'test')
@@ -27,7 +27,7 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
         home_page.add_recipe_button.click()
 
-        self.wait_for_load(home_page)
+        self.wait_for_change_page(home_page)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
@@ -44,13 +44,13 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
         home_page.add_recipe_button.click()
 
-        self.wait_for_load(home_page)
+        self.wait_for_change_page(home_page)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
 
         login_page.login("test", "test")
-        self.wait_for_load(login_page)
+        self.wait_for_change_page(login_page)
 
         new_recipe_page = NewRecipePage(self.driver)
         self.assertTrue(new_recipe_page.is_title_correct())

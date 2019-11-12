@@ -11,7 +11,7 @@ class BasePageLocators:
 
     # LOGGED IN USER NAVIGATION BAR
     USER_MENU_DROPDOWN = (By.ID, 'navbarDropdown')
-    WAITING_RECIPES_BUTTON = (By.XPATH, '//*[@id="navbarTogglerBasic"]/ul/li[2]/div/a[1]')
+    WAITING_RECIPES_BUTTON = (By.CSS_SELECTOR, 'a:contains("Pending recipes")')
     LOGOUT_BUTTON = (By.XPATH, '//*[@id="navbarTogglerBasic"]/ul/li[2]/div/a[2]')
 
 

@@ -72,12 +72,7 @@ class BasePage:
         return self.driver.current_url == self.url
 
     def is_title_correct(self):
-        current_title = self.driver.title
-        if current_title == self.title:
-            return True
-        else:
-            print("Current title: %s" % current_title)
-            return False
+        return self.driver.title == self.title
 
     def go_to_login_page(self):
         self.login_button.click()
@@ -296,7 +291,7 @@ class NewRecipePage(BasePage):
 
         def __repr__(self):
             return "IngredientRow: name: %s, amount: %d, unit: %s" % (
-            self.name.get_text(), self.amount.get_text(), self.unit.get_text())
+                self.name.get_text(), self.amount.get_text(), self.unit.get_text())
 
     def __init__(self, driver):
         super().__init__(driver)

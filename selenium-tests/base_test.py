@@ -32,7 +32,7 @@ class BaseTest(TestCase):
         self.driver.quit()
         self.aut.stop()
 
-    def wait_for_load(self, current_page: BasePage):
+    def wait_for_change_page(self, current_page: BasePage):
         try:
             page_loaded = self.wait.until_not(lambda driver: current_page.is_title_correct())
         except TimeoutException:
