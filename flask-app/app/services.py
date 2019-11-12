@@ -2,7 +2,7 @@ from flask import current_app
 from sqlalchemy.orm import load_only
 
 from app import db
-from app.models import Recipe, WaitingRecipe
+from app.models import Recipe, WaitingRecipe, User
 
 
 def init_waiting_recipe(**kwargs):
@@ -87,3 +87,7 @@ def get_all_waiting_recipes(user):
             load_only("id", "title", "time", "difficulty")).all()
     current_app.logger.debug('Full list of waiting recipes got for user %s' % user.username)
     return waiting_recipes
+
+
+def get_user_by_name(username):
+    return User.query.filter_by(username=username).first()
