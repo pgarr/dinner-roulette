@@ -51,6 +51,7 @@ class BaseTest(TestCase):
             return None
 
     def smart_login(self, login, password):
+        """logs in with credentials, but first logs out if already logged in with different user"""
         base_page = BasePage(self.driver)
 
         if base_page.user_name != login:

@@ -11,8 +11,8 @@ class BasePageLocators:
 
     # LOGGED IN USER NAVIGATION BAR
     USER_MENU_DROPDOWN = (By.ID, 'navbarDropdown')
-    WAITING_RECIPES_BUTTON = (By.CSS_SELECTOR, 'a:contains("Pending recipes")')
-    LOGOUT_BUTTON = (By.XPATH, '//*[@id="navbarTogglerBasic"]/ul/li[2]/div/a[2]')
+    WAITING_RECIPES_BUTTON = (By.XPATH, "//a[contains(text(), 'Pending recipes')]")
+    LOGOUT_BUTTON = (By.XPATH, "//a[contains(text(), 'Logout')]")
 
 
 class HomePageLocators:
@@ -28,9 +28,8 @@ class LoginPageLocators:
     PASSWORD_FIELD = (By.ID, 'password')
     REMEMBER_ME_CHECKBOX = (By.ID, 'remember_me')
     SUBMIT_BUTTON = (By.ID, 'submit')
-    NEW_USER_BUTTON = (By.CSS_SELECTOR, 'a:contains("New user?")')  # TODO: :contains() is not an accepted css3 selector
-    FORGOTTEN_PASSWORD_BUTTON = (
-        By.CSS_SELECTOR, 'a:contains("Forgotten password?")')  # TODO: :contains() is not an accepted css3 selector
+    NEW_USER_BUTTON = (By.XPATH, "//a[contains(text(), 'New user?')]")
+    FORGOTTEN_PASSWORD_BUTTON = (By.XPATH, "//a[contains(text(), 'Forgotten password?')]")
 
 
 class RecipePageLocators:
@@ -43,8 +42,7 @@ class RecipePageLocators:
     INGREDIENT_NAME = (By.TAG_NAME, 'th')  # inside INGREDIENT_ROW
     INGREDIENT_AMOUNT = (By.TAG_NAME, 'td')  # inside INGREDIENT_ROW
     PREPARATION_PTAG = (By.XPATH, '/html/body/div[2]/div[3]/div[2]/p')
-    SOURCE_LINK = (By.CSS_SELECTOR,
-                   "a:contains('source')")  # TODO: :contains() is not an accepted css3 selector, use xpath instead (check  accept_link)
+    SOURCE_LINK = (By.XPATH, "//a[contains(text(), 'source')]")
 
 
 class WaitingRecipePageLocators:
