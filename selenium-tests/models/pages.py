@@ -47,6 +47,11 @@ class BasePage:
         return self.driver.find_element(*BasePageLocators.WAITING_RECIPES_BUTTON)
 
     @property
+    def my_recipes_button(self):
+        """Visible for logged in user"""
+        return self.driver.find_element(*BasePageLocators.MY_RECIPES_BUTTON)
+
+    @property
     def logout_button(self):
         """Visible for logged in user"""
         return self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON)
@@ -76,6 +81,10 @@ class BasePage:
 
     def go_to_new_recipe_page(self):
         self.add_recipe_button.click()
+
+    def go_to_my_recipes_page(self):
+        self.user_menu_dropdown.click()
+        self.my_recipes_button.click()
 
     def logout(self):
         self.user_menu_dropdown.click()

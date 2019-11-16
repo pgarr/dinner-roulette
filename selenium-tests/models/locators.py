@@ -11,6 +11,7 @@ class BasePageLocators:
 
     # LOGGED IN USER NAVIGATION BAR
     USER_MENU_DROPDOWN = (By.ID, 'navbarDropdown')
+    MY_RECIPES_BUTTON = (By.XPATH, "//a[contains(text(), 'My recipes')]")
     WAITING_RECIPES_BUTTON = (By.XPATH, "//a[contains(text(), 'Pending recipes')]")
     LOGOUT_BUTTON = (By.XPATH, "//a[contains(text(), 'Logout')]")
 
