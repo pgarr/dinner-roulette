@@ -1,5 +1,5 @@
 from base_test import BaseTest
-from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage
+from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, MyRecipesPage
 
 
 class LoggingUserTest(BaseTest):
@@ -24,6 +24,13 @@ class LoggingUserTest(BaseTest):
     def test_waiting_recipes_leads_to_login_if_not_logged(self):
         waiting_recipes_page = WaitingRecipesPage(self.driver)
         self.driver.get(waiting_recipes_page.url)
+
+        login_page = LoginPage(self.driver)
+        self.assertTrue(login_page.is_title_correct())
+
+    def test_my_recipes_leads_to_login_if_not_logged(self):
+        my_recipes_page = MyRecipesPage(self.driver)
+        self.driver.get(my_recipes_page.url)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())

@@ -13,17 +13,14 @@ from utils.aut import Aut
 
 class BaseTest(TestCase):
 
-    @property
     def setUp_users(self):
         return [{"username": "test", "email": "test@test.com", "password": "test"},
                 {"username": "test2", "email": "test2@test.com", "password": "test"},
                 {"username": "admin", "email": "admin@test.com", "password": "admin"}]
 
-    @property
     def setUp_recipes(self):
         return None
 
-    @property
     def setUp_waiting_recipes(self):
         return None
 
@@ -34,7 +31,8 @@ class BaseTest(TestCase):
 
     def setUp(self):
         # run aut
-        self._aut = Aut(users=self.setUp_users, recipes=self.setUp_recipes, waiting_recipes=self.setUp_waiting_recipes)
+        self._aut = Aut(users=self.setUp_users(), recipes=self.setUp_recipes(),
+                        waiting_recipes=self.setUp_waiting_recipes())
         self._aut.run(10)
         # set language preferences
         options = webdriver.ChromeOptions()

@@ -155,6 +155,16 @@ class WaitingRecipesPage(HomePage):
         return "Waiting Recipes - Cookbook"
 
 
+class MyRecipesPage(HomePage):
+    @property
+    def url(self):
+        return self._url + '/recipes/my'
+
+    @property
+    def title(self):
+        return "My Recipes - Cookbook"
+
+
 class LoginPage(BasePage):
 
     @property
