@@ -13,15 +13,29 @@ from utils.aut import Aut
 
 class BaseTest(TestCase):
 
+    @property
+    def setUp_users(self):
+        return [{"username": "test", "email": "test@test.com", "password": "test"},
+                {"username": "test2", "email": "test2@test.com", "password": "test"},
+                {"username": "admin", "email": "admin@test.com", "password": "admin"}]
+
+    @property
+    def setUp_recipes(self):
+        return None
+
+    @property
+    def setUp_waiting_recipes(self):
+        return None
+
     @classmethod
     def setUpClass(cls):
         basedir = os.path.abspath(os.path.dirname(__file__))
         load_dotenv(os.path.join(basedir, '.env'))
-        # run aut
-        cls._aut = Aut()
-        cls._aut.run(10)
 
     def setUp(self):
+        # run aut
+        self._aut = Aut(users=self.setUp_users, recipes=self.setUp_recipes, waiting_recipes=self.setUp_waiting_recipes)
+        self._aut.run(10)
         # set language preferences
         options = webdriver.ChromeOptions()
         options.add_argument('--lang=en')
@@ -33,10 +47,7 @@ class BaseTest(TestCase):
 
     def tearDown(self):
         self.driver.quit()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls._aut.stop()
+        self._aut.stop()
 
     # helper methods:
     def wait_page_changes(self, current_page: BasePage, expected_page: BasePage = None):
