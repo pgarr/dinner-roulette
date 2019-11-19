@@ -6,12 +6,12 @@ data = {"users": [{"username": "test", "email": "test@test.com", "password": "te
                   {"username": "test2", "email": "test2@test.com", "password": "test"},
                   {"username": "admin", "email": "admin@test.com", "password": "admin"}],
         "recipes": [
-            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test", "author": "test2"}, "ingredients": [
+            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test", "author": "test2", "ingredients": [
                  {"title": "test1", "amount": 3, "unit": "kg"},
                  {"title": "test2"}]
              }],
         "waiting_recipes": [
-            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test", "author": "test2"},
+            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test", "author": "test2",
             {"title": "test2", "link": "http://test.pl", "preparation": "test test", "author": "test", "ingredients": [
                  {"title": "test1", "amount": 3, "unit": "kg"},
                  {"title": "test2"}]
