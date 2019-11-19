@@ -6,7 +6,7 @@ import time
 import requests
 
 
-class Aut:
+class Aut:   # TODO: requires unit tests
     def __init__(self, users=None, recipes=None, waiting_recipes=None):
         self.python = os.environ.get('PYTHON_AUT_DIR')
         self.runner = os.environ.get('AUT_DIR')
@@ -34,7 +34,7 @@ class Aut:
         if self.process:
             self.process.terminate()
 
-    def prepare_input_data(self, users, recipes, waiting_recipes):  # TODO: requires unit tests
+    def prepare_input_data(self, users, recipes, waiting_recipes):
         if not users and not recipes and not waiting_recipes:
             return None
         else:

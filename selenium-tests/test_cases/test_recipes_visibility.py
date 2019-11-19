@@ -1,6 +1,6 @@
 from base_test import BaseTest
 from models.pages import HomePage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage, \
-    RecipePage
+    RecipePage, MyRecipesPage
 
 
 class RecipesVisibilityTest(BaseTest):
@@ -107,3 +107,43 @@ class RecipesVisibilityTest(BaseTest):
 
         self.assertEqual(len(waiting_list_page.recipes), waiting_recipes_count,
                          msg="After accepting new recipe, waiting recipes count is same as before adding this recipe")
+
+
+class MyRecipesTest(BaseTest):
+
+    def setUp_recipes(self):
+        recipes = [
+            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test",
+             "author": "test2", "ingredients": [
+                {"title": "test1", "amount": 3, "unit": "kg"},
+                {"title": "test2"}]},
+            {"title": "test2", "time": 30, "difficulty": 3, "link": "http://test2.pl", "preparation": "test2 test2",
+             "author": "test2", "ingredients": [
+                {"title": "test1", "amount": 3, "unit": "kg"},
+                {"title": "test2"}]}
+        ]
+        return recipes
+
+    def test_my_recipes_two_recipes(self):
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+
+        self.smart_login('test2', 'test')
+
+        home_page.go_to_my_recipes_page()
+        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+
+        self.assertEqual(len(my_recipes_page.recipes), 2,
+                         msg="My recipes count is correct")
+
+    def test_my_recipes_no_recipes(self):
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+
+        self.smart_login('test', 'test')
+
+        home_page.go_to_my_recipes_page()
+        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+
+        self.assertEqual(len(my_recipes_page.recipes), 0,
+                         msg="My recipes count is correct")
