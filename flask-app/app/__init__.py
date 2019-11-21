@@ -79,8 +79,9 @@ def create_app(config_class=Config):
         app.logger.info('dinner-roulette startup')
 
         # backup schedule
-        bs = BackupScheduler(db)
-        bs.start()
+        if app.config['BACKUP_SCHEDULE']:
+            app.backup = BackupScheduler(db, int(app.config['BACKUP_SCHEDULE']))
+            app.backup.start()
 
     return app
 

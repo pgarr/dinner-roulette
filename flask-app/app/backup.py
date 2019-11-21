@@ -12,10 +12,10 @@ from app.email import send_email
 
 class BackupScheduler:
 
-    def __init__(self, db: SQLAlchemy):
+    def __init__(self, db: SQLAlchemy, schedule_time):
         self.app = current_app._get_current_object()
         self.db = db
-        self.wait_time = int(self.app.config['BACKUP_SCHEDULE'])
+        self.wait_time = schedule_time
         self.app.logger.info("Backup: schedule time - %d" % self.wait_time)
 
     def dump_backup(self):
