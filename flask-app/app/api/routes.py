@@ -5,7 +5,7 @@ from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
 from app.services import get_recipe, save_recipe, init_waiting_recipe, get_all_recipes, get_waiting_recipe, \
-    get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting
+    get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes
 
 
 @bp.route('/', methods=['GET'])
@@ -17,6 +17,14 @@ def connection():
 def recipes():
     recipe_models = get_all_recipes()
     result = recipes_schema.dump(recipe_models)
+    return jsonify({'recipes': result.data})
+
+
+@bp.route('/recipes/my', methods=['GET'])
+@jwt_required()
+def my_recipes():
+    my_models = get_user_recipes(author=current_identity)
+    result = recipes_schema.dump(my_models)
     return jsonify({'recipes': result.data})
 
 

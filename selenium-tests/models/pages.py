@@ -5,8 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from models.elements import TextFieldElement
 from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators, \
-    WaitingRecipePageLocators, NewRecipePageLocators
-from utils.errors import NotLoggedInError, UserLoggedInError
+    WaitingRecipePageLocators, NewRecipePageLocators, ErrorPageLocators
 
 
 class BasePage:
@@ -35,49 +34,40 @@ class BasePage:
     @property
     def login_button(self):
         """Visible if user is not logged in"""
-        try:
-            return self.driver.find_element(*BasePageLocators.LOGIN_BUTTON)
-        except NoSuchElementException as e:
-            raise UserLoggedInError from e
+        return self.driver.find_element(*BasePageLocators.LOGIN_BUTTON)
 
     @property
     def user_menu_dropdown(self):
         """Visible for logged in user"""
-        try:
-            return self.driver.find_element(*BasePageLocators.USER_MENU_DROPDOWN)
-        except NoSuchElementException as e:
-            raise NotLoggedInError from e
+        return self.driver.find_element(*BasePageLocators.USER_MENU_DROPDOWN)
 
     @property
     def waiting_recipes_button(self):
         """Visible for logged in user"""
-        try:
-            return self.driver.find_element(*BasePageLocators.WAITING_RECIPES_BUTTON)
-        except NoSuchElementException as e:
-            raise NotLoggedInError from e
+        return self.driver.find_element(*BasePageLocators.WAITING_RECIPES_BUTTON)
+
+    @property
+    def my_recipes_button(self):
+        """Visible for logged in user"""
+        return self.driver.find_element(*BasePageLocators.MY_RECIPES_BUTTON)
 
     @property
     def logout_button(self):
         """Visible for logged in user"""
-        try:
-            return self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON)
-        except NoSuchElementException as e:
-            raise NotLoggedInError from e
+        return self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON)
 
     @property
     def user_name(self):
-        return self.user_menu_dropdown.text
+        try:
+            return self.user_menu_dropdown.text
+        except NoSuchElementException:
+            return None
 
     def is_url_correct(self):
         return self.driver.current_url == self.url
 
     def is_title_correct(self):
-        current_title = self.driver.title
-        if current_title == self.title:
-            return True
-        else:
-            print("Current title: %s" % current_title)
-            return False
+        return self.driver.title == self.title
 
     def go_to_login_page(self):
         self.login_button.click()
@@ -91,6 +81,14 @@ class BasePage:
 
     def go_to_new_recipe_page(self):
         self.add_recipe_button.click()
+
+    def go_to_my_recipes_page(self):
+        self.user_menu_dropdown.click()
+        self.my_recipes_button.click()
+
+    def logout(self):
+        self.user_menu_dropdown.click()
+        self.logout_button.click()
 
 
 class BasePageUrlRegex(BasePage):
@@ -157,6 +155,16 @@ class WaitingRecipesPage(HomePage):
         return "Waiting Recipes - Cookbook"
 
 
+class MyRecipesPage(HomePage):
+    @property
+    def url(self):
+        return self._url + '/recipes/my'
+
+    @property
+    def title(self):
+        return "My Recipes - Cookbook"
+
+
 class LoginPage(BasePage):
 
     @property
@@ -218,7 +226,7 @@ class RecipePage(BasePageUrlRegex):
 
     @property
     def title(self):
-        return "Recipe Page - Cookbook"
+        return "Recipe - Cookbook"
 
     @property
     def recipe_title(self):
@@ -270,7 +278,7 @@ class WaitingRecipePage(RecipePage):
 
     @property
     def title(self):
-        return "Waiting Recipe Page - Cookbook"
+        return "Waiting Recipe - Cookbook"
 
     @property
     def accept_link(self):
@@ -296,7 +304,7 @@ class NewRecipePage(BasePage):
 
         def __repr__(self):
             return "IngredientRow: name: %s, amount: %d, unit: %s" % (
-            self.name.get_text(), self.amount.get_text(), self.unit.get_text())
+                self.name.get_text(), self.amount.get_text(), self.unit.get_text())
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -367,3 +375,10 @@ class EditWaitingRecipePage(EditRecipePage):
     @property
     def title(self):
         return "Edit Waiting Recipe Page - Cookbook"
+
+
+class ErrorPage(BasePage):
+
+    @property
+    def message(self):
+        return self.driver.find_element(*ErrorPageLocators.ERROR_MESSAGE).text

@@ -1,9 +1,5 @@
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
-
 from base_test import BaseTest
-from config import MAX_LOADING_TIME
-from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage
+from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, MyRecipesPage
 
 
 class LoggingUserTest(BaseTest):
@@ -12,25 +8,18 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
 
         home_page.go_to_login_page()
-        login_page = LoginPage(self.driver)
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
-        self.assertTrue(login_page.is_title_correct())
         login_page.login('test', 'test')
+        self.wait_page_changes(login_page, home_page)
 
-        self.wait_for_load(login_page)
-
-        self.assertTrue(home_page.is_title_correct())
         self.assertEqual(home_page.user_name, 'test')
 
     def test_add_recipe_leads_to_login_if_not_logged(self):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
-        home_page.add_recipe_button.click()
-
-        self.wait_for_load(home_page)
-
-        login_page = LoginPage(self.driver)
-        self.assertTrue(login_page.is_title_correct())
+        home_page.go_to_new_recipe_page()
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
     def test_waiting_recipes_leads_to_login_if_not_logged(self):
         waiting_recipes_page = WaitingRecipesPage(self.driver)
@@ -39,18 +28,18 @@ class LoggingUserTest(BaseTest):
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
 
-    def test_when_add_recipe_leads_to_logging_logging_leads_to_add_recipe(self):
-        home_page = HomePage(self.driver)
-        self.driver.get(home_page.url)
-        home_page.add_recipe_button.click()
-
-        self.wait_for_load(home_page)
+    def test_my_recipes_leads_to_login_if_not_logged(self):
+        my_recipes_page = MyRecipesPage(self.driver)
+        self.driver.get(my_recipes_page.url)
 
         login_page = LoginPage(self.driver)
         self.assertTrue(login_page.is_title_correct())
 
-        login_page.login("test", "test")
-        self.wait_for_load(login_page)
+    def test_when_add_recipe_leads_to_logging_logging_leads_to_add_recipe(self):
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+        home_page.go_to_new_recipe_page()
+        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
 
-        new_recipe_page = NewRecipePage(self.driver)
-        self.assertTrue(new_recipe_page.is_title_correct())
+        login_page.login("test", "test")
+        new_recipe_page = self.wait_page_changes(login_page, NewRecipePage(self.driver))

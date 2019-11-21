@@ -11,8 +11,9 @@ class BasePageLocators:
 
     # LOGGED IN USER NAVIGATION BAR
     USER_MENU_DROPDOWN = (By.ID, 'navbarDropdown')
-    WAITING_RECIPES_BUTTON = (By.XPATH, '//*[@id="navbarTogglerBasic"]/ul/li[2]/div/a[1]')
-    LOGOUT_BUTTON = (By.XPATH, '//*[@id="navbarTogglerBasic"]/ul/li[2]/div/a[2]')
+    MY_RECIPES_BUTTON = (By.XPATH, "//a[contains(text(), 'My recipes')]")
+    WAITING_RECIPES_BUTTON = (By.XPATH, "//a[contains(text(), 'Pending recipes')]")
+    LOGOUT_BUTTON = (By.XPATH, "//a[contains(text(), 'Logout')]")
 
 
 class HomePageLocators:
@@ -28,8 +29,8 @@ class LoginPageLocators:
     PASSWORD_FIELD = (By.ID, 'password')
     REMEMBER_ME_CHECKBOX = (By.ID, 'remember_me')
     SUBMIT_BUTTON = (By.ID, 'submit')
-    NEW_USER_BUTTON = (By.CSS_SELECTOR, 'a:contains("New user?")')
-    FORGOTTEN_PASSWORD_BUTTON = (By.CSS_SELECTOR, 'a:contains("Forgotten password?")')
+    NEW_USER_BUTTON = (By.XPATH, "//a[contains(text(), 'New user?')]")
+    FORGOTTEN_PASSWORD_BUTTON = (By.XPATH, "//a[contains(text(), 'Forgotten password?')]")
 
 
 class RecipePageLocators:
@@ -42,11 +43,11 @@ class RecipePageLocators:
     INGREDIENT_NAME = (By.TAG_NAME, 'th')  # inside INGREDIENT_ROW
     INGREDIENT_AMOUNT = (By.TAG_NAME, 'td')  # inside INGREDIENT_ROW
     PREPARATION_PTAG = (By.XPATH, '/html/body/div[2]/div[3]/div[2]/p')
-    SOURCE_LINK = (By.CSS_SELECTOR, 'a:contains("source")')
+    SOURCE_LINK = (By.XPATH, "//a[contains(text(), 'source')]")
 
 
 class WaitingRecipePageLocators:
-    ACCEPT_LINK = (By.CSS_SELECTOR, 'a:contains("Accept")')
+    ACCEPT_LINK = (By.XPATH, "//a[contains(text(), 'Accept')]")
 
 
 class NewRecipePageLocators:
@@ -62,3 +63,7 @@ class NewRecipePageLocators:
     INGREDIENT_NAME_FIELD = (By.ID, 'ingredients-%d-title')
     INGREDIENT_AMOUNT_FIELD = (By.ID, 'ingredients-%d-amount')
     INGREDIENT_UNIT_FIELD = (By.ID, 'ingredients-%d-unit')
+
+
+class ErrorPageLocators:
+    ERROR_MESSAGE = (By.CLASS_NAME, 'error-msg')
