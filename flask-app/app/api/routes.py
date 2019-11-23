@@ -130,7 +130,7 @@ def update_waiting_recipe(pk):
         return error_response(401)
 
 
-@bp.route('/search/<string:text>', 'GET')
+@bp.route('/search/<string:text>', methods=['GET'])
 def search(text):
     recipe_models, total = search_recipe(text, 1, 100)
     result = recipes_schema.dump(recipe_models)
