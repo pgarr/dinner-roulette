@@ -52,7 +52,7 @@ def save_recipe(model):
     model.clear_empty_ingredients()
     db.session.add(model)
     db.session.commit()
-    current_app.logger.info('%s saved - ID %d' % (type(model.__class__), model.id))
+    current_app.logger.info('%s saved - ID %d' % (model.__class__, model.id))
 
 
 def get_recipe(pk):
