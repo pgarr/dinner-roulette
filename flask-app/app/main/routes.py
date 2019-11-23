@@ -135,6 +135,18 @@ def search():
     return render_template('index.html', title=_('Search'), recipes=recipes)
 
 
+@bp.route('/admin/reindex')
+@login_required
+def reindex():
+    """Temporary endpoint to reindex recipes in elasticsearch"""
+    # TODO: remove or develop
+    if current_user.admin:
+        Recipe.reindex()
+        return 'Done'
+    else:
+        abort(401)
+
+
 # helper methods
 def save_recipe_from_form(form, model):
     model.title = form.title.data
@@ -152,8 +164,3 @@ def save_recipe_from_form(form, model):
 @bp.before_app_request
 def before_request():
     g.search_form = SearchForm()
-
-
-@bp.before_app_first_request
-def before_first_request():
-    Recipe.reindex()
