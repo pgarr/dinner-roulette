@@ -1,8 +1,9 @@
-from flask import abort, render_template, flash, redirect, url_for
+from flask import abort, render_template, flash, redirect, url_for, g, request
 from flask_login import current_user, login_required
 
 from app.main import bp
-from app.main.forms import RecipeForm
+from app.main.forms import RecipeForm, SearchForm
+from app.models import Recipe
 from app.services import init_waiting_recipe, get_recipe, save_recipe, get_all_recipes, get_waiting_recipe, \
     clone_recipe_to_waiting, get_all_waiting_recipes, accept_waiting, get_user_recipes
 from flask_babel import _
@@ -119,6 +120,22 @@ def edit_waiting(pk):
         abort(401)
 
 
+@bp.route('/search')
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for('.index'))
+    # requires pagination implemented
+    # page = request.args.get('page', 1, type=int)
+    # recipes, total = Recipe.search(g.search_form.q.data, page, current_app.config['POSTS_PER_PAGE'])
+    # next_url = url_for('.search', q=g.search_form.q.data, page=page + 1) if total > page * current_app.config[
+    #     'POSTS_PER_PAGE'] else None
+    # prev_url = url_for('.search', q=g.search_form.q.data, page=page - 1) if page > 1 else None
+    # return render_template('index.html', title=_('Search'), recipes=recipes, next_url=next_url, prev_url=prev_url)
+    recipes, total = Recipe.search(g.search_form.q.data, 1, 100)
+    return render_template('index.html', title=_('Search'), recipes=recipes)
+
+
+# helper methods
 def save_recipe_from_form(form, model):
     model.title = form.title.data
     model.time = form.time.data
@@ -130,3 +147,13 @@ def save_recipe_from_form(form, model):
         if i.title.data:
             model.add_ingredient(title=i.title.data, amount=i.amount.data, unit=i.unit.data)
     save_recipe(model)
+
+
+@bp.before_app_request
+def before_request():
+    g.search_form = SearchForm()
+
+
+@bp.before_app_first_request
+def before_first_request():
+    Recipe.reindex()
