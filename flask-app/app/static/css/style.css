@@ -39,3 +39,7 @@ body {
     height: 400px;
 }
 
+.search-form {
+    margin-block-end: 0em;
+}
+
