@@ -91,3 +91,11 @@ def get_all_waiting_recipes(user):
 
 def get_user_by_name(username):
     return User.query.filter_by(username=username).first()
+
+
+def search_recipe(string, page, per_page):
+    return Recipe.search(string, page, per_page)
+
+
+def reindex_es():
+    Recipe.reindex()
