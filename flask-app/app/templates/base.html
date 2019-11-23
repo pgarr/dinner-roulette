@@ -23,7 +23,7 @@
     </head>
 
     <body>
-    <div class="container">
+    <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
             <a class="navbar-brand" href="{{ url_for('main.index') }}">Cookbook</a>
@@ -57,6 +57,13 @@
                         </li>
                     {% endif %}
                 </ul>
+                {% if g.search_form %}
+                    <form class="search-form" method="get" action="{{ url_for('main.search') }}">
+                        <div class="nav-item">
+                            {{ g.search_form.q(size=20, class_='form-control', placeholder=g.search_form.q.label.text) }}
+                        </div>
+                    </form>
+                {% endif %}
             </div>
         </nav>
 

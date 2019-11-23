@@ -5,7 +5,7 @@ from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
 from app.services import get_recipe, save_recipe, init_waiting_recipe, get_all_recipes, get_waiting_recipe, \
-    get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes
+    get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
 
 
 @bp.route('/', methods=['GET'])
@@ -130,6 +130,14 @@ def update_waiting_recipe(pk):
         return error_response(401)
 
 
+@bp.route('/search/<string:text>', methods=['GET'])
+def search(text):
+    recipe_models, total = search_recipe(text, 1, 100)
+    result = recipes_schema.dump(recipe_models)
+    return jsonify({'recipes': result.data})
+
+
+# helper functions
 def save_recipe_from_schema(data, model):
     model.title = data.get('title')
     model.time = data.get('time')

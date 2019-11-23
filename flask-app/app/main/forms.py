@@ -1,8 +1,9 @@
+from flask import request
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, IntegerField, FormField, \
     FieldList, FloatField
-from wtforms.validators import URL, NumberRange, Optional, Length
+from wtforms.validators import URL, NumberRange, Optional, Length, DataRequired
 
 
 class CommaFloatField(FloatField):
@@ -34,3 +35,14 @@ class RecipeForm(FlaskForm):
     add_ingredient = SubmitField('+')
     remove_ingredient = SubmitField('-')
     submit = SubmitField(_l('Submit'))
+
+
+class SearchForm(FlaskForm):
+    q = StringField(_l('Search'), validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        if 'formadata' not in kwargs:
+            kwargs['formdata'] = request.args
+        if 'csrf_enabled' not in kwargs:
+            kwargs['csrf_enabled'] = False
+        super(SearchForm, self).__init__(*args, **kwargs)

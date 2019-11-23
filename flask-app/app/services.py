@@ -52,7 +52,7 @@ def save_recipe(model):
     model.clear_empty_ingredients()
     db.session.add(model)
     db.session.commit()
-    current_app.logger.info('%s saved - ID %d' % (type(model.__class__), model.id))
+    current_app.logger.info('%s saved - ID %d' % (model.__class__, model.id))
 
 
 def get_recipe(pk):
@@ -91,3 +91,11 @@ def get_all_waiting_recipes(user):
 
 def get_user_by_name(username):
     return User.query.filter_by(username=username).first()
+
+
+def search_recipe(string, page, per_page):
+    return Recipe.search(string, page, per_page)
+
+
+def reindex_es():
+    Recipe.reindex()

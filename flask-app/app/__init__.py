@@ -2,6 +2,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler, SMTPHandler
 
+from elasticsearch import Elasticsearch
 from flask import Flask, current_app, request
 from flask_babel import Babel, lazy_gettext as _l
 from flask_login import LoginManager
@@ -44,6 +45,10 @@ def create_app(config_class=Config):
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    # elasticsearch
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
+
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
             auth = None
@@ -79,8 +84,9 @@ def create_app(config_class=Config):
         app.logger.info('dinner-roulette startup')
 
         # backup schedule
-        bs = BackupScheduler(db)
-        bs.start()
+        if app.config['BACKUP_SCHEDULE']:
+            app.backup = BackupScheduler(db, int(app.config['BACKUP_SCHEDULE']))
+            app.backup.start()
 
     return app
 
