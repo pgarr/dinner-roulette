@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, current_app, url_for
 from flask_jwt import jwt_required, current_identity
 
 from app.api import bp
@@ -15,17 +15,19 @@ def connection():
 
 @bp.route('/recipes', methods=['GET'])
 def recipes():
-    recipe_models = get_recipes()
-    result = recipes_schema.dump(recipe_models)
-    return jsonify({'recipes': result.data})
+    page = request.args.get('page', 1)
+    per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
+    recipe_models = get_recipes(page=page, per_page=per_page)
+    return paginated_recipes_jsonify(recipe_models, page, per_page, endpoint='.recipes', items_name='recipes')
 
 
 @bp.route('/recipes/my', methods=['GET'])
 @jwt_required()
 def my_recipes():
-    my_models = get_user_recipes(author=current_identity)
-    result = recipes_schema.dump(my_models)
-    return jsonify({'recipes': result.data})
+    page = request.args.get('page', 1)
+    per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
+    my_models = get_user_recipes(author=current_identity, page=page, per_page=per_page)
+    return paginated_recipes_jsonify(my_models, page, per_page, endpoint='.my_recipes', items_name='recipes')
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
@@ -49,9 +51,12 @@ def waiting_recipe(pk):
 @bp.route('/waiting', methods=['GET'])
 @jwt_required()
 def waiting_recipes():
-    waitings_models = get_waiting_recipes(user=current_identity)
-    result = recipes_schema.dump(waitings_models)
-    return jsonify({'pending_recipes': result.data})
+    page = request.args.get('page', 1)
+    per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
+    waitings_models = get_waiting_recipes(user=current_identity, page=page,
+                                          per_page=per_page)
+    return paginated_recipes_jsonify(waitings_models, page, per_page, endpoint='.waiting_recipes',
+                                     items_name='pending_recipes')
 
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
@@ -132,8 +137,10 @@ def update_waiting_recipe(pk):
 
 @bp.route('/search', methods=['GET'])
 def search():
-    text = request.args.get('q', '')
-    recipe_models, total = search_recipe(text, 1, 100)
+    q = request.args.get('q', '')
+    page = request.args.get('page', 1)
+    per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
+    recipe_models, total = search_recipe(q, page, per_page)
     result = recipes_schema.dump(recipe_models)
     return jsonify({'recipes': result.data})
 
@@ -149,3 +156,24 @@ def save_recipe_from_schema(data, model):
     for data_ingredient in data['ingredients']:
         model.add_ingredient(**data_ingredient)
     save_recipe(model)
+
+
+def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, **kwargs):
+    result = recipes_schema.dump(paginated.items)
+    page = int(page)
+    per_page = int(per_page)
+    meta = {
+        'page': page,
+        'per_page': per_page,
+        'total_pages': paginated.pages,
+        'total_items': paginated.total
+    }
+    links = {
+        'self': url_for(endpoint, page=page, per_page=per_page,
+                        **kwargs),
+        'next': url_for(endpoint, page=page + 1, per_page=per_page,
+                        **kwargs) if paginated.has_next else None,
+        'prev': url_for(endpoint, page=page - 1, per_page=per_page,
+                        **kwargs) if paginated.has_prev else None
+    }
+    return jsonify({items_name: result.data, '_meta': meta, '_links': links})

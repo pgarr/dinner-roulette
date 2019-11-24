@@ -68,28 +68,30 @@ def get_waiting_recipe(pk):
 
 
 def get_recipes(page, per_page):
-    pagination = Recipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+    page = int(page)
+    per_page = int(per_page)
+    paginated = Recipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
         page, per_page, False)
     current_app.logger.debug('Page %d of list of recipes got' % page)
-    return pagination
+    return paginated
 
 
 def get_user_recipes(author, page, per_page):
-    pagination = Recipe.query.filter(Recipe.author == author).options(
+    paginated = Recipe.query.filter(Recipe.author == author).options(
         load_only("id", "title", "time", "difficulty")).paginate(page, per_page, False)
     current_app.logger.debug("Page %d of list of %s's recipes got" % (page, author.username))
-    return pagination
+    return paginated
 
 
 def get_waiting_recipes(user, page, per_page):
     if user.admin:
-        pagination = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+        paginated = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
             page, per_page, False)
     else:
-        pagination = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
+        paginated = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
             "id", "title", "time", "difficulty")).paginate(page, per_page, False)
     current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
-    return pagination
+    return paginated
 
 
 def get_user_by_name(username):
@@ -97,6 +99,8 @@ def get_user_by_name(username):
 
 
 def search_recipe(string, page, per_page):
+    page = int(page)
+    per_page = int(per_page)
     return Recipe.search(string, page, per_page)
 
 

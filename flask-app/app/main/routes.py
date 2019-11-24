@@ -141,8 +141,6 @@ def search():
         'RECIPES_PER_PAGE'] else None
     prev_url = url_for('.search', q=g.search_form.q.data, page=page - 1) if page > 1 else None
     return render_template('index.html', title=_('Search'), recipes=recipes, next_url=next_url, prev_url=prev_url)
-    # recipes, total = search_recipe(g.search_form.q.data, 1, 100)
-    # return render_template('index.html', title=_('Search'), recipes=recipes)
 
 
 @bp.route('/admin/reindex')
