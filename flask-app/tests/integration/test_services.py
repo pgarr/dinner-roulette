@@ -58,25 +58,25 @@ class TestServices(TestAppSetUp):
         db.session.commit()
 
     def test_get_all_recpies(self):
-        recipes = get_recipes()
-        self.assertEqual(len(recipes), 2)
+        recipes = get_recipes(1, 1000)
+        self.assertEqual(len(recipes.items), 2)
 
     def test_get_user_recipes_two_recipes(self):
-        recipes = get_user_recipes(self.user)
-        self.assertEqual(len(recipes), 2)
+        recipes = get_user_recipes(self.user, 1, 1000)
+        self.assertEqual(len(recipes.items), 2)
 
     def test_get_user_recipes_no_recipes(self):
-        recipes = get_user_recipes(self.user2)
-        self.assertEqual(len(recipes), 0)
+        recipes = get_user_recipes(self.user2, 1, 1000)
+        self.assertEqual(len(recipes.items), 0)
 
     def test_get_all_waiting_recipes_no_recipes(self):
-        waiting_recipes = get_waiting_recipes(self.user)
-        self.assertEqual(len(waiting_recipes), 0)
+        waiting_recipes = get_waiting_recipes(self.user, 1, 1000)
+        self.assertEqual(len(waiting_recipes.items), 0)
 
     def test_get_all_waiting_recipes_two_recipes(self):
-        waiting_recipes = get_waiting_recipes(self.user3)
-        self.assertEqual(len(waiting_recipes), 2)
+        waiting_recipes = get_waiting_recipes(self.user3, 1, 1000)
+        self.assertEqual(len(waiting_recipes.items), 2)
 
     def test_get_all_waiting_recipes_admin(self):
-        waiting_recipes = get_waiting_recipes(self.admin)
-        self.assertEqual(len(waiting_recipes), 3)
+        waiting_recipes = get_waiting_recipes(self.admin, 1, 1000)
+        self.assertEqual(len(waiting_recipes.items), 3)
