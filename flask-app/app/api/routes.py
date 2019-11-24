@@ -1,10 +1,11 @@
-from flask import jsonify, request, current_app, url_for
+from flask import jsonify, request, current_app
 from flask_jwt import jwt_required, current_identity
 
 from app.api import bp
 from app.api.errors import error_response, bad_request
+from app.api.helper_fun import save_recipe_from_schema, paginated_recipes_jsonify
 from app.api.schemas import recipes_schema, recipe_schema
-from app.services import get_recipe, save_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
+from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
     get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
 
 
@@ -143,37 +144,3 @@ def search():
     recipe_models, total = search_recipe(q, page, per_page)
     result = recipes_schema.dump(recipe_models)
     return jsonify({'recipes': result.data})
-
-
-# helper functions
-def save_recipe_from_schema(data, model):
-    model.title = data.get('title')
-    model.time = data.get('time')
-    model.difficulty = data.get('difficulty')
-    model.link = data.get('link')
-    model.preparation = data.get('preparation')
-    model.ingredients = []
-    for data_ingredient in data['ingredients']:
-        model.add_ingredient(**data_ingredient)
-    save_recipe(model)
-
-
-def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, **kwargs):
-    result = recipes_schema.dump(paginated.items)
-    page = int(page)
-    per_page = int(per_page)
-    meta = {
-        'page': page,
-        'per_page': per_page,
-        'total_pages': paginated.pages,
-        'total_items': paginated.total
-    }
-    links = {
-        'self': url_for(endpoint, page=page, per_page=per_page,
-                        **kwargs),
-        'next': url_for(endpoint, page=page + 1, per_page=per_page,
-                        **kwargs) if paginated.has_next else None,
-        'prev': url_for(endpoint, page=page - 1, per_page=per_page,
-                        **kwargs) if paginated.has_prev else None
-    }
-    return jsonify({items_name: result.data, '_meta': meta, '_links': links})
