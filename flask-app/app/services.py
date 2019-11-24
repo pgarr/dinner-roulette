@@ -67,26 +67,29 @@ def get_waiting_recipe(pk):
     return waiting_recipe
 
 
-def get_all_recipes():
-    recipes = Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug('Full list of recipes got')
-    return recipes
+def get_recipes(page, per_page):
+    pagination = Recipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+        page, per_page, False)
+    current_app.logger.debug('Page %d of list of recipes got' % page)
+    return pagination
 
 
-def get_user_recipes(author):
-    recipes = Recipe.query.filter(Recipe.author == author).options(load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug("List of %s's recipes got" % author.username)
-    return recipes
+def get_user_recipes(author, page, per_page):
+    pagination = Recipe.query.filter(Recipe.author == author).options(
+        load_only("id", "title", "time", "difficulty")).paginate(page, per_page, False)
+    current_app.logger.debug("Page %d of list of %s's recipes got" % (page, author.username))
+    return pagination
 
 
-def get_all_waiting_recipes(user):
+def get_waiting_recipes(user, page, per_page):
     if user.admin:
-        waiting_recipes = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+        pagination = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+            page, per_page, False)
     else:
-        waiting_recipes = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(
-            load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug('Full list of waiting recipes got for user %s' % user.username)
-    return waiting_recipes
+        pagination = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
+            "id", "title", "time", "difficulty")).paginate(page, per_page, False)
+    current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
+    return pagination
 
 
 def get_user_by_name(username):

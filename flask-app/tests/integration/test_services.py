@@ -1,6 +1,6 @@
 from app import db
 from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
-from app.services import get_all_recipes, get_user_recipes, get_all_waiting_recipes
+from app.services import get_recipes, get_user_recipes, get_waiting_recipes
 from tests.base_test import TestAppSetUp
 
 
@@ -58,7 +58,7 @@ class TestServices(TestAppSetUp):
         db.session.commit()
 
     def test_get_all_recpies(self):
-        recipes = get_all_recipes()
+        recipes = get_recipes()
         self.assertEqual(len(recipes), 2)
 
     def test_get_user_recipes_two_recipes(self):
@@ -70,13 +70,13 @@ class TestServices(TestAppSetUp):
         self.assertEqual(len(recipes), 0)
 
     def test_get_all_waiting_recipes_no_recipes(self):
-        waiting_recipes = get_all_waiting_recipes(self.user)
+        waiting_recipes = get_waiting_recipes(self.user)
         self.assertEqual(len(waiting_recipes), 0)
 
     def test_get_all_waiting_recipes_two_recipes(self):
-        waiting_recipes = get_all_waiting_recipes(self.user3)
+        waiting_recipes = get_waiting_recipes(self.user3)
         self.assertEqual(len(waiting_recipes), 2)
 
     def test_get_all_waiting_recipes_admin(self):
-        waiting_recipes = get_all_waiting_recipes(self.admin)
+        waiting_recipes = get_waiting_recipes(self.admin)
         self.assertEqual(len(waiting_recipes), 3)

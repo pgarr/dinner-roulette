@@ -58,5 +58,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if prev_url %}
+            <a href="{{ prev_url }}">{{ _('Previous') }}</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}">{{ _('Next') }}</a>
+        {% endif %}
     </div>
 {% endblock %}

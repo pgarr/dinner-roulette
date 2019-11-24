@@ -4,8 +4,8 @@ from flask_jwt import jwt_required, current_identity
 from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.schemas import recipes_schema, recipe_schema
-from app.services import get_recipe, save_recipe, init_waiting_recipe, get_all_recipes, get_waiting_recipe, \
-    get_all_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
+from app.services import get_recipe, save_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
+    get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
 
 
 @bp.route('/', methods=['GET'])
@@ -15,7 +15,7 @@ def connection():
 
 @bp.route('/recipes', methods=['GET'])
 def recipes():
-    recipe_models = get_all_recipes()
+    recipe_models = get_recipes()
     result = recipes_schema.dump(recipe_models)
     return jsonify({'recipes': result.data})
 
@@ -49,7 +49,7 @@ def waiting_recipe(pk):
 @bp.route('/waiting', methods=['GET'])
 @jwt_required()
 def waiting_recipes():
-    waitings_models = get_all_waiting_recipes(user=current_identity)
+    waitings_models = get_waiting_recipes(user=current_identity)
     result = recipes_schema.dump(waitings_models)
     return jsonify({'pending_recipes': result.data})
 
