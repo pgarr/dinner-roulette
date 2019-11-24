@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 
 from app.main import bp
 from app.main.forms import RecipeForm, SearchForm
+from app.main.helper_fun import save_recipe_from_form
 from app.services import init_waiting_recipe, get_recipe, save_recipe, get_recipes, get_waiting_recipe, \
     clone_recipe_to_waiting, get_waiting_recipes, accept_waiting, get_user_recipes, search_recipe, reindex_es
 
@@ -153,20 +154,6 @@ def reindex():
         return 'Done'
     else:
         abort(401)
-
-
-# helper functions
-def save_recipe_from_form(form, model):
-    model.title = form.title.data
-    model.time = form.time.data
-    model.difficulty = form.difficulty.data
-    model.link = form.link.data
-    model.preparation = form.preparation.data
-    model.ingredients = []
-    for i in form.ingredients:
-        if i.title.data:
-            model.add_ingredient(title=i.title.data, amount=i.amount.data, unit=i.unit.data)
-    save_recipe(model)
 
 
 @bp.before_app_request
