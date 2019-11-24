@@ -3,8 +3,8 @@ from flask_jwt import jwt_required, current_identity
 
 from app.api import bp
 from app.api.errors import error_response, bad_request
-from app.api.helper_fun import save_recipe_from_schema, paginated_recipes_jsonify
-from app.api.schemas import recipes_schema, recipe_schema
+from app.api.helper_fun import save_recipe_from_schema, paginated_recipes_jsonify, SearchAPIPaginatedAdapter
+from app.api.schemas import recipe_schema
 from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
     get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
 
@@ -142,5 +142,5 @@ def search():
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     recipe_models, total = search_recipe(q, page, per_page)
-    result = recipes_schema.dump(recipe_models)
-    return jsonify({'recipes': result.data})
+    paginated = SearchAPIPaginatedAdapter(recipe_models, page, per_page, total)
+    return paginated_recipes_jsonify(paginated, page, per_page, endpoint='.search', items_name='recipes', q=q)
