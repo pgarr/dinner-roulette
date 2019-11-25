@@ -5,3 +5,4 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     RECIPES_PER_PAGE = 4
+    ELASTICSEARCH_URL = None

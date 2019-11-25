@@ -25,10 +25,9 @@ def clone_recipe_to_waiting(recipe_model):
 def accept_waiting(waiting_model):
     recipe_model = _push_updates_to_recipe(waiting_model)
     db.session.add(recipe_model)
-    w_id = waiting_model.id
     db.session.delete(waiting_model)
     db.session.commit()
-    current_app.logger.info('ID %d waiting recipe accepted to ID %d recipe' % (w_id, recipe_model.id))
+    current_app.logger.info('ID %d waiting recipe accepted to ID %d recipe' % (waiting_model.id, recipe_model.id))
     return recipe_model
 
 
