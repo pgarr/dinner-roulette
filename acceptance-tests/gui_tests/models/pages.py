@@ -3,9 +3,9 @@ import re
 
 from selenium.common.exceptions import NoSuchElementException
 
-from models.elements import TextFieldElement
-from models.locators import BasePageLocators, LoginPageLocators, HomePageLocators, RecipePageLocators, \
-    WaitingRecipePageLocators, NewRecipePageLocators, ErrorPageLocators
+from gui_tests.models.elements import TextFieldElement
+from gui_tests.models.locators import BasePageLocators, HomePageLocators, LoginPageLocators, RecipePageLocators, \
+    NewRecipePageLocators, WaitingRecipePageLocators, ErrorPageLocators
 
 
 class BasePage:
@@ -360,7 +360,7 @@ class EditRecipePage(BasePageUrlRegex, NewRecipePage):
 
     @property
     def title(self):
-        return "Edit Recipe Page - Cookbook"
+        return "Edit Recipe - Cookbook"
 
     # def is_url_correct(self):
     #     return super(BasePageUrlRegex).is_url_correct()  # should not be needed based on C3 MRO algorithm

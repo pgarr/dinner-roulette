@@ -1,6 +1,5 @@
-from base_test import BaseTest
-from models.pages import HomePage, WaitingRecipesPage, NewRecipePage, WaitingRecipePage, ErrorPage, \
-    RecipePage, MyRecipesPage
+from gui_tests.base_test import BaseTest
+from gui_tests.models.pages import HomePage, MyRecipesPage, WaitingRecipesPage
 
 
 class MyRecipesTest(BaseTest):

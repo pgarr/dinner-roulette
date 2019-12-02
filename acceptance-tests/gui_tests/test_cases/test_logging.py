@@ -1,5 +1,5 @@
-from base_test import BaseTest
-from models.pages import HomePage, LoginPage, WaitingRecipesPage, NewRecipePage, MyRecipesPage
+from gui_tests.base_test import BaseTest
+from gui_tests.models.pages import HomePage, LoginPage, WaitingRecipesPage, MyRecipesPage, NewRecipePage
 
 
 class LoggingUserTest(BaseTest):
