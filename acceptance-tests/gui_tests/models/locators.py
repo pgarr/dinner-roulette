@@ -36,7 +36,7 @@ class LoginPageLocators:
 class RecipePageLocators:
     TITLE_HEADER = (By.TAG_NAME, 'h2')
     AUTHOR_NAME_PTAG = (By.CSS_SELECTOR, '.author > p')
-    EDIT_LINK = (By.CSS_SELECTOR, 'a:contains("Edit")')
+    EDIT_LINK = (By.XPATH, "//a[contains(text(), 'Edit')]")
     TIME_PTAG = (By.XPATH, '/html/body/div[2]/div[2]/div[1]/p')
     DIFFICULTY_STAR = (By.CSS_SELECTOR, '.fas.fa-star')
     INGREDIENT_ROW = (By.CSS_SELECTOR, 'table > tbody > tr')

@@ -1,5 +1,6 @@
-from base_test import BaseTest
-from models.pages import HomePage, NewRecipePage, WaitingRecipePage, WaitingRecipesPage, RecipePage
+from gui_tests.base_test import BaseTest
+from gui_tests.models.pages import NewRecipePage, WaitingRecipePage, WaitingRecipesPage, RecipePage, HomePage, \
+    EditRecipePage
 
 
 class RecipesStatesTransitionTest(BaseTest):
@@ -77,8 +78,56 @@ class RecipesStatesTransitionTest(BaseTest):
         self.assertEqual(len(home_page.recipes), 2,
                          msg="After accepting waiting recipe, accepted recipes count is higher by 1")
 
+
+class RecipesUpdatesTest(BaseTest):
+
+    def setUp_users(self):
+        return [{"username": "test", "email": "test@test.com", "password": "test"},
+                {"username": "admin", "email": "admin@test.com", "password": "admin"}]
+
+    def setUp_recipes(self):
+        recipes = [
+            {"title": "accepted", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test",
+             "author": "test", "ingredients": [
+                {"title": "test1", "amount": 3, "unit": "kg"},
+                {"title": "test2"}]}
+        ]
+        return recipes
+
+    def setUp_waiting_recipes(self):
+        waiting_recipes = [
+            {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test",
+             "author": "test", "ingredients": [
+                {"title": "test1", "amount": 3, "unit": "kg"},
+                {"title": "test2"}]}
+        ]
+        return waiting_recipes
+
     def test_updated_recipe_goes_to_waiting_but_old_stays_in_accepted(self):
-        self.fail()
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+
+        self.smart_login('test', 'test')
+
+        home_page.recipes[0].go_to_details()
+        recipe_page = self.wait_page_changes(home_page, RecipePage(self.driver))
+
+        recipe_page.edit()
+        edit_recipe_page = self.wait_page_changes(recipe_page, EditRecipePage(self.driver))
+
+        edit_recipe_page.name.set_text('updated')
+        edit_recipe_page.submit()
+        waiting_recipe_page = self.wait_page_changes(edit_recipe_page, WaitingRecipePage(self.driver))
+
+        waiting_recipe_page.go_to_home_page()
+        self.wait_page_changes(waiting_recipe_page, home_page)
+
+        self.assertEqual('accepted', home_page.recipes[0].name)
+
+        home_page.go_to_waiting_page()
+        waiting_list_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+
+        self.assertEqual('updated', waiting_list_page.recipes[1].name)
 
     def test_updated_waiting_recipe_stays_updated_in_waiting(self):
         self.fail()

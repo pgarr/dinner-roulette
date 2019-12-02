@@ -7,8 +7,11 @@ class TextFieldElement:
 
     def set_text(self, value):
         """Sets the text to the value supplied"""
-        self.driver.find_element(*self.locator).send_keys(value)
+        element = self.driver.find_element(*self.locator)
+        element.clear()
+        element.send_keys(value)
 
-    def get_text(self):
-        """Gets the text in the field"""
-        return self.driver.find_element(*self.locator).text
+
+def get_text(self):
+    """Gets the text in the field"""
+    return self.driver.find_element(*self.locator).text
