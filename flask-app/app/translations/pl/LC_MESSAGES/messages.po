@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-12 20:06+0100\n"
+"POT-Creation-Date: 2019-12-02 20:32+0100\n"
 "PO-Revision-Date: 2019-06-04 19:02+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pl\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
-#: app/__init__.py:19
+#: app/__init__.py:20
 msgid "Please log in to access this page."
 msgstr "Zaloguj się, by mieć dostęp do tej strony."
 
@@ -88,111 +88,115 @@ msgstr "Zresetuj hasło"
 msgid "Your password has been reset."
 msgstr "Twoje hasło zostało zresetowane"
 
-#: app/main/forms.py:15
+#: app/main/forms.py:16
 msgid "Not a valid float value"
 msgstr "Niewłaściwa wartość liczbowa"
 
-#: app/main/forms.py:19
+#: app/main/forms.py:20
 msgid "Ingredient name"
 msgstr "Składnik"
 
-#: app/main/forms.py:20
+#: app/main/forms.py:21
 msgid "Ingredient amount"
 msgstr "Ilość"
 
-#: app/main/forms.py:21
+#: app/main/forms.py:22
 msgid "Ingredient unit"
 msgstr "Jednostka"
 
-#: app/main/forms.py:26
+#: app/main/forms.py:27
 msgid "Recipe title"
 msgstr "Nazwa przepisu"
 
-#: app/main/forms.py:27
+#: app/main/forms.py:28
 msgid "Preparation time (minutes)"
 msgstr "Czas przygotowania (minuty)"
 
-#: app/main/forms.py:28
+#: app/main/forms.py:29
 msgid "Preparation difficulty (1-5)"
 msgstr "Trudność przygotowania (1-5)"
 
-#: app/main/forms.py:31
+#: app/main/forms.py:32
 msgid "Website"
 msgstr "Strona internetowa"
 
-#: app/main/forms.py:32 app/templates/recipe.html:87
+#: app/main/forms.py:33 app/templates/recipe.html:87
 msgid "Preparation"
 msgstr "Przygotowanie"
 
-#: app/main/forms.py:36
+#: app/main/forms.py:37
 msgid "Submit"
 msgstr "Zatwierdź"
 
-#: app/main/routes.py:15
+#: app/main/forms.py:41 app/main/routes.py:144
+msgid "Search"
+msgstr "Szukaj"
+
+#: app/main/routes.py:19
 msgid "Home Page"
 msgstr "Strona domowa"
 
-#: app/main/routes.py:21
+#: app/main/routes.py:26
 msgid "Recipe"
 msgstr "Przepis"
 
-#: app/main/routes.py:29
+#: app/main/routes.py:34
 msgid "This recipe is pending approval by the administrator."
 msgstr "Ten przepis oczekuje na zatwierdzenie przez administratora."
 
-#: app/main/routes.py:30
+#: app/main/routes.py:35
 msgid "Waiting Recipe"
 msgstr "Oczekujacy przepis"
 
-#: app/main/routes.py:39
+#: app/main/routes.py:47
 msgid "My Recipes"
 msgstr "Moje przepisy"
 
-#: app/main/routes.py:46
+#: app/main/routes.py:58
 msgid "Waiting Recipes"
 msgstr "Oczekujące przepisy"
 
-#: app/main/routes.py:55
+#: app/main/routes.py:68
 msgid "Recipe accepted!"
 msgstr "Przepis zaakceptowany!"
 
-#: app/main/routes.py:72
+#: app/main/routes.py:85
 msgid "Recipe added!"
 msgstr "Przepis dodany!"
 
-#: app/main/routes.py:73
+#: app/main/routes.py:86
 msgid "Recipe will be seen for other users after administrator acceptance."
 msgstr ""
 "Przepis będzie widoczny dla innych użytkowników po zatwierdzeniu przez "
 "administratora."
 
-#: app/main/routes.py:75
+#: app/main/routes.py:88
 msgid "New Recipe"
 msgstr "Nowy przepis"
 
-#: app/main/routes.py:84
+#: app/main/routes.py:97
 msgid "Recipe already has changes waiting for acceptance!"
 msgstr "Przepis ma już zmiany oczekujące na zatwierdzenie!"
 
-#: app/main/routes.py:95
+#: app/main/routes.py:108
 msgid "Recipe updated!"
 msgstr "Przepis zaktualizowany!"
 
-#: app/main/routes.py:96
+#: app/main/routes.py:109
 msgid "Changes will be seen for other users after administrator acceptance."
 msgstr ""
 "Zmiany będą widoczne dla innych użytkowników po zatwierdzeniu przez "
 "administratora."
 
-#: app/main/routes.py:98
+#: app/main/routes.py:111
 msgid "Edit Recipe"
 msgstr "Edytuj przepis"
 
-#: app/main/routes.py:115
+#: app/main/routes.py:128
 msgid "Pending changes saved!"
 msgstr "Oczekujące zmiany zostały zaktualizowane!"
 
-#: app/main/routes.py:117
+#: app/main/routes.py:130
 msgid "Edit Waiting Recipe"
 msgstr "Edytuj oczekujący przepis"
 
@@ -236,6 +240,14 @@ msgstr "Trudność"
 #: app/templates/index.html:21
 msgid "Attributes"
 msgstr "Cechy"
+
+#: app/templates/index.html:62
+msgid "Previous"
+msgstr "Poprzednie"
+
+#: app/templates/index.html:65
+msgid "Next"
+msgstr "Następne"
 
 #: app/templates/new-recipe.html:45 app/templates/recipe.html:57
 msgid "Ingredients"
