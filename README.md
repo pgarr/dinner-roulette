@@ -5,6 +5,8 @@
 Web app to store dishes recipes.
 It has users who create recipes and admin who accepts recipes before they are visible for others.
 
+Based on Miguel Grinberg's The Flask Mega-Tutorial.
+
 ## Useful commands.
 
 ### Push only app folder to Heroku.
