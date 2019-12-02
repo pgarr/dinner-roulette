@@ -7,7 +7,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from config import MAX_LOADING_TIME
-from models.pages import BasePage, LoginPage
+from gui_tests.models.pages import BasePage, LoginPage
 from utils.aut import Aut
 
 
@@ -27,7 +27,7 @@ class BaseTest(TestCase):
     @classmethod
     def setUpClass(cls):
         basedir = os.path.abspath(os.path.dirname(__file__))
-        load_dotenv(os.path.join(basedir, '.env'))
+        load_dotenv(os.path.join(basedir, '..', '.env'))
 
     def setUp(self):
         # run aut

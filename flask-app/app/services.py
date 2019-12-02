@@ -25,10 +25,9 @@ def clone_recipe_to_waiting(recipe_model):
 def accept_waiting(waiting_model):
     recipe_model = _push_updates_to_recipe(waiting_model)
     db.session.add(recipe_model)
-    w_id = waiting_model.id
     db.session.delete(waiting_model)
     db.session.commit()
-    current_app.logger.info('ID %d waiting recipe accepted to ID %d recipe' % (w_id, recipe_model.id))
+    current_app.logger.info('ID %d waiting recipe accepted to ID %d recipe' % (waiting_model.id, recipe_model.id))
     return recipe_model
 
 
@@ -67,26 +66,31 @@ def get_waiting_recipe(pk):
     return waiting_recipe
 
 
-def get_all_recipes():
-    recipes = Recipe.query.options(load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug('Full list of recipes got')
-    return recipes
+def get_recipes(page, per_page):
+    page = int(page)
+    per_page = int(per_page)
+    paginated = Recipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+        page, per_page, False)
+    current_app.logger.debug('Page %d of list of recipes got' % page)
+    return paginated
 
 
-def get_user_recipes(author):
-    recipes = Recipe.query.filter(Recipe.author == author).options(load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug("List of %s's recipes got" % author.username)
-    return recipes
+def get_user_recipes(author, page, per_page):
+    paginated = Recipe.query.filter(Recipe.author == author).options(
+        load_only("id", "title", "time", "difficulty")).paginate(page, per_page, False)
+    current_app.logger.debug("Page %d of list of %s's recipes got" % (page, author.username))
+    return paginated
 
 
-def get_all_waiting_recipes(user):
+def get_waiting_recipes(user, page, per_page):
     if user.admin:
-        waiting_recipes = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).all()
+        paginated = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
+            page, per_page, False)
     else:
-        waiting_recipes = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(
-            load_only("id", "title", "time", "difficulty")).all()
-    current_app.logger.debug('Full list of waiting recipes got for user %s' % user.username)
-    return waiting_recipes
+        paginated = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
+            "id", "title", "time", "difficulty")).paginate(page, per_page, False)
+    current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
+    return paginated
 
 
 def get_user_by_name(username):
@@ -94,6 +98,8 @@ def get_user_by_name(username):
 
 
 def search_recipe(string, page, per_page):
+    page = int(page)
+    per_page = int(per_page)
     return Recipe.search(string, page, per_page)
 
 

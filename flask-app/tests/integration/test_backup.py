@@ -29,7 +29,7 @@ class TestBackup(TestAppSetUp):
                             ' \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 3, \"username\": \"admin\", \"email\":' \
                             ' \"admin@test\.com\", \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}\],'
 
-        self.bh = BackupScheduler(db)
+        self.bh = BackupScheduler(db, 10000)
 
     def test_backup_users_created_and_other_tables_are_empty(self):
         result = self.bh.dump_backup()

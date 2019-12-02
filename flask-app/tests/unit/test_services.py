@@ -195,3 +195,4 @@ class TestServices(TestCase):
         self.assertEqual(recipe_model.ingredients[0].title, 'test1')
         self.assertEqual(recipe_model.ingredients[0].amount, 1)
         self.assertEqual(recipe_model.ingredients[0].unit, 'kg')
+
