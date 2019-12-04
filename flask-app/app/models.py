@@ -1,3 +1,4 @@
+from datetime import datetime
 from time import time
 
 import jwt
@@ -50,7 +51,7 @@ class SearchableMixin(object):
             add_to_index(cls.__tablename__, obj)
 
 
-# set up the event handlers
+# set up the event handlers for search index
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
@@ -117,6 +118,8 @@ class RecipeMixin(object):
     difficulty = db.Column(db.Integer)
     link = db.Column(db.String(1000))
     preparation = db.Column(db.Text)
+    create_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime, index=True, onupdate=datetime.utcnow)
 
     # TODO: attributes = db.relationship # one to many - attribute table
 
