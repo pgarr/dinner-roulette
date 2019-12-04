@@ -28,16 +28,3 @@ After this, you can translate new entries in messages.po files and use:
 
 This operation adds a messages.mo file next to messages.po in each language repository. The .mo file is the file that Flask-Babel will use to load translations for the application.
 
-### Updates for database structure (Flask-Migrate).
-
-  --flask db migrate
-
-This operation generates a new migration script.
-
-  --flask db upgrade
-
-This operation applies the changes to database.
-
-  --flask db downgrade
-
-This command undoes the last migration (mostly used in development phase).
