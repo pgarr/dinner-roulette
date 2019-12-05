@@ -1,4 +1,5 @@
 from flask import current_app
+from sqlalchemy import desc, asc
 from sqlalchemy.orm import load_only
 
 from app import db
@@ -69,26 +70,28 @@ def get_waiting_recipe(pk):
 def get_recipes(page, per_page):
     page = int(page)
     per_page = int(per_page)
-    paginated = Recipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
-        page, per_page, False)
+    paginated = Recipe.query.options(load_only("id", "title", "time", "difficulty")).order_by(
+        desc(Recipe.create_date)).paginate(page, per_page, False)
     current_app.logger.debug('Page %d of list of recipes got' % page)
     return paginated
 
 
 def get_user_recipes(author, page, per_page):
     paginated = Recipe.query.filter(Recipe.author == author).options(
-        load_only("id", "title", "time", "difficulty")).paginate(page, per_page, False)
+        load_only("id", "title", "time", "difficulty")).order_by(desc(Recipe.create_date)).paginate(page, per_page,
+                                                                                                    False)
     current_app.logger.debug("Page %d of list of %s's recipes got" % (page, author.username))
     return paginated
 
 
 def get_waiting_recipes(user, page, per_page):
     if user.admin:
-        paginated = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).paginate(
-            page, per_page, False)
+        paginated = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).order_by(
+            asc(WaitingRecipe.last_modified)).paginate(page, per_page, False)
     else:
         paginated = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
-            "id", "title", "time", "difficulty")).paginate(page, per_page, False)
+            "id", "title", "time", "difficulty")).order_by(asc(WaitingRecipe.last_modified)).paginate(page, per_page,
+                                                                                                      False)
     current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
     return paginated
 
