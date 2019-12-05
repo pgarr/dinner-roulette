@@ -25,7 +25,7 @@ class BackupScheduler:
         dmp = {}
         for table in meta.sorted_tables:
             dmp[table.name] = [dict(row) for row in self.db.engine.execute(table.select())]
-        return json.dumps(dmp)
+        return json.dumps(dmp, default=str)
 
     def dump_backup_flask(self):
         """Dump all tables as dict (table name : list (row) of dicts(column_name : value)"""
