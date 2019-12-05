@@ -30,20 +30,20 @@ def upgrade():
     # ### end Alembic commands ###
 
     # Create an ad-hoc table to use for the insert statement.
-    recipe = sa.table('recipe',
-                      sa.Column('create_date', sa.DateTime),
-                      sa.Column('last_modified', sa.DateTime)
-                      )
-    waiting = sa.table('waiting_recipe',
-                       sa.Column('create_date', sa.DateTime),
-                       sa.Column('last_modified', sa.DateTime)
-                       )
+    # recipe = sa.table('recipe',
+    #                   sa.Column('create_date', sa.DateTime),
+    #                   sa.Column('last_modified', sa.DateTime)
+    #                   )
+    # waiting = sa.table('waiting_recipe',
+    #                    sa.Column('create_date', sa.DateTime),
+    #                    sa.Column('last_modified', sa.DateTime)
+    #                    )
     # insert data
-    op.execute(recipe.update().where(recipe.c.create_date is None).values(create_date=datetime.utcnow))
-    op.execute(recipe.update().where(recipe.c.last_modified is None).values(last_modified=datetime.utcnow))
-
-    op.execute(waiting.update().where(waiting.c.create_date is None).values(create_date=datetime.utcnow))
-    op.execute(waiting.update().where(waiting.c.last_modified is None).values(last_modified=datetime.utcnow))
+    # op.execute(recipe.update().where(recipe.c.create_date is None).values(create_date=datetime.utcnow))
+    # op.execute(recipe.update().where(recipe.c.last_modified is None).values(last_modified=datetime.utcnow))
+    #
+    # op.execute(waiting.update().where(waiting.c.create_date is None).values(create_date=datetime.utcnow))
+    # op.execute(waiting.update().where(waiting.c.last_modified is None).values(last_modified=datetime.utcnow))
 
 
 def downgrade():
