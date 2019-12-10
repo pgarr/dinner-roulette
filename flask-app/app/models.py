@@ -121,8 +121,6 @@ class RecipeMixin(object):
     create_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     last_modified = db.Column(db.DateTime, index=True, onupdate=datetime.utcnow)
 
-    # TODO: attributes = db.relationship # one to many - attribute table
-
     @declared_attr
     def author_id(cls):
         return db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -172,3 +170,4 @@ class WaitingRecipe(RecipeMixin, db.Model):
     ingredient_class = WaitingRecipeIngredient
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
     updated_recipe = db.relationship("Recipe", back_populates="waiting_updates")
+    refused = db.Column(db.Boolean, default=False)
