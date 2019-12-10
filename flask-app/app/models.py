@@ -131,6 +131,10 @@ class RecipeMixin(object):
     def author(cls):
         return db.relationship("User")
 
+    @declared_attr
+    def ingredients(cls):
+        return db.relationship(cls.ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
+
     def __repr__(self):
         return '<Recipe {}>'.format(self.title)
 
@@ -153,7 +157,6 @@ class Recipe(RecipeMixin, SearchableMixin, db.Model):
     __tablename__ = 'recipe'
 
     ingredient_class = RecipeIngredient
-    ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
     waiting_updates = db.relationship("WaitingRecipe", uselist=False, back_populates="updated_recipe")
 
 
@@ -167,7 +170,5 @@ class WaitingRecipe(RecipeMixin, db.Model):
     __tablename__ = 'waiting_recipe'
 
     ingredient_class = WaitingRecipeIngredient
-    ingredients = db.relationship(ingredient_class, lazy="dynamic", cascade="all, delete-orphan")
-    # TODO: przenieść do mixin
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
     updated_recipe = db.relationship("Recipe", back_populates="waiting_updates")
