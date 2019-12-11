@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from app import db
 from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
 from app.services import get_recipes, get_user_recipes, get_waiting_recipes, accept_waiting, get_recipe, \
-    get_user_by_name, get_waiting_recipe, save_recipe, search_recipe
+    get_user_by_name, get_waiting_recipe, save_recipe, search_recipe, reject_waiting
 from tests.base_test import TestAppSetUp
 
 
@@ -80,15 +80,15 @@ class TestServices(TestAppSetUp):
 
     def test_get_waiting_recipes_no_recipes(self):
         waiting_recipes = get_waiting_recipes(self.user, 1, 1000)
-        self.assertEqual(len(waiting_recipes.items), 0)
+        self.assertEqual(0, len(waiting_recipes.items))
 
     def test_get_waiting_recipes_two_recipes(self):
         waiting_recipes = get_waiting_recipes(self.user3, 1, 1000)
-        self.assertEqual(len(waiting_recipes.items), 2)
+        self.assertEqual(2, len(waiting_recipes.items))
 
     def test_get_waiting_recipes_admin(self):
         waiting_recipes = get_waiting_recipes(self.admin, 1, 1000)
-        self.assertEqual(len(waiting_recipes.items), 3)
+        self.assertEqual(3, len(waiting_recipes.items))
 
     def test_accept_waiting_new_recipe(self):
         accept_waiting(self.waiting_model_2)
@@ -233,8 +233,73 @@ class TestServicesSortBasic(TestAppSetUp):
 
 
 class TestServicesSearch(TestAppSetUp):
-    def test_search_recipe_called_with_strings(self):
+    def test_search_recipe_convert_strings_to_ints(self):
         from app import models
         models.query_index = Mock(return_value=([1], 2))
         search_recipe('test', '1', '1')
         models.query_index.assert_called_once_with('recipe', 'test', 1, 1)
+
+
+class TestServicesRefusedWaitingRecipe(TestAppSetUp):
+    def setUp(self):
+        super().setUp()
+        # users test admin
+        self.user = User(username="test", email="test@test.com")
+        self.user.set_password("test")
+        db.session.add(self.user)
+
+        self.admin = User(username="admin", email="admin@test.com")
+        self.admin.set_password("admin")
+        db.session.add(self.admin)
+
+        self.waiting_model_pending = WaitingRecipe(title='waiting_pending', author=self.user, refused=False)
+        db.session.add(self.waiting_model_pending)
+
+        self.waiting_model_refused = WaitingRecipe(title='waiting_refused', author=self.user, refused=True)
+        db.session.add(self.waiting_model_refused)
+
+        self.recipe_model = Recipe(title='accepted_recipe', author=self.user)
+
+        db.session.commit()
+
+    def test_get_waiting_recipes_returns_only_pending_for_admin(self):
+        waiting_list = get_waiting_recipes(self.admin, 1, 100)
+        self.assertFalse(any(item.refused for item in waiting_list.items))
+
+    def test_get_waiting_recipes_returns_pending_and_refused_for_user(self):
+        waiting_list = get_waiting_recipes(self.user, 1, 100)
+        self.assertTrue(any(item.refused for item in waiting_list.items))
+        self.assertTrue(any(not item.refused for item in waiting_list.items))
+
+    def test_get_waiting_recipes_returns_refused_status(self):
+        waiting_list = get_waiting_recipes(self.user, 1, 100)
+        self.assertTrue(all(hasattr(item, 'refused') for item in waiting_list.items))
+
+    def test_save_recipe_sets_pending_to_pending_if_waiting(self):
+        save_recipe(self.waiting_model_pending)
+        self.assertFalse(self.waiting_model_pending.refused)
+
+    def test_save_recipe_sets_refused_to_pending_if_waiting(self):
+        save_recipe(self.waiting_model_refused)
+        self.assertFalse(self.waiting_model_refused.refused)
+
+    def test_save_recipe_inits_status_pending_for_waiting(self):
+        waiting_model = WaitingRecipe(title='waiting_new', author=self.user)
+        save_recipe(waiting_model)
+        self.assertFalse(self.waiting_model_pending.refused)
+
+    def test_save_recipe_dont_set_status_pending_for_accepted(self):
+        save_recipe(self.recipe_model)
+        self.assertFalse(hasattr(self.recipe_model, 'refused'))
+
+    def test_reject_waiting_sets_refused_to_true_when_false(self):
+        id_ = self.waiting_model_pending.id
+        reject_waiting(self.waiting_model_pending)
+        rejected_recipe = WaitingRecipe.query.get_or_404(id_)
+        self.assertTrue(rejected_recipe.refused)
+
+    def test_reject_waiting_sets_refused_to_true_when_true(self):
+        id_ = self.waiting_model_refused.id
+        reject_waiting(self.waiting_model_refused)
+        rejected_recipe = WaitingRecipe.query.get_or_404(id_)
+        self.assertTrue(rejected_recipe.refused)

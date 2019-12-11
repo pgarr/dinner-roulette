@@ -171,3 +171,9 @@ class WaitingRecipe(RecipeMixin, db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
     updated_recipe = db.relationship("Recipe", back_populates="waiting_updates")
     refused = db.Column(db.Boolean, default=False)
+
+    def reset_refused(self):
+        self.refused = False
+
+    def reject(self):
+        self.refused = True
