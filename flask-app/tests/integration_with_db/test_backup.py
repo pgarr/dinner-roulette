@@ -63,6 +63,7 @@ class TestBackup(TestAppSetUp):
         db.session.commit()
 
         result = self.bh.dump_backup()
+        # print(result)
 
         pattern = self.user_pattern + ' \"recipe\": \[{\"id\": 1, \"title\": \"test\", \"time\": 1, \"difficulty\": 1, ' \
                                       '\"link\": \"http://test\.com\", \"preparation\": \"test\", \"create_date\": ' \
@@ -79,10 +80,10 @@ class TestBackup(TestAppSetUp):
                                       '\"title\": \"test\", \"time\": 3, \"difficulty\": 3, \"link\": ' \
                                       '\"http://test3\.com\", \"preparation\": \"test3\", \"create_date\": ' \
                                       '\"2019-01-30 00:00:00\", \"last_modified\": \"2019-11-01 00:00:00\", ' \
-                                      '\"recipe_id\": null, \"author_id\": 2}\], \"waiting_recipe_ingredient\": ' \
-                                      '\[{\"id\": 1, \"title\": \"test1\", \"amount\": 3\.0, \"unit\": \"g\", ' \
-                                      '\"recipe_id\": 1}, {\"id\": 2, \"title\": \"test2\", \"amount\": 3\.0, ' \
-                                      '\"unit\": \"g\", \"recipe_id\": 1}\]}'
+                                      '\"recipe_id\": null, \"refused\": false, \"author_id\": 2}\], ' \
+                                      '\"waiting_recipe_ingredient\": \[{\"id\": 1, \"title\": \"test1\",' \
+                                      ' \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}, {\"id\": 2, \"title\": ' \
+                                      '\"test2\", \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}\]}'
         match = re.fullmatch(pattern, result)
         self.assertTrue(match)
 
