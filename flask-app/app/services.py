@@ -89,7 +89,7 @@ def get_user_recipes(author, page, per_page):
 
 
 def get_waiting_recipes(user, page, per_page):
-    if user.admin:  # TODO: DRY
+    if user.admin:  # TODO: DRY - if else are nearly same
         paginated = WaitingRecipe.query \
             .filter(WaitingRecipe.refused == False) \
             .options(load_only("id", "title", "time", "difficulty")) \
@@ -117,7 +117,7 @@ def search_recipe(string, page, per_page):
 
 
 def reject_waiting(waiting_model):
-    waiting_model.refused = True
+    waiting_model.reject()
     db.session.add(waiting_model)
     db.session.commit()
     current_app.logger.info('Pending recipe refused - ID %d' % waiting_model.id)
