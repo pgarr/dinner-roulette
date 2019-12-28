@@ -3,30 +3,36 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row header-top-margin">
-
-            <div class="col-md-9 col-sm-11">
+            <div class="col-12">
                 <h2>{{ recipe.title }}</h2>
             </div>
-
-            {% if current_user == recipe.author or current_user.admin %}
-                <div class="col-1">
-                    {% if waiting %}
-                        <a href="{{ url_for('main.edit_waiting', pk=recipe.id) }}">{{ _('Edit') }}</a>
+            <div class="col-12">
+                {% if waiting %}
+                    {% if recipe.refused %}
+                        <span class="badge badge-danger">{{ _('Refused') }}</span>
                     {% else %}
-                        <a href="{{ url_for('main.edit', pk=recipe.id) }}">{{ _('Edit') }}</a>
+                        <span class="badge badge-primary">{{ _('Pending') }}</span>
                     {% endif %}
-                </div>
-            {% else %}
-                 <div class="col-1"></div>
-            {% endif %}
-
-            <div class="col-md-2 author">
+                {% endif %}
                 <p>{{ _('Author:') }} {{ recipe.author.username}}</p>
             </div>
         </div>
-        {% if waiting and current_user.admin %}
-            <a href="{{ url_for('main.accept', pk=recipe.id) }}">{{ _('Accept') }}</a>
-        {% endif %}
+
+        <div class="row">
+            <div class="col-12">
+                {% if current_user == recipe.author or current_user.admin %}
+                    {% if waiting %}
+                        <a href="{{ url_for('main.edit_waiting', pk=recipe.id) }}" class="btn btn-primary">{{ _('Edit') }}</a>
+                    {% else %}
+                        <a href="{{ url_for('main.edit', pk=recipe.id) }}" class="btn btn-primary">{{ _('Edit') }}</a>
+                    {% endif %}
+                {% endif %}
+                {% if waiting and current_user.admin %}
+                    <a href="{{ url_for('main.accept', pk=recipe.id) }}" class="btn btn-success">{{ _('Accept') }}</a>
+                    <a href="{{ url_for('main.reject', pk=recipe.id) }}" class="btn btn-danger">{{ _('Reject') }}</a>
+                {% endif %}
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-1 col-md-2">
