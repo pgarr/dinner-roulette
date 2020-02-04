@@ -81,11 +81,6 @@ class RecipesStatesTransitionTest(BaseTest):
 
 class RecipesUpdatesTest(BaseTest):
 
-    def setUp_users(self):
-        return [{"username": "test", "email": "test@test.com", "password": "test"},
-                {"username": "test2", "email": "test2@test.com", "password": "test"},
-                {"username": "admin", "email": "admin@test.com", "password": "admin"}]
-
     def setUp_recipes(self):
         return [
             {"title": "accepted", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test",

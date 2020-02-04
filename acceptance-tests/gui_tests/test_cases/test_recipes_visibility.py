@@ -26,8 +26,7 @@ class MyRecipesTest(BaseTest):
         home_page.go_to_my_recipes_page()
         my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
 
-        self.assertEqual(len(my_recipes_page.recipes), 2,
-                         msg="My recipes count is correct")
+        self.assertEqual(len(my_recipes_page.recipes), 2, msg="My recipes count is correct")
 
     def test_my_recipes_no_recipes(self):
         home_page = HomePage(self.driver)
