@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from app import db
 from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
 from app.services import get_recipes, get_user_recipes, get_waiting_recipes, accept_waiting, get_recipe, \
-    get_user_by_name, get_waiting_recipe, save_recipe, search_recipe, reject_waiting
+    get_user_by_name, get_waiting_recipe, save_recipe, search_recipe, reject_waiting, get_recipe_by_title
 from tests.base_test import TestAppSetUp
 
 
@@ -161,6 +161,14 @@ class TestServices(TestAppSetUp):
     def test_get_user_by_name_not_existing(self):
         user = get_user_by_name('asdfgh')
         self.assertIsNone(user)
+
+    def test_get_recipe_by_title_existing(self):
+        recipe = get_recipe_by_title(self.recipe_model.title)
+        self.assertEqual(self.recipe_model.__repr__(), recipe.__repr__())
+
+    def test_get_recipe_by_title_not_existing(self):
+        recipe = get_recipe_by_title('asdfgh')
+        self.assertIsNone(recipe)
 
 
 class TestServicesSortBasic(TestAppSetUp):

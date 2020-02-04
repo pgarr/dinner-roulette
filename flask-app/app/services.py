@@ -110,6 +110,10 @@ def get_user_by_name(username):
     return User.query.filter_by(username=username).first()
 
 
+def get_recipe_by_title(title):
+    return Recipe.query.filter_by(title=title).first()
+
+
 def search_recipe(string, page, per_page):
     page = int(page)
     per_page = int(per_page)
