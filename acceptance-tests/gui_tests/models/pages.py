@@ -374,7 +374,7 @@ class EditWaitingRecipePage(EditRecipePage):
 
     @property
     def title(self):
-        return "Edit Waiting Recipe Page - Cookbook"
+        return "Edit Waiting Recipe - Cookbook"
 
 
 class ErrorPage(BasePage):

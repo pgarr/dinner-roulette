@@ -50,6 +50,10 @@ def _push_updates_to_recipe(waiting_model):
 
 def save_recipe(model):
     model.clear_empty_ingredients()
+    try:
+        model.reset_refused()
+    except AttributeError:
+        pass
     db.session.add(model)
     db.session.commit()
     current_app.logger.info('%s saved - ID %d' % (model.__class__, model.id))
@@ -85,13 +89,19 @@ def get_user_recipes(author, page, per_page):
 
 
 def get_waiting_recipes(user, page, per_page):
-    if user.admin:
-        paginated = WaitingRecipe.query.options(load_only("id", "title", "time", "difficulty")).order_by(
-            asc(WaitingRecipe.last_modified)).paginate(page, per_page, False)
+    if user.admin:  # TODO: DRY - if else are nearly same
+        paginated = WaitingRecipe.query \
+            .filter(WaitingRecipe.refused == False) \
+            .options(load_only("id", "title", "time", "difficulty")) \
+            .order_by(asc(WaitingRecipe.last_modified)) \
+            .paginate(page, per_page, False)
+        # smth == False is not pytonic, but required for model property. Nothing else works.
     else:
-        paginated = WaitingRecipe.query.filter(WaitingRecipe.author == user).options(load_only(
-            "id", "title", "time", "difficulty")).order_by(asc(WaitingRecipe.last_modified)).paginate(page, per_page,
-                                                                                                      False)
+        paginated = WaitingRecipe.query \
+            .filter(WaitingRecipe.author == user) \
+            .options(load_only("id", "title", "time", "difficulty", "refused")) \
+            .order_by(asc(WaitingRecipe.last_modified)) \
+            .paginate(page, per_page, False)
     current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
     return paginated
 
@@ -100,10 +110,22 @@ def get_user_by_name(username):
     return User.query.filter_by(username=username).first()
 
 
+def get_recipe_by_title(title):
+    return Recipe.query.filter_by(title=title).first()
+
+
 def search_recipe(string, page, per_page):
     page = int(page)
     per_page = int(per_page)
     return Recipe.search(string, page, per_page)
+
+
+def reject_waiting(waiting_model):
+    waiting_model.reject()
+    db.session.add(waiting_model)
+    db.session.commit()
+    current_app.logger.info('Pending recipe refused - ID %d' % waiting_model.id)
+    return waiting_model
 
 
 def reindex_es():

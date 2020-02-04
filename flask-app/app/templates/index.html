@@ -17,9 +17,11 @@
                     <th scope="col">
                         {{ _('Difficulty') }}
                     </th>
-<!--                    <th scope="col">-->
-<!--                        {{ _('Attributes') }}-->
-<!--                    </th>-->
+                    {% if waiting %}
+                        <th scope="col">
+                            {{ _('Status') }}
+                        </th>
+                    {% endif %}
                 </tr>
             </thead>
 
@@ -51,9 +53,17 @@
                                 {% endfor %}
                             {% endif %}
                         </td>
-<!--                        <td>-->
-<!--                            implement-->
-<!--                        </td>-->
+                        {% if waiting %}
+                            {% if recipe.refused %}
+                                <th scope="col">
+                                    <span class="badge badge-danger">{{ _('Refused') }}</span>
+                                </th>
+                            {% else %}
+                                <th scope="col">
+                                    <span class="badge badge-primary">{{ _('Pending') }}</span>
+                                </th>
+                            {% endif %}
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>

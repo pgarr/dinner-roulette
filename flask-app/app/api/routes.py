@@ -4,9 +4,9 @@ from flask_jwt import jwt_required, current_identity
 from app.api import bp
 from app.api.errors import error_response, bad_request
 from app.api.helper_fun import save_recipe_from_schema, paginated_recipes_jsonify, SearchAPIPaginatedAdapter
-from app.api.schemas import recipe_schema
+from app.api.schemas import recipe_schema, waiting_schema
 from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
-    get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe
+    get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe, reject_waiting
 
 
 @bp.route('/', methods=['GET'])
@@ -43,7 +43,7 @@ def recipe(pk):
 def waiting_recipe(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_identity == waiting_model.author or current_identity.admin:
-        result = recipe_schema.dump(waiting_model)
+        result = waiting_schema.dump(waiting_model)
         return jsonify({'pending_recipe': result.data})
     else:
         return error_response(401)
@@ -57,7 +57,7 @@ def waiting_recipes():
     waitings_models = get_waiting_recipes(user=current_identity, page=page,
                                           per_page=per_page)
     return paginated_recipes_jsonify(waitings_models, page, per_page, endpoint='.waiting_recipes',
-                                     items_name='pending_recipes')
+                                     items_name='pending_recipes', waiting=True)
 
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
@@ -73,19 +73,32 @@ def accept(pk):
         return error_response(401)
 
 
+@bp.route('/waiting/<int:pk>/reject', methods=['GET'])
+@jwt_required()
+def reject(pk):
+    if current_identity.admin:
+        waiting_model = get_waiting_recipe(pk)
+        reject_waiting(waiting_model)
+        result = waiting_schema.dump(waiting_model)
+        return jsonify({"message": "Recipe rejected!",
+                        "rejected_recipe": result.data}), 200
+    else:
+        return error_response(401)
+
+
 @bp.route('/recipe', methods=['POST'])
 @jwt_required()
 def create_recipe():
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')
-    data, errors = recipe_schema.load(json_data)
+    data, errors = waiting_schema.load(json_data)
     if errors:
         return jsonify(errors), 422
     waiting_model = init_waiting_recipe(author=current_identity)
     save_recipe_from_schema(data, waiting_model)
     waiting_model = get_waiting_recipe(waiting_model.id)
-    result = recipe_schema.dump(waiting_model)
+    result = waiting_schema.dump(waiting_model)
     return jsonify({"message": "Recipe will be seen for other users after administrator acceptance.",
                     "pending_recipe": result.data}), 201
 
@@ -99,17 +112,17 @@ def update_recipe(pk):
     recipe_model = get_recipe(pk)
     if current_identity == recipe_model.author or current_identity.admin:
         if recipe_model.waiting_updates:
-            result = recipe_schema.dump(recipe_model.waiting_updates)
+            result = waiting_schema.dump(recipe_model.waiting_updates)
             return jsonify({"message": "Recipe already has changes waiting for acceptance!",
                             "pending_recipe": result.data}), 403
         else:
-            data, errors = recipe_schema.load(json_data)
+            data, errors = waiting_schema.load(json_data)
             if errors:
                 return jsonify(errors), 422
             waiting_model = clone_recipe_to_waiting(recipe_model)
             save_recipe_from_schema(data, waiting_model)
             waiting_model = get_waiting_recipe(waiting_model.id)
-            result = recipe_schema.dump(waiting_model)
+            result = waiting_schema.dump(waiting_model)
             return jsonify({"message": "Changes will be seen for other users after administrator acceptance.",
                             "pending_recipe": result.data}), 200
     else:
@@ -124,12 +137,12 @@ def update_waiting_recipe(pk):
         return bad_request('No input data provided')
     waiting_model = get_waiting_recipe(pk)
     if current_identity == waiting_model.author or current_identity.admin:
-        data, errors = recipe_schema.load(json_data)
+        data, errors = waiting_schema.load(json_data)
         if errors:
             return jsonify(errors), 422
         save_recipe_from_schema(data, waiting_model)
         waiting_model = get_waiting_recipe(waiting_model.id)
-        result = recipe_schema.dump(waiting_model)
+        result = waiting_schema.dump(waiting_model)
         return jsonify({"message": "Pending changes saved.",
                         "pending_recipe": result.data}), 200
     else:

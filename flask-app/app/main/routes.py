@@ -5,8 +5,9 @@ from flask_login import current_user, login_required
 from app.main import bp
 from app.main.forms import RecipeForm, SearchForm
 from app.main.helper_fun import save_recipe_from_form
-from app.services import init_waiting_recipe, get_recipe, save_recipe, get_recipes, get_waiting_recipe, \
-    clone_recipe_to_waiting, get_waiting_recipes, accept_waiting, get_user_recipes, search_recipe, reindex_es
+from app.services import init_waiting_recipe, get_recipe, get_recipes, get_waiting_recipe, \
+    clone_recipe_to_waiting, get_waiting_recipes, accept_waiting, get_user_recipes, search_recipe, reindex_es, \
+    reject_waiting
 
 
 @bp.route('/')
@@ -31,7 +32,6 @@ def get(pk):
 def get_waiting(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
-        flash(_('This recipe is pending approval by the administrator.'))
         return render_template('recipe.html', title=_('Waiting Recipe'), recipe=waiting_model, waiting=True)
     else:
         abort(401)
@@ -128,6 +128,18 @@ def edit_waiting(pk):
             flash(_('Pending changes saved!'))
             return redirect(url_for('.get_waiting', pk=waiting_model.id))
         return render_template('new-recipe.html', title=_('Edit Waiting Recipe'), form=form)
+    else:
+        abort(401)
+
+
+@bp.route('/waiting/<int:pk>/reject', methods=['GET'])
+@login_required
+def reject(pk):
+    if current_user.admin:
+        waiting_model = get_waiting_recipe(pk)
+        reject_waiting(waiting_model)
+        flash(_('Pending recipe rejected!'))
+        return redirect(url_for('.get_waiting_list'))
     else:
         abort(401)
 

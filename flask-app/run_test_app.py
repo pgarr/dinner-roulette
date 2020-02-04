@@ -25,7 +25,7 @@ import os
 
 from app import create_app, db
 from app.models import User, Recipe, WaitingRecipe
-from app.services import get_user_by_name
+from app.services import get_user_by_name, get_recipe_by_title
 from tests.test_config import TestConfig
 
 
@@ -51,9 +51,12 @@ def set_up_data(data_dict):
     # set up waiting recipes
     for waiting_recipe_data in data_dict.get('waiting_recipes', ()):
         author = waiting_recipe_data.pop('author', None)
+        updated_recipe = waiting_recipe_data.pop('updated_recipe', None)
         ingredients_data = waiting_recipe_data.pop('ingredients', ())
+
         waiting_recipe = WaitingRecipe(**waiting_recipe_data)
         waiting_recipe.author = get_user_by_name(author)
+        waiting_recipe.updated_recipe = get_recipe_by_title(updated_recipe)
 
         for ingredient_data in ingredients_data:
             waiting_recipe.add_ingredient(**ingredient_data)

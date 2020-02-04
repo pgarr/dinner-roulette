@@ -1,6 +1,6 @@
 from flask import url_for, jsonify
 
-from app.api.schemas import recipes_schema
+from app.api.schemas import recipes_schema, waitings_schema
 from app.services import save_recipe
 
 
@@ -16,8 +16,11 @@ def save_recipe_from_schema(data, model):
     save_recipe(model)
 
 
-def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, **kwargs):
-    result = recipes_schema.dump(paginated.items)
+def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, waiting=False, **kwargs):
+    if waiting:
+        result = waitings_schema.dump(paginated.items)
+    else:
+        result = recipes_schema.dump(paginated.items)
     page = int(page)
     per_page = int(per_page)
     meta = {
