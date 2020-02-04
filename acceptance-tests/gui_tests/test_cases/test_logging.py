@@ -1,4 +1,5 @@
 from gui_tests.base_test import BaseTest
+from gui_tests.helpers import wait_page_changes
 from gui_tests.models.pages import HomePage, LoginPage, WaitingRecipesPage, MyRecipesPage, NewRecipePage
 
 
@@ -8,10 +9,10 @@ class LoggingUserTest(BaseTest):
         self.driver.get(home_page.url)
 
         home_page.go_to_login_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+        login_page = wait_page_changes(home_page, LoginPage(self.driver))
 
         login_page.login('test', 'test')
-        self.wait_page_changes(login_page, home_page)
+        wait_page_changes(login_page, home_page)
 
         self.assertEqual(home_page.user_name, 'test')
 
@@ -19,7 +20,7 @@ class LoggingUserTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
         home_page.go_to_new_recipe_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+        login_page = wait_page_changes(home_page, LoginPage(self.driver))
 
     def test_waiting_recipes_leads_to_login_if_not_logged(self):
         waiting_recipes_page = WaitingRecipesPage(self.driver)
@@ -39,7 +40,7 @@ class LoggingUserTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
         home_page.go_to_new_recipe_page()
-        login_page = self.wait_page_changes(home_page, LoginPage(self.driver))
+        login_page = wait_page_changes(home_page, LoginPage(self.driver))
 
         login_page.login("test", "test")
-        new_recipe_page = self.wait_page_changes(login_page, NewRecipePage(self.driver))
+        new_recipe_page = wait_page_changes(login_page, NewRecipePage(self.driver))

@@ -1,4 +1,5 @@
 from gui_tests.base_test import BaseTest
+from gui_tests.helpers import wait_page_changes
 from gui_tests.models.pages import HomePage, MyRecipesPage, WaitingRecipesPage
 
 
@@ -24,7 +25,7 @@ class MyRecipesTest(BaseTest):
         self.smart_login('test2', 'test')
 
         home_page.go_to_my_recipes_page()
-        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+        my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 2, msg="My recipes count is correct")
 
@@ -35,7 +36,7 @@ class MyRecipesTest(BaseTest):
         self.smart_login('test', 'test')
 
         home_page.go_to_my_recipes_page()
-        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+        my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 0,
                          msg="My recipes count is correct")
@@ -89,7 +90,7 @@ class RecipesVisibilityTest(BaseTest):
         self.smart_login('test', 'test')
 
         home_page.go_to_waiting_page()
-        waiting_recipes_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+        waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 2,
                          msg="Waiting recipes count is correct")
@@ -101,7 +102,7 @@ class RecipesVisibilityTest(BaseTest):
         self.smart_login('test2', 'test')
 
         home_page.go_to_waiting_page()
-        waiting_recipes_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+        waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 0,
                          msg="Waiting recipes count is correct")
@@ -113,7 +114,7 @@ class RecipesVisibilityTest(BaseTest):
         self.smart_login('admin', 'admin')
 
         home_page.go_to_waiting_page()
-        waiting_recipes_page = self.wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+        waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 3,
                          msg="Waiting recipes count is correct")
@@ -125,7 +126,7 @@ class RecipesVisibilityTest(BaseTest):
         self.smart_login('test2', 'test')
 
         home_page.go_to_my_recipes_page()
-        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+        my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 2,
                          msg="My recipes count is correct")
@@ -137,7 +138,7 @@ class RecipesVisibilityTest(BaseTest):
         self.smart_login('test', 'test')
 
         home_page.go_to_my_recipes_page()
-        my_recipes_page = self.wait_page_changes(home_page, MyRecipesPage(self.driver))
+        my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 0,
                          msg="My recipes count is correct")

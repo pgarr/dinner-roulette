@@ -7,7 +7,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from config import MAX_LOADING_TIME
-from gui_tests.errors import WrongPageLoadedError
+from gui_tests.helpers import wait_page_changes
 from gui_tests.models.pages import BasePage, LoginPage
 from utils.aut import Aut
 
@@ -49,15 +49,6 @@ class BaseTest(TestCase):
         self._aut.stop()
 
     # helper methods:
-    def wait_page_changes(self, current_page: BasePage, expected_page: BasePage = None):
-        try:
-            page_loaded = self.wait.until_not(lambda driver: current_page.is_title_correct())
-        except TimeoutException:
-            self.fail("Loading timeout expired")
-        if expected_page and not expected_page.is_title_correct():
-            raise WrongPageLoadedError()
-        else:
-            return expected_page
 
     def smart_login(self, login, password):
         """logs in with credentials, but first logs out if already logged in with different user"""
@@ -74,9 +65,9 @@ class BaseTest(TestCase):
             except NoSuchElementException:
                 pass
             base_page.go_to_login_page()
-            login_page = self.wait_page_changes(base_page, LoginPage(self.driver))
+            login_page = wait_page_changes(base_page, LoginPage(self.driver))
 
             login_page.login(login, password)
-            self.wait_page_changes(current_page=login_page)
+            wait_page_changes(current_page=login_page)
 
             self.assertEqual(base_page.user_name, login)
