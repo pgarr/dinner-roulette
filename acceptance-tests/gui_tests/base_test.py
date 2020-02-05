@@ -8,7 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from config import MAX_LOADING_TIME
 from gui_tests.helpers import wait_page_changes
-from gui_tests.models.pages import BasePage, LoginPage
+from gui_tests.models.pages import BasePage, LoginPage, NavigationBar
 from utils.aut import Aut
 
 
@@ -43,6 +43,7 @@ class BaseTest(TestCase):
         self.driver.maximize_window()
 
         self.wait = WebDriverWait(self.driver, MAX_LOADING_TIME)
+        self.navbar = NavigationBar(self.driver)
 
     def tearDown(self):
         self.driver.quit()
@@ -54,20 +55,20 @@ class BaseTest(TestCase):
         """logs in with credentials, but first logs out if already logged in with different user"""
         base_page = BasePage(self.driver)
 
-        if base_page.user_name != login:
+        if self.navbar.user_name != login:
             try:
-                base_page.logout()
+                self.navbar.logout()
                 # wait until name is None
                 try:
-                    page_loaded = self.wait.until_not(lambda driver: base_page.user_name)
+                    page_loaded = self.wait.until_not(lambda driver: self.navbar.user_name)
                 except TimeoutException:
                     self.fail("Loading timeout expired")
             except NoSuchElementException:
                 pass
-            base_page.go_to_login_page()
+            self.navbar.go_to_login_page()
             login_page = wait_page_changes(base_page, LoginPage(self.driver))
 
             login_page.login(login, password)
             wait_page_changes(current_page=login_page)
 
-            self.assertEqual(base_page.user_name, login)
+            self.assertEqual(self.navbar.user_name, login)

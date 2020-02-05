@@ -8,20 +8,9 @@ from gui_tests.models.locators import BasePageLocators, HomePageLocators, LoginP
     NewRecipePageLocators, WaitingRecipePageLocators, ErrorPageLocators
 
 
-class BasePage:
-    """Base class to initialize the base page that will be called from all pages"""
-
+class NavigationBar:
     def __init__(self, driver):
         self.driver = driver
-        self._url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
-
-    @property
-    def url(self):
-        return self._url
-
-    @property
-    def title(self):
-        return "Base Page"
 
     @property
     def home_button(self):
@@ -63,12 +52,6 @@ class BasePage:
         except NoSuchElementException:
             return None
 
-    def is_url_correct(self):
-        return self.driver.current_url == self.url
-
-    def is_title_correct(self):
-        return self.driver.title == self.title
-
     def go_to_login_page(self):
         self.login_button.click()
 
@@ -91,11 +74,33 @@ class BasePage:
         self.logout_button.click()
 
 
+class BasePage:
+    """Base class to initialize the base page that will be called from all pages"""
+
+    def __init__(self, driver):
+        self.driver = driver
+        self._url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
+
+    @property
+    def url(self):
+        return self._url
+
+    @property
+    def title(self):
+        return "Base Page"
+
+    def is_url_correct(self):
+        return self.driver.current_url == self.url
+
+    def is_title_correct(self):
+        return self.driver.title == self.title
+
+
 class BasePageUrlRegex(BasePage):
 
     @property
     def url(self):
-        raise ValueError("Url is dynamic!")
+        raise ValueError("Url is dynamic!")  # TODO
 
     @property
     def url_regex(self):

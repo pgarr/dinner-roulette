@@ -34,19 +34,19 @@ class RecipesStatesTransitionTest(BaseTest):
 
         self.smart_login('test', 'test')
 
-        home_page.go_to_new_recipe_page()
+        self.navbar.go_to_new_recipe_page()
         new_recipe_page = wait_page_changes(home_page, NewRecipePage(self.driver))
 
         new_recipe_page.name.set_text('New Recipe')
         new_recipe_page.submit()
         waiting_recipe_page = wait_page_changes(new_recipe_page, WaitingRecipePage(self.driver))
 
-        waiting_recipe_page.go_to_home_page()
+        self.navbar.go_to_home_page()
         wait_page_changes(waiting_recipe_page, home_page)
 
         self.assertEqual(len(home_page.recipes), 1,
                          msg="After adding new recipe, recipes count is the same")
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_list_page.recipes), 2,
@@ -58,7 +58,7 @@ class RecipesStatesTransitionTest(BaseTest):
 
         self.smart_login('admin', 'admin')
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         waiting_list_page.recipes[0].go_to_details()
@@ -67,13 +67,13 @@ class RecipesStatesTransitionTest(BaseTest):
         waiting_recipe_page.accept()
         recipe_page = wait_page_changes(waiting_recipe_page, RecipePage(self.driver))
 
-        recipe_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         wait_page_changes(recipe_page, waiting_list_page)
 
         self.assertEqual(len(waiting_list_page.recipes), 0,
                          msg="After accepting waiting recipe, waiting recipes count is lesser by 1")
 
-        waiting_list_page.go_to_home_page()
+        self.navbar.go_to_home_page()
         wait_page_changes(waiting_list_page, home_page)
 
         self.assertEqual(len(home_page.recipes), 2,
@@ -124,12 +124,12 @@ class RecipesUpdatesTest(BaseTest):
         edit_recipe_page.submit()
         waiting_recipe_page = wait_page_changes(edit_recipe_page, WaitingRecipePage(self.driver))
 
-        waiting_recipe_page.go_to_home_page()
+        self.navbar.go_to_home_page()
         wait_page_changes(waiting_recipe_page, home_page)
 
         self.assertEqual('accepted', home_page.recipes[1].name)
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual('updated', waiting_list_page.recipes[0].name)
@@ -140,7 +140,7 @@ class RecipesUpdatesTest(BaseTest):
 
         self.smart_login('test2', 'test')
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         waiting_list_page.recipes[0].go_to_details()
@@ -158,12 +158,12 @@ class RecipesUpdatesTest(BaseTest):
         # verify this is the same recipe (url)
         self.assertEqual(self.driver.current_url, waiting_url)
 
-        waiting_recipe_page.go_to_home_page()
+        self.navbar.go_to_home_page()
         wait_page_changes(waiting_recipe_page, home_page)
 
         self.assertEqual(len(home_page.recipes), 2, msg="No new accepted recipe was created")
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         wait_page_changes(home_page, waiting_list_page)
 
         self.assertEqual(len(waiting_list_page.recipes), 2, msg="No new waiting recipe was created")
@@ -179,7 +179,7 @@ class RecipesUpdatesTest(BaseTest):
 
         recipe_url = self.driver.current_url
 
-        recipe_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(recipe_page, WaitingRecipesPage(self.driver))
 
         waiting_list_page.recipes[1].go_to_details()
@@ -190,13 +190,13 @@ class RecipesUpdatesTest(BaseTest):
 
         self.assertEqual(self.driver.current_url, recipe_url)
 
-        recipe_page.go_to_home_page()
+        self.navbar.go_to_home_page()
         wait_page_changes(recipe_page, home_page)
 
         self.assertEqual(len(home_page.recipes), 2, msg="No new accepted recipe was created")
         self.assertEqual("waiting_updates", home_page.recipes[0].name, msg="Name was updated")
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         wait_page_changes(home_page, waiting_list_page)
 
         self.assertEqual(len(waiting_list_page.recipes), 1, msg="Accepted waiting recipe was removed from waiting list")

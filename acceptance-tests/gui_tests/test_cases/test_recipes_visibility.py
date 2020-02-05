@@ -24,7 +24,7 @@ class MyRecipesTest(BaseTest):
 
         self.smart_login('test2', 'test')
 
-        home_page.go_to_my_recipes_page()
+        self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 2, msg="My recipes count is correct")
@@ -35,7 +35,7 @@ class MyRecipesTest(BaseTest):
 
         self.smart_login('test', 'test')
 
-        home_page.go_to_my_recipes_page()
+        self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 0,
@@ -89,7 +89,7 @@ class RecipesVisibilityTest(BaseTest):
 
         self.smart_login('test', 'test')
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 2,
@@ -101,7 +101,7 @@ class RecipesVisibilityTest(BaseTest):
 
         self.smart_login('test2', 'test')
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 0,
@@ -113,7 +113,7 @@ class RecipesVisibilityTest(BaseTest):
 
         self.smart_login('admin', 'admin')
 
-        home_page.go_to_waiting_page()
+        self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
 
         self.assertEqual(len(waiting_recipes_page.recipes), 3,
@@ -125,7 +125,7 @@ class RecipesVisibilityTest(BaseTest):
 
         self.smart_login('test2', 'test')
 
-        home_page.go_to_my_recipes_page()
+        self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 2,
@@ -137,7 +137,7 @@ class RecipesVisibilityTest(BaseTest):
 
         self.smart_login('test', 'test')
 
-        home_page.go_to_my_recipes_page()
+        self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
 
         self.assertEqual(len(my_recipes_page.recipes), 0,
