@@ -22,7 +22,7 @@ class MyRecipesTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test2', 'test')
+        self.navbar.smart_login(home_page, 'test2', 'test')
 
         self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
@@ -33,7 +33,7 @@ class MyRecipesTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test', 'test')
+        self.navbar.smart_login(home_page, 'test', 'test')
 
         self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
@@ -87,7 +87,7 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test', 'test')
+        self.navbar.smart_login(home_page, 'test', 'test')
 
         self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -99,7 +99,7 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test2', 'test')
+        self.navbar.smart_login(home_page, 'test2', 'test')
 
         self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -111,7 +111,7 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('admin', 'admin')
+        self.navbar.smart_login(home_page, 'admin', 'admin')
 
         self.navbar.go_to_waiting_page()
         waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -123,7 +123,7 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test2', 'test')
+        self.navbar.smart_login(home_page, 'test2', 'test')
 
         self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))
@@ -135,7 +135,7 @@ class RecipesVisibilityTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test', 'test')
+        self.navbar.smart_login(home_page, 'test', 'test')
 
         self.navbar.go_to_my_recipes_page()
         my_recipes_page = wait_page_changes(home_page, MyRecipesPage(self.driver))

@@ -32,7 +32,7 @@ class RecipesStatesTransitionTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test', 'test')
+        self.navbar.smart_login(home_page, 'test', 'test')
 
         self.navbar.go_to_new_recipe_page()
         new_recipe_page = wait_page_changes(home_page, NewRecipePage(self.driver))
@@ -56,7 +56,7 @@ class RecipesStatesTransitionTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('admin', 'admin')
+        self.navbar.smart_login(home_page, 'admin', 'admin')
 
         self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -112,7 +112,7 @@ class RecipesUpdatesTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test', 'test')
+        self.navbar.smart_login(home_page, 'test', 'test')
 
         home_page.recipes[1].go_to_details()
         recipe_page = wait_page_changes(home_page, RecipePage(self.driver))
@@ -138,7 +138,7 @@ class RecipesUpdatesTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('test2', 'test')
+        self.navbar.smart_login(home_page, 'test2', 'test')
 
         self.navbar.go_to_waiting_page()
         waiting_list_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
@@ -172,7 +172,7 @@ class RecipesUpdatesTest(BaseTest):
         home_page = HomePage(self.driver)
         self.driver.get(home_page.url)
 
-        self.smart_login('admin', 'admin')
+        self.navbar.smart_login(home_page, 'admin', 'admin')
 
         home_page.recipes[0].go_to_details()
         recipe_page = wait_page_changes(home_page, RecipePage(self.driver))

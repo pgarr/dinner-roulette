@@ -2,7 +2,10 @@ import os
 import re
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
 
+import config
+from gui_tests.helpers import wait_page_changes
 from gui_tests.models.elements import TextFieldElement
 from gui_tests.models.locators import BasePageLocators, HomePageLocators, LoginPageLocators, RecipePageLocators, \
     NewRecipePageLocators, WaitingRecipePageLocators, ErrorPageLocators
@@ -72,6 +75,24 @@ class NavigationBar:
     def logout(self):
         self.user_menu_dropdown.click()
         self.logout_button.click()
+
+    def smart_login(self, current_page, login, password):
+        """logs in with credentials, but first logs out if already logged in with different user"""
+
+        if self.user_name != login:
+            try:
+                wait = WebDriverWait(current_page.driver, config.MAX_LOADING_TIME)
+                self.logout()
+                # wait until name is None
+                page_loaded = wait.until_not(lambda driver: self.user_name)  # throws TimeoutException
+            except NoSuchElementException:
+                pass
+            self.go_to_login_page()
+            login_page = wait_page_changes(current_page, LoginPage(self.driver))
+
+            login_page.login(login, password)
+            wait_page_changes(current_page=login_page)
+            assert self.user_name == login
 
 
 class BasePage:
