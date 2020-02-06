@@ -6,10 +6,6 @@ from gui_tests.models.pages import NewRecipePage, WaitingRecipePage, WaitingReci
 
 class RecipesStatesTransitionTest(BaseTest):
 
-    def setUp_users(self):
-        return [{"username": "test", "email": "test@test.com", "password": "test"},
-                {"username": "admin", "email": "admin@test.com", "password": "admin"}]
-
     def setUp_recipes(self):
         recipes = [
             {"title": "test", "time": 30, "difficulty": 3, "link": "http://test.pl", "preparation": "test test",
@@ -185,10 +181,12 @@ class RecipesUpdatesTest(BaseTest):
         waiting_list_page.recipes[1].go_to_details()
         waiting_recipe_page = wait_page_changes(waiting_list_page, WaitingRecipePage(self.driver))
 
+        new_title = waiting_recipe_page.recipe_title
         waiting_recipe_page.accept()
         wait_page_changes(waiting_recipe_page, recipe_page)
 
         self.assertEqual(self.driver.current_url, recipe_url)
+        self.assertEqual(recipe_page.recipe_title, new_title)
 
         self.navbar.go_to_home_page()
         wait_page_changes(recipe_page, home_page)
