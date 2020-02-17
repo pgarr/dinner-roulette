@@ -48,6 +48,7 @@ class RecipePageLocators:
 
 class WaitingRecipePageLocators:
     ACCEPT_LINK = (By.XPATH, "//a[contains(text(), 'Accept')]")
+    REJECT_LINK = (By.XPATH, "//a[contains(text(), 'Reject')]")
 
 
 class NewRecipePageLocators:

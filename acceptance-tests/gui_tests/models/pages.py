@@ -310,9 +310,15 @@ class WaitingRecipePage(RecipePage):
     def accept_link(self):
         return self.driver.find_element(*WaitingRecipePageLocators.ACCEPT_LINK)
 
+    @property
+    def reject_link(self):
+        return self.driver.find_element(*WaitingRecipePageLocators.REJECT_LINK)
+
     def accept(self):
         self.accept_link.click()
 
+    def reject(self):
+        self.reject_link.click()
 
 class NewRecipePage(BasePage):
     class IngredientRow:
