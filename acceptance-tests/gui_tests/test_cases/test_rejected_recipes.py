@@ -73,4 +73,18 @@ class RejectedRecipesTest(BaseTest):
         self.assertEqual(waiting_recipes_page.recipes[1].name, 'new_name')
 
     def test_rejecting_recipe(self):
-        self.fail()
+        home_page = HomePage(self.driver)
+        self.driver.get(home_page.url)
+
+        self.navbar.smart_login(home_page, 'admin', 'admin')
+
+        self.navbar.go_to_waiting_page()
+        waiting_recipes_page = wait_page_changes(home_page, WaitingRecipesPage(self.driver))
+
+        waiting_recipes_page.recipes[0].go_to_details()
+        waiting_page = wait_page_changes(waiting_recipes_page, WaitingRecipePage(self.driver))
+
+        waiting_page.reject()
+        wait_page_changes(waiting_page, waiting_recipes_page)
+
+        self.assertEqual(len(waiting_recipes_page.recipes), 0)
