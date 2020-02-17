@@ -11,7 +11,6 @@ class TextFieldElement:
         element.clear()
         element.send_keys(value)
 
-
-def get_text(self):
-    """Gets the text in the field"""
-    return self.driver.find_element(*self.locator).text
+    def get_text(self):
+        """Gets the text in the field"""
+        return self.driver.find_element(*self.locator).get_attribute("value")

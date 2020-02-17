@@ -2,26 +2,18 @@ import os
 import re
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
 
+import config
+from gui_tests.helpers import wait_page_changes
 from gui_tests.models.elements import TextFieldElement
 from gui_tests.models.locators import BasePageLocators, HomePageLocators, LoginPageLocators, RecipePageLocators, \
     NewRecipePageLocators, WaitingRecipePageLocators, ErrorPageLocators
 
 
-class BasePage:
-    """Base class to initialize the base page that will be called from all pages"""
-
+class NavigationBar:
     def __init__(self, driver):
         self.driver = driver
-        self._url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
-
-    @property
-    def url(self):
-        return self._url
-
-    @property
-    def title(self):
-        return "Base Page"
 
     @property
     def home_button(self):
@@ -63,12 +55,6 @@ class BasePage:
         except NoSuchElementException:
             return None
 
-    def is_url_correct(self):
-        return self.driver.current_url == self.url
-
-    def is_title_correct(self):
-        return self.driver.title == self.title
-
     def go_to_login_page(self):
         self.login_button.click()
 
@@ -90,12 +76,52 @@ class BasePage:
         self.user_menu_dropdown.click()
         self.logout_button.click()
 
+    def smart_login(self, current_page, login, password):
+        """logs in with credentials, but first logs out if already logged in with different user"""
+
+        if self.user_name != login:
+            try:
+                wait = WebDriverWait(current_page.driver, config.MAX_LOADING_TIME)
+                self.logout()
+                # wait until name is None
+                page_loaded = wait.until_not(lambda driver: self.user_name)  # throws TimeoutException
+            except NoSuchElementException:
+                pass
+            self.go_to_login_page()
+            login_page = wait_page_changes(current_page, LoginPage(self.driver))
+
+            login_page.login(login, password)
+            wait_page_changes(current_page=login_page)
+            assert self.user_name == login
+
+
+class BasePage:
+    """Base class to initialize the base page that will be called from all pages"""
+
+    def __init__(self, driver):
+        self.driver = driver
+        self._url = 'http://127.0.0.1:' + os.environ.get('AUT_PORT')
+
+    @property
+    def url(self):
+        return self._url
+
+    @property
+    def title(self):
+        return "Base Page"
+
+    def is_url_correct(self):
+        return self.driver.current_url == self.url
+
+    def is_title_correct(self):
+        return self.driver.title == self.title
+
 
 class BasePageUrlRegex(BasePage):
 
     @property
     def url(self):
-        raise ValueError("Url is dynamic!")
+        raise ValueError("Url is dynamic!")  # TODO
 
     @property
     def url_regex(self):
@@ -284,9 +310,15 @@ class WaitingRecipePage(RecipePage):
     def accept_link(self):
         return self.driver.find_element(*WaitingRecipePageLocators.ACCEPT_LINK)
 
+    @property
+    def reject_link(self):
+        return self.driver.find_element(*WaitingRecipePageLocators.REJECT_LINK)
+
     def accept(self):
         self.accept_link.click()
 
+    def reject(self):
+        self.reject_link.click()
 
 class NewRecipePage(BasePage):
     class IngredientRow:
