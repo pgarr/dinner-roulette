@@ -2,22 +2,6 @@
 
 {% block content %}
     <div class="container-fluid">
-        <div class="row header-top-margin">
-            <div class="col-12">
-                <h2>{{ recipe.title }}</h2>
-            </div>
-            <div class="col-12">
-                {% if waiting %}
-                    {% if recipe.refused %}
-                        <span class="badge badge-danger">{{ _('Refused') }}</span>
-                    {% else %}
-                        <span class="badge badge-primary">{{ _('Pending') }}</span>
-                    {% endif %}
-                {% endif %}
-                <p>{{ _('Author:') }} {{ recipe.author.username}}</p>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-12">
                 {% if current_user == recipe.author or current_user.admin %}
@@ -31,6 +15,22 @@
                     <a href="{{ url_for('main.accept', pk=recipe.id) }}" class="btn btn-success">{{ _('Accept') }}</a>
                     <a href="{{ url_for('main.reject', pk=recipe.id) }}" class="btn btn-danger">{{ _('Reject') }}</a>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="row header-top-margin">
+            <div class="col-12">
+                <h2>{{ recipe.title }}</h2>
+            </div>
+            <div class="col-12">
+                {% if waiting %}
+                    {% if recipe.refused %}
+                        <span class="badge badge-danger">{{ _('Refused') }}</span>
+                    {% else %}
+                        <span class="badge badge-primary">{{ _('Pending') }}</span>
+                    {% endif %}
+                {% endif %}
+                <p>{{ _('Author:') }} {{ recipe.author.username}}</p>
             </div>
         </div>
 
