@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Form,
@@ -6,7 +7,7 @@ import {
   Navbar,
   NavDropdown,
 } from "react-bootstrap";
-import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Toolbar = (props) => (
   <Navbar bg="dark" variant="dark" expand="lg">
@@ -14,8 +15,17 @@ const Toolbar = (props) => (
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href="#home">+ Dodaj przepis</Nav.Link>
-        <NavDropdown title="User" id="basic-nav-dropdown">
+        <Nav.Link href="#home">
+          <FontAwesomeIcon icon="plus" /> Dodaj przepis
+        </Nav.Link>
+        <NavDropdown
+          title={
+            <span>
+              <FontAwesomeIcon icon="user" /> User
+            </span>
+          }
+          id="basic-nav-dropdown"
+        >
           <NavDropdown.Item href="#action/3.1">Moje przepisy</NavDropdown.Item>
           <NavDropdown.Item href="#action/3.2">
             Oczekujące przepisy

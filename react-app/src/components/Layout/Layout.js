@@ -1,5 +1,5 @@
-import { Col, Container, Row } from "react-bootstrap";
 import React from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import styles from "./Layout.module.css";
 import Toolbar from "../Toolbar/Toolbar";
 

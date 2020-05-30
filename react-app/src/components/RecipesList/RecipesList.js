@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 import PropTypes from "prop-types";
+
 import Recipe from "./Recipe/Recipe";
 
 const RecipesList = (props) => {
@@ -16,15 +17,7 @@ const RecipesList = (props) => {
       </thead>
       <tbody>
         {props.recipes.map((recipe, index) => {
-          return (
-            <Recipe
-              index={index}
-              title={recipe.title}
-              difficulty={recipe.difficulty}
-              time={recipe.time}
-              key={recipe.id}
-            />
-          );
+          return <Recipe index={index} {...recipe} key={recipe.id} />;
         })}
       </tbody>
     </Table>
