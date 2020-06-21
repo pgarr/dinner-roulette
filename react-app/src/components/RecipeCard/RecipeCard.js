@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { checkPropTypes } from "prop-types";
 
-import DifficultySymbol from "../DifficultySymbol/DifficultySymbol";
+import styles from "./RecipeCard.module.css";
+import DifficultySymbol from "../UI/DifficultySymbol/DifficultySymbol";
 import IngredientList from "./IngredientList/IngredientList";
 import PreparationBox from "./PreparationBox/PreparationBox";
 
@@ -36,9 +36,11 @@ const RecipeCard = (props) => {
           <DifficultySymbol difficulty={props.difficulty} />
         </Col>
       </Row>
-      <Row>
+      <Row className={styles.Data}>
         <Col xs lg="4">
-          <IngredientList ingredients={props.ingredients} />
+          {props.ingredients && (
+            <IngredientList ingredients={props.ingredients} />
+          )}
         </Col>
         <Col xs lg="8">
           {props.preparation && (

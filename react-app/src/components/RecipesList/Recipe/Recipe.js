@@ -1,6 +1,6 @@
 import React from "react";
 
-import DifficultySymbol from "../../DifficultySymbol/DifficultySymbol";
+import DifficultySymbol from "../../UI/DifficultySymbol/DifficultySymbol";
 
 const Recipe = (props) => (
   <tr>

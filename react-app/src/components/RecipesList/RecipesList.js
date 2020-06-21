@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import Recipe from "./Recipe/Recipe";
+import * as actions from "../../store/actions/index";
 
-const RecipesList = (props) => {
+const RecipesList = ({ recipes, onFetchRecipes }) => {
+  useEffect(() => {
+    onFetchRecipes();
+  }, [onFetchRecipes]);
+
   return (
     <Table hover>
       <thead>
@@ -16,7 +22,7 @@ const RecipesList = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.recipes.map((recipe, index) => {
+        {recipes.map((recipe, index) => {
           return <Recipe index={index} {...recipe} key={recipe.id} />;
         })}
       </tbody>
@@ -24,8 +30,20 @@ const RecipesList = (props) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    recipes: state.recipe.recipes,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchRecipes: () => dispatch(actions.fetchRecipes()),
+  };
+};
+
 RecipesList.propTypes = {
   recipes: PropTypes.array.isRequired,
 };
 
-export default RecipesList;
+export default connect(mapStateToProps, mapDispatchToProps)(RecipesList);
