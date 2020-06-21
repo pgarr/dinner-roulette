@@ -3,4 +3,5 @@ export {
   fetchRecipesSuccess,
   fetchRecipesFail,
   fetchRecipesStart,
+  changePage,
 } from "./recipe";

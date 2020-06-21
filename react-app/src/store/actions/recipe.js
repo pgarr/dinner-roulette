@@ -1,9 +1,11 @@
 import * as actionTypes from "./actionTypes";
 
-export const fetchRecipesSuccess = (recipes) => {
+export const fetchRecipesSuccess = (recipes, activePage, totalPages) => {
   return {
     type: actionTypes.FETCH_RECIPES_SUCCESS,
     recipes: recipes,
+    activePage: activePage,
+    totalPages: totalPages,
   };
 };
 
@@ -20,8 +22,16 @@ export const fetchRecipesStart = () => {
   };
 };
 
-export const fetchRecipes = () => {
+export const fetchRecipes = (page) => {
   return {
     type: actionTypes.FETCH_RECIPES,
+    page: page,
+  };
+};
+
+export const changePage = (activePage) => {
+  return {
+    type: actionTypes.CHANGE_PAGE,
+    activePage: activePage,
   };
 };

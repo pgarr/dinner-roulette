@@ -1,44 +1,75 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Table } from "react-bootstrap";
+import { Table, Pagination } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import Recipe from "./Recipe/Recipe";
 import * as actions from "../../store/actions/index";
 
-const RecipesList = ({ recipes, onFetchRecipes }) => {
+const RecipesList = ({
+  recipes,
+  onFetchRecipes,
+  activePage,
+  totalPages,
+  onChangePage,
+}) => {
   useEffect(() => {
-    onFetchRecipes();
-  }, [onFetchRecipes]);
+    onFetchRecipes(activePage);
+  }, [onFetchRecipes, activePage]);
+
+  // Pagination
+  let items = [];
+  for (let number = 1; number <= totalPages; number++) {
+    items.push(
+      <Pagination.Item
+        key={number}
+        active={number === activePage}
+        onClick={
+          number === activePage
+            ? null
+            : (event) => onChangePage(event.target.text)
+        }
+      >
+        {number}
+      </Pagination.Item>
+    );
+  }
 
   return (
-    <Table hover>
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nazwa</th>
-          <th scope="col">Czas</th>
-          <th scope="col">Trudność</th>
-        </tr>
-      </thead>
-      <tbody>
-        {recipes.map((recipe, index) => {
-          return <Recipe index={index} {...recipe} key={recipe.id} />;
-        })}
-      </tbody>
-    </Table>
+    <React.Fragment>
+      <Table hover>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa</th>
+            <th scope="col">Czas</th>
+            <th scope="col">Trudność</th>
+          </tr>
+        </thead>
+        <tbody>
+          {recipes.map((recipe, index) => {
+            return <Recipe index={index + 1} {...recipe} key={recipe.id} />;
+          })}
+        </tbody>
+      </Table>
+      <Pagination size="sm">{items}</Pagination>
+    </React.Fragment>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
+    loading: state.recipe.loading,
     recipes: state.recipe.recipes,
+    activePage: state.recipe.activePage,
+    totalPages: state.recipe.totalPages,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchRecipes: () => dispatch(actions.fetchRecipes()),
+    onFetchRecipes: (page) => dispatch(actions.fetchRecipes(page)),
+    onChangePage: (page) => dispatch(actions.changePage(page)),
   };
 };
 

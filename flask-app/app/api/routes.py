@@ -16,7 +16,7 @@ def connection():
 
 @bp.route('/recipes', methods=['GET'])
 def recipes():
-    page = request.args.get('page', 1)
+    page = request.args.get('page', 1)  # FIXME: jeśli jest string (np. "undefined") zwraca 500
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     recipe_models = get_recipes(page=page, per_page=per_page)
     return paginated_recipes_jsonify(recipe_models, page, per_page, endpoint='.recipes', items_name='recipes')
