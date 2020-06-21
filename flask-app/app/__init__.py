@@ -5,6 +5,7 @@ from logging.handlers import RotatingFileHandler, SMTPHandler
 from elasticsearch import Elasticsearch
 from flask import Flask, current_app, request
 from flask_babel import Babel, lazy_gettext as _l
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -32,6 +33,8 @@ def create_app(config_class=Config):
     login.init_app(app)
     mail.init_app(app)
     babel.init_app(app)
+
+    CORS(app)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
