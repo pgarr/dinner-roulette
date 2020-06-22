@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import Ingredient from "./Ingredient/Ingredient";
 
-const IngredientList = (props) => {
+const IngredientList = ({ ingredients }) => {
   return (
     <Table hover>
       <thead>
@@ -14,7 +14,7 @@ const IngredientList = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.ingredients.map((ingredient, index) => {
+        {ingredients.map((ingredient, index) => {
           return <Ingredient key={index} {...ingredient} />;
         })}
       </tbody>

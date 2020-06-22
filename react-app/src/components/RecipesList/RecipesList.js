@@ -12,10 +12,15 @@ const RecipesList = ({
   activePage,
   totalPages,
   onChangePage,
+  history,
 }) => {
   useEffect(() => {
     onFetchRecipes(activePage);
   }, [onFetchRecipes, activePage]);
+
+  const recipeSelectedHandler = (id) => {
+    history.push({ pathname: "/recipes/" + id });
+  };
 
   // Pagination
   let items = [];
@@ -48,7 +53,14 @@ const RecipesList = ({
         </thead>
         <tbody>
           {recipes.map((recipe, index) => {
-            return <Recipe index={index + 1} {...recipe} key={recipe.id} />;
+            return (
+              <Recipe
+                index={index + 1}
+                {...recipe}
+                key={recipe.id}
+                clicked={() => recipeSelectedHandler(recipe.id)}
+              />
+            );
           })}
         </tbody>
       </Table>
@@ -59,10 +71,10 @@ const RecipesList = ({
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.recipe.loading,
-    recipes: state.recipe.recipes,
-    activePage: state.recipe.activePage,
-    totalPages: state.recipe.totalPages,
+    loading: state.recipes.loading,
+    recipes: state.recipes.recipes,
+    activePage: state.recipes.activePage,
+    totalPages: state.recipes.totalPages,
   };
 };
 

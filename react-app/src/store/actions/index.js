@@ -4,4 +4,10 @@ export {
   fetchRecipesFail,
   fetchRecipesStart,
   changePage,
-} from "./recipe";
+} from "./recipes";
+export {
+  loadDetails,
+  loadDetailsStart,
+  loadDetailsFail,
+  loadDetailsSuccess,
+} from "./details";

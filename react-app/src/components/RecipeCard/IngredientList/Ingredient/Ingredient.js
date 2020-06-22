@@ -1,10 +1,10 @@
 import React from "react";
 
-const Ingredient = (props) => {
+const Ingredient = ({ title, amount, unit }) => {
   return (
     <tr>
-      <td>{props.name}</td>
-      <td>{`${props.amount} ${props.unit}`}</td>
+      <td>{title}</td>
+      <td>{`${amount} ${unit}`}</td>
     </tr>
   );
 };
