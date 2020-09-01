@@ -55,11 +55,13 @@ const RecipeCard = ({
         <Col>Autor: {author}</Col>
       </Row>
       <Row>
-        <Col xs={2}>
-          <FontAwesomeIcon icon="clock" />
-          {time}'
-        </Col>
-        <Col xs={2}>{diff}</Col>
+        {time && (
+          <Col xs={2}>
+            <FontAwesomeIcon icon="clock" />
+            {time}'
+          </Col>
+        )}
+        {diff && <Col xs={2}>{diff}</Col>}
       </Row>
       <Row className={styles.Data}>
         <Col xs lg="4">
