@@ -13,6 +13,7 @@ import Layout from "../Layout/Layout";
 import RecipesList from "../RecipesList/RecipesList";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import Home from "../Home/Home";
+import Auth from "../Auth/Auth";
 
 const App = (props) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
@@ -23,6 +24,7 @@ const App = (props) => {
         <Switch>
           <Route path="/recipes" exact component={RecipesList} />
           <Route path="/recipes/:id" component={RecipeCard} />
+          <Route path="/login" component={Auth} />
           <Route path="/" exact component={Home} />
         </Switch>
       </Layout>
