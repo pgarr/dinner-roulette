@@ -1,10 +1,12 @@
 from flask import Blueprint, current_app
-from flask_jwt import JWT
-from app.api import security
+from flask_jwt_extended import JWTManager
+
+from app.services import get_user_by_name
 
 bp = Blueprint('api', __name__)
 
-current_app.config['JWT_AUTH_URL_RULE'] = '/api/auth'  # TODO: zmienić hardcode na zależne od endpoint api
-jwt = JWT(current_app, security.authenticate, security.identity)
+current_app.config['JWT_SECRET_KEY'] = current_app.config['SECRET_KEY']
+jwt = JWTManager(current_app)
+jwt.user_loader_callback_loader(get_user_by_name)
 
 from app.api import routes

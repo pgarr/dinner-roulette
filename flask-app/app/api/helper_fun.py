@@ -1,7 +1,8 @@
 from flask import url_for, jsonify
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 from app.api.schemas import recipes_schema, waitings_schema
-from app.services import save_recipe
+from app.services import save_recipe, get_user_by_name
 
 
 def save_recipe_from_schema(data, model):
@@ -38,6 +39,18 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, w
                         **kwargs) if paginated.has_prev else None
     }
     return jsonify({items_name: result.data, '_meta': meta, '_links': links})
+
+
+def get_jwt_token(username, password, refresh=False):
+    user = get_user_by_name(username)
+    if user and user.check_password(password):
+        ret = {
+            'access_token': create_access_token(identity=user.username),
+        }
+        if not refresh:
+            ret['refresh_token'] = create_refresh_token(identity=user.username)
+        return ret
+    return None
 
 
 class SearchAPIPaginatedAdapter:
