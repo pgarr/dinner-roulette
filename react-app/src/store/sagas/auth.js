@@ -2,6 +2,7 @@ import { delay, put, call } from "redux-saga/effects";
 
 import axios from "../../shared/axios-recipes";
 import * as actions from "../actions/index";
+import jwt from "jsonwebtoken";
 
 export function* logoutSaga(action) {
   yield call([localStorage, "removeItem"], "access_token");
@@ -10,8 +11,8 @@ export function* logoutSaga(action) {
 }
 
 export function* checkAuthTimeoutSaga(action) {
-  yield delay(action.expirationTime * 1000);
-  yield put(actions.logout());
+  yield delay(action.expirationTime);
+  yield put(actions.logout()); // TODO: refresh zamiast logout
 }
 
 export function* authUserSaga(action) {
@@ -26,33 +27,38 @@ export function* authUserSaga(action) {
 
     yield localStorage.setItem("access_token", response.data.access_token);
     yield localStorage.setItem("refresh_token", response.data.refresh_token);
-
-    yield put(actions.authSuccess(response.data.access_token, action.username)); // TODO: z tokena username
-    // yield put(actions.checkAuthTimeout(response.data.expiresIn)); // TODO: z tokena expiresIn
+    yield put(
+      actions.authSuccess(
+        response.data.access_token,
+        response.data.refresh_token
+      )
+    );
+    const payload = jwt.decode(response.data.access_token);
+    const expirationTime = yield payload.exp * 1000 - new Date().getTime();
+    yield put(actions.checkAuthTimeout(expirationTime));
   } catch (error) {
     yield put(actions.authFail(error.response.data));
   }
 }
 
 export function* authCheckStateSaga(action) {
-  const token = yield localStorage.getItem("access_token");
+  const access_token = yield localStorage.getItem("access_token");
+  const refresh_token = yield localStorage.getItem("refresh_token");
 
-  if (!token) {
+  if (!access_token) {
     yield put(actions.logout());
   } else {
-    // const expirationDate = yield new Date(
-    //   localStorage.getItem("expirationDate")
-    // );
-    // if (expirationDate <= new Date()) {
-    //   yield put(actions.logout());
-    // } else {
-    const username = "test"; // TODO: z tokena username
-    yield put(actions.authSuccess(token, username));
-    // yield put(
-    //   actions.checkAuthTimeout(
-    //     (expirationDate.getTime() - new Date().getTime()) / 1000
-    //   )
-    // );
-    // }
+    const payload = jwt.decode(access_token);
+    const expirationDate = yield new Date(payload.exp * 1000);
+    if (expirationDate <= new Date()) {
+      yield put(actions.logout()); // TODO: refresh zamiast logout
+    } else {
+      yield put(actions.authSuccess(access_token, refresh_token));
+      yield put(
+        actions.checkAuthTimeout(
+          expirationDate.getTime() - new Date().getTime()
+        )
+      );
+    }
   }
 }

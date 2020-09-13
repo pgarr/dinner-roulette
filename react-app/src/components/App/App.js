@@ -1,5 +1,6 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
+import React, { useEffect, Suspense } from "react";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faClock,
@@ -14,22 +15,56 @@ import RecipesList from "../RecipesList/RecipesList";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
+import * as actions from "../../store/actions/index";
 
-const App = (props) => {
+const App = ({ onTryAutoSingup, isAuthenticated }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
+
+  useEffect(() => {
+    onTryAutoSingup();
+  }, [onTryAutoSingup]);
+
+  let routes = (
+    <Switch>
+      <Route path="/recipes" exact component={RecipesList} />
+      <Route path="/recipes/:id" component={RecipeCard} />
+      <Route path="/login" component={Auth} />
+      <Route path="/" exact component={Home} />
+      <Redirect to="/" />
+    </Switch>
+  );
+
+  if (isAuthenticated) {
+    routes = (
+      <Switch>
+        <Route path="/recipes" exact component={RecipesList} />
+        <Route path="/recipes/:id" component={RecipeCard} />
+        <Route path="/login" component={Auth} />
+        <Route path="/" exact component={Home} />
+        <Redirect to="/" />
+      </Switch>
+    );
+  }
 
   return (
     <div>
       <Layout>
-        <Switch>
-          <Route path="/recipes" exact component={RecipesList} />
-          <Route path="/recipes/:id" component={RecipeCard} />
-          <Route path="/login" component={Auth} />
-          <Route path="/" exact component={Home} />
-        </Switch>
+        <Suspense fallback={<p>Loading...</p>}>{routes}</Suspense>
       </Layout>
     </div>
   );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.access_token !== null,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTryAutoSingup: () => dispatch(actions.authCheckState()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
