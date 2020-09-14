@@ -12,7 +12,11 @@ export function* logoutSaga(action) {
 
 export function* checkAuthTimeoutSaga(action) {
   yield delay(action.expirationTime);
-  yield put(actions.logout()); // TODO: refresh zamiast logout
+  if (action.refresh_token) {
+    yield put(actions.refresh(action.refresh_token)); // TODO: sprawdzić expiration date
+  } else {
+    yield put(actions.logout());
+  }
 }
 
 export function* authUserSaga(action) {
@@ -35,7 +39,9 @@ export function* authUserSaga(action) {
     );
     const payload = jwt.decode(response.data.access_token);
     const expirationTime = yield payload.exp * 1000 - new Date().getTime();
-    yield put(actions.checkAuthTimeout(expirationTime));
+    yield put(
+      actions.checkAuthTimeout(expirationTime, response.data.refresh_token)
+    );
   } catch (error) {
     yield put(actions.authFail(error.response.data));
   }
@@ -51,14 +57,39 @@ export function* authCheckStateSaga(action) {
     const payload = jwt.decode(access_token);
     const expirationDate = yield new Date(payload.exp * 1000);
     if (expirationDate <= new Date()) {
-      yield put(actions.logout()); // TODO: refresh zamiast logout
+      if (refresh_token) {
+        yield put(actions.refresh(refresh_token)); // TODO: sprawdzić expiration date
+      } else {
+        yield put(actions.logout());
+      }
     } else {
       yield put(actions.authSuccess(access_token, refresh_token));
       yield put(
         actions.checkAuthTimeout(
-          expirationDate.getTime() - new Date().getTime()
+          expirationDate.getTime() - new Date().getTime(),
+          refresh_token
         )
       );
     }
+  }
+}
+
+export function* refreshAuthSaga(action) {
+  try {
+    const response = yield axios.post(
+      "/auth/refresh",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${action.refresh_token}`,
+        },
+      }
+    );
+    yield localStorage.setItem("access_token", response.data.access_token);
+    yield put(
+      actions.authSuccess(response.data.access_token, action.refresh_token)
+    );
+  } catch (error) {
+    yield put(actions.logout());
   }
 }

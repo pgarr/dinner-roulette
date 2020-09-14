@@ -21,4 +21,5 @@ export {
   authSuccess,
   authFail,
   checkAuthTimeout,
+  refresh,
 } from "./auth";

@@ -8,6 +8,7 @@ import {
   checkAuthTimeoutSaga,
   authUserSaga,
   authCheckStateSaga,
+  refreshAuthSaga,
 } from "./auth";
 
 export function* watchRecipes() {
@@ -24,5 +25,6 @@ export function* watchAuth() {
     takeEvery(actionTypes.AUTH_CHECK_TIMEOUT, checkAuthTimeoutSaga),
     takeEvery(actionTypes.AUTH_USER, authUserSaga),
     takeEvery(actionTypes.AUTH_CHECK_STATE, authCheckStateSaga),
+    takeEvery(actionTypes.AUTH_INITIATE_REFRESH, refreshAuthSaga),
   ]);
 }

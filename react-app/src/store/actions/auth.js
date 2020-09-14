@@ -33,10 +33,11 @@ export const logoutSucceed = () => {
   };
 };
 
-export const checkAuthTimeout = (expirationTime) => {
+export const checkAuthTimeout = (expirationTime, refresh_token) => {
   return {
     type: actionTypes.AUTH_CHECK_TIMEOUT,
     expirationTime,
+    refresh_token,
   };
 };
 
@@ -58,5 +59,12 @@ export const setAuthRedirectPath = (path) => {
 export const authCheckState = () => {
   return {
     type: actionTypes.AUTH_CHECK_STATE,
+  };
+};
+
+export const refresh = (refresh_token) => {
+  return {
+    type: actionTypes.AUTH_INITIATE_REFRESH,
+    refresh_token,
   };
 };
