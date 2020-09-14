@@ -16,6 +16,7 @@ import RecipeCard from "../RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import * as actions from "../../store/actions/index";
+import Logout from "../Auth/Logout/Logout";
 
 const App = ({ onTryAutoSingup, isAuthenticated }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
@@ -29,22 +30,23 @@ const App = ({ onTryAutoSingup, isAuthenticated }) => {
       <Route path="/recipes" exact component={RecipesList} />
       <Route path="/recipes/:id" component={RecipeCard} />
       <Route path="/login" component={Auth} />
+      <Route path="/logout" component={Logout} />
       <Route path="/" exact component={Home} />
       <Redirect to="/" />
     </Switch>
   );
 
-  if (isAuthenticated) {
-    routes = (
-      <Switch>
-        <Route path="/recipes" exact component={RecipesList} />
-        <Route path="/recipes/:id" component={RecipeCard} />
-        <Route path="/login" component={Auth} />
-        <Route path="/" exact component={Home} />
-        <Redirect to="/" />
-      </Switch>
-    );
-  }
+  // if (isAuthenticated) {
+  //   routes = (
+  //     <Switch>
+  //       <Route path="/recipes" exact component={RecipesList} />
+  //       <Route path="/recipes/:id" component={RecipeCard} />
+  //       <Route path="/logout" component={Logout} />
+  //       <Route path="/" exact component={Home} />
+  //       <Redirect to="/" />
+  //     </Switch>
+  //   );
+  // }
 
   return (
     <div>
