@@ -4,8 +4,8 @@ import * as actionTypes from "../actions/actionTypes";
 describe("auth reducer", () => {
   it("should return the initial state", () => {
     expect(reducer(undefined, {})).toEqual({
-      token: null,
-      userId: null,
+      access_token: null,
+      refresh_token: null,
       error: null,
       loading: false,
       authRedirectPath: "/",
@@ -16,21 +16,21 @@ describe("auth reducer", () => {
     expect(
       reducer(
         {
-          token: null,
-          userId: null,
+          access_token: null,
+          refresh_token: null,
           error: null,
           loading: false,
           authRedirectPath: "/",
         },
         {
           type: actionTypes.AUTH_SUCCESS,
-          idToken: "some-token",
-          userId: "some-user-id",
+          access_token: "some-access-token",
+          refresh_token: "some-refresh-token",
         }
       )
     ).toEqual({
-      token: "some-token",
-      userId: "some-user-id",
+      access_token: "some-access-token",
+      refresh_token: "some-refresh-token",
       error: null,
       loading: false,
       authRedirectPath: "/",
