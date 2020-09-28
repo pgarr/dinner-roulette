@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import create_app, db
-from tests.test_config import TestConfig
+from tests.utils import TestConfig
 
 
 class TestAppSetUp(TestCase):
