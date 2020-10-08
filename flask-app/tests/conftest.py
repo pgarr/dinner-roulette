@@ -49,10 +49,8 @@ def make_user(database):
 
 @pytest.fixture
 def make_recipe(database):
-    def _make_recipe(title, time, difficulty, link, preparation, author, create_date, last_modified, ingredients):
-        recipe_model = Recipe(title=title, time=time, difficulty=difficulty, link=link, preparation=preparation,
-                              author=author, create_date=create_date,
-                              last_modified=last_modified,
+    def _make_recipe(ingredients, **kwargs):
+        recipe_model = Recipe(**kwargs,
                               ingredients=[RecipeIngredient(title=ingredient['title'], amount=ingredient['amount'],
                                                             unit=ingredient['unit']) for ingredient in ingredients])
 
@@ -66,16 +64,12 @@ def make_recipe(database):
 
 @pytest.fixture
 def make_waiting_recipe(database):
-    def _make_waiting_recipe(title, time, difficulty, link, preparation, author, create_date, last_modified,
-                             ingredients):
-        waiting_recipe_model = WaitingRecipe(title=title, time=time, difficulty=difficulty, link=link,
-                                             preparation=preparation, author=author, create_date=create_date,
-                                             last_modified=last_modified,
-                                             ingredients=[WaitingRecipeIngredient(title=ingredient['title'],
-                                                                                  amount=ingredient['amount'],
-                                                                                  unit=ingredient['unit']) for
-                                                          ingredient
-                                                          in ingredients])
+    def _make_waiting_recipe(ingredients, **kwargs):
+        waiting_recipe_model = WaitingRecipe(**kwargs, ingredients=[WaitingRecipeIngredient(title=ingredient['title'],
+                                                                                            amount=ingredient['amount'],
+                                                                                            unit=ingredient['unit']) for
+                                                                    ingredient
+                                                                    in ingredients])
 
         database.session.add(waiting_recipe_model)
         database.session.commit()
