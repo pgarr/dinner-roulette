@@ -4,11 +4,9 @@ from unittest.mock import Mock
 import pytest
 from werkzeug.exceptions import NotFound
 
-from app import db
-from app.models import User, RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
+from app.models import RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
 from app.services import get_recipes, get_user_recipes, get_waiting_recipes, accept_waiting, get_recipe, \
     get_user_by_name, get_waiting_recipe, save_recipe, search_recipe, reject_waiting, get_recipe_by_title
-from tests.base_test import TestAppSetUp
 
 
 @pytest.fixture
