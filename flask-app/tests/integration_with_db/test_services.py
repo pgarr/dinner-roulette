@@ -161,76 +161,53 @@ class TestServices:
         assert recipe is None
 
 
-class TestServicesSortBasic(TestAppSetUp):
-    def setUp(self):
-        super().setUp()
-        # users test test2 test3 admin
-        self.user = User(username="test", email="test@test.com")
-        self.user.set_password("test")
-        db.session.add(self.user)
+class TestServicesSortBasic:
 
-        self.user2 = User(username="test2", email="test2@test.com")
-        self.user2.set_password("test")
-        db.session.add(self.user2)
+    @pytest.fixture
+    def recipes_users_set(self, test_client, database, users_set, make_recipe, make_waiting_recipe):
+        user1, user2, admin = users_set
+        recipe1 = make_recipe(title='third', author=user2, create_date=datetime(2019, 1, 10),
+                              last_modified=datetime(2019, 12, 1))
+        recipe2 = make_recipe(title='first', author=user1, create_date=datetime(2019, 1, 30),
+                              last_modified=datetime(2019, 11, 1))
+        recipe3 = make_recipe(title='second', author=user2, create_date=datetime(2019, 1, 20),
+                              last_modified=datetime(2019, 6, 1))
+        waiting_recipe1 = make_waiting_recipe(title='waiting_second', author=user2, create_date=datetime(2019, 1, 20),
+                                              last_modified=datetime(2019, 11, 1))
+        waiting_recipe2 = make_waiting_recipe(title='waiting_first', author=user2, create_date=datetime(2019, 1, 30),
+                                              last_modified=datetime(2019, 10, 1))
+        waiting_recipe3 = make_waiting_recipe(title='waiting_third', author=user1, create_date=datetime(2019, 1, 10),
+                                              last_modified=datetime(2019, 12, 1))
+        return user1, user2, admin, recipe1, recipe2, recipe3, waiting_recipe1, waiting_recipe2, waiting_recipe3
 
-        self.admin = User(username="admin", email="admin@test.com")
-        self.admin.set_password("admin")
-        db.session.add(self.admin)
-
-        self.recipe_model = Recipe(title='third', author=self.user2, create_date=datetime(2019, 1, 10),
-                                   last_modified=datetime(2019, 12, 1))
-        db.session.add(self.recipe_model)
-
-        self.recipe_model2 = Recipe(title='first', author=self.user, create_date=datetime(2019, 1, 30),
-                                    last_modified=datetime(2019, 11, 1))
-        db.session.add(self.recipe_model2)
-
-        self.recipe_model3 = Recipe(title='second', author=self.user2, create_date=datetime(2019, 1, 20),
-                                    last_modified=datetime(2019, 6, 1))
-        db.session.add(self.recipe_model3)
-
-        self.waiting_model = WaitingRecipe(title='waiting_second', author=self.user2,
-                                           create_date=datetime(2019, 1, 20),
-                                           last_modified=datetime(2019, 11, 1))
-        db.session.add(self.waiting_model)
-
-        self.waiting_model2 = WaitingRecipe(title='waiting_first', author=self.user2,
-                                            create_date=datetime(2019, 1, 30),
-                                            last_modified=datetime(2019, 10, 1))
-        db.session.add(self.waiting_model2)
-
-        self.waiting_model3 = WaitingRecipe(title='waiting_third', author=self.user,
-                                            create_date=datetime(2019, 1, 10),
-                                            last_modified=datetime(2019, 12, 1))
-        db.session.add(self.waiting_model3)
-
-        db.session.commit()
-
-    def test_recipes_sort_by_create_date_from_latest(self):
+    def test_recipes_sort_by_create_date_from_latest(self, recipes_users_set):
         recipes = get_recipes(1, 100)
-        self.assertEqual(3, len(recipes.items))
-        self.assertEqual('first', recipes.items[0].title)
-        self.assertEqual('second', recipes.items[1].title)
-        self.assertEqual('third', recipes.items[2].title)
+        assert 3 == len(recipes.items)
+        assert 'first' == recipes.items[0].title
+        assert 'second' == recipes.items[1].title
+        assert 'third' == recipes.items[2].title
 
-    def test_my_recipes_sort_by_create_date_from_latest(self):
-        recipes = get_user_recipes(self.user2, 1, 100)
-        self.assertEqual(2, len(recipes.items))
-        self.assertEqual('second', recipes.items[0].title)
-        self.assertEqual('third', recipes.items[1].title)
+    def test_my_recipes_sort_by_create_date_from_latest(self, recipes_users_set):
+        user1, user2, admin, recipe1, recipe2, recipe3, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
+        recipes = get_user_recipes(user2, 1, 100)
+        assert 2 == len(recipes.items)
+        assert 'second' == recipes.items[0].title
+        assert 'third' == recipes.items[1].title
 
-    def test_waiting_recipes_user_sort_by_last_update_from_oldest(self):
-        recipes = get_waiting_recipes(self.user2, 1, 100)
-        self.assertEqual(2, len(recipes.items))
-        self.assertEqual('waiting_first', recipes.items[0].title)
-        self.assertEqual('waiting_second', recipes.items[1].title)
+    def test_waiting_recipes_user_sort_by_last_update_from_oldest(self, recipes_users_set):
+        user1, user2, admin, recipe1, recipe2, recipe3, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
+        recipes = get_waiting_recipes(user2, 1, 100)
+        assert 2 == len(recipes.items)
+        assert 'waiting_first' == recipes.items[0].title
+        assert 'waiting_second' == recipes.items[1].title
 
-    def test_waiting_recipes_admin_sort_by_last_update_from_oldest(self):
-        recipes = get_waiting_recipes(self.admin, 1, 100)
-        self.assertEqual(3, len(recipes.items))
-        self.assertEqual('waiting_first', recipes.items[0].title)
-        self.assertEqual('waiting_second', recipes.items[1].title)
-        self.assertEqual('waiting_third', recipes.items[2].title)
+    def test_waiting_recipes_admin_sort_by_last_update_from_oldest(self, recipes_users_set):
+        user1, user2, admin, recipe1, recipe2, recipe3, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
+        recipes = get_waiting_recipes(admin, 1, 100)
+        assert 3, len(recipes.items)
+        assert 'waiting_first' == recipes.items[0].title
+        assert 'waiting_second' == recipes.items[1].title
+        assert 'waiting_third' == recipes.items[2].title
 
 
 class TestServicesSearch:
@@ -241,66 +218,63 @@ class TestServicesSearch:
         models.query_index.assert_called_once_with('recipe', 'test', 1, 1)
 
 
-class TestServicesRefusedWaitingRecipe(TestAppSetUp):
-    def setUp(self):
-        super().setUp()
-        # users test admin
-        self.user = User(username="test", email="test@test.com")
-        self.user.set_password("test")
-        db.session.add(self.user)
+class TestServicesRefusedWaitingRecipe:
 
-        self.admin = User(username="admin", email="admin@test.com")
-        self.admin.set_password("admin")
-        db.session.add(self.admin)
+    @pytest.fixture
+    def recipes_users_set(self, test_client, database, users_set, make_recipe, make_waiting_recipe):
+        user1, user2, admin = users_set
+        recipe1 = make_recipe(title='accepted_recipe', author=user1)
+        waiting_recipe1 = make_waiting_recipe(title='waiting_pending', author=user1, refused=False)
+        waiting_recipe2 = make_waiting_recipe(title='waiting_refused', author=user1, refused=True)
+        return user1, admin, recipe1, waiting_recipe1, waiting_recipe2
 
-        self.waiting_model_pending = WaitingRecipe(title='waiting_pending', author=self.user, refused=False)
-        db.session.add(self.waiting_model_pending)
+    def test_get_waiting_recipes_returns_only_pending_for_admin(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        waiting_list = get_waiting_recipes(admin, 1, 100)
+        assert not any(item.refused for item in waiting_list.items)
 
-        self.waiting_model_refused = WaitingRecipe(title='waiting_refused', author=self.user, refused=True)
-        db.session.add(self.waiting_model_refused)
+    def test_get_waiting_recipes_returns_pending_and_refused_for_user(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        waiting_list = get_waiting_recipes(user1, 1, 100)
+        assert any(item.refused for item in waiting_list.items)
+        assert any(not item.refused for item in waiting_list.items)
 
-        self.recipe_model = Recipe(title='accepted_recipe', author=self.user)
+    def test_get_waiting_recipes_returns_refused_status(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        waiting_list = get_waiting_recipes(user1, 1, 100)
+        assert all(hasattr(item, 'refused') for item in waiting_list.items)
 
-        db.session.commit()
+    def test_save_recipe_sets_pending_to_pending_if_waiting(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        save_recipe(waiting_recipe1)
+        assert not waiting_recipe1.refused
 
-    def test_get_waiting_recipes_returns_only_pending_for_admin(self):
-        waiting_list = get_waiting_recipes(self.admin, 1, 100)
-        self.assertFalse(any(item.refused for item in waiting_list.items))
+    def test_save_recipe_sets_refused_to_pending_if_waiting(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        save_recipe(waiting_recipe2)
+        assert not waiting_recipe2.refused
 
-    def test_get_waiting_recipes_returns_pending_and_refused_for_user(self):
-        waiting_list = get_waiting_recipes(self.user, 1, 100)
-        self.assertTrue(any(item.refused for item in waiting_list.items))
-        self.assertTrue(any(not item.refused for item in waiting_list.items))
-
-    def test_get_waiting_recipes_returns_refused_status(self):
-        waiting_list = get_waiting_recipes(self.user, 1, 100)
-        self.assertTrue(all(hasattr(item, 'refused') for item in waiting_list.items))
-
-    def test_save_recipe_sets_pending_to_pending_if_waiting(self):
-        save_recipe(self.waiting_model_pending)
-        self.assertFalse(self.waiting_model_pending.refused)
-
-    def test_save_recipe_sets_refused_to_pending_if_waiting(self):
-        save_recipe(self.waiting_model_refused)
-        self.assertFalse(self.waiting_model_refused.refused)
-
-    def test_save_recipe_inits_status_pending_for_waiting(self):
-        waiting_model = WaitingRecipe(title='waiting_new', author=self.user)
+    def test_save_recipe_inits_status_pending_for_waiting(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        waiting_model = WaitingRecipe(title='waiting_new', author=user1)
         save_recipe(waiting_model)
-        self.assertFalse(self.waiting_model_pending.refused)
+        assert not waiting_model.refused
 
-    def test_save_recipe_dont_set_status_pending_for_accepted(self):
-        save_recipe(self.recipe_model)
-        self.assertFalse(hasattr(self.recipe_model, 'refused'))
+    def test_save_recipe_dont_set_status_pending_for_accepted(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        save_recipe(recipe1)
+        assert not hasattr(recipe1, 'refused')
 
-    def test_reject_waiting_sets_refused_to_true_when_false(self):
-        id_ = self.waiting_model_pending.id
-        reject_waiting(self.waiting_model_pending)
+    def test_reject_waiting_sets_refused_to_true_when_false(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        id_ = waiting_recipe1.id
+        reject_waiting(waiting_recipe1)
         rejected_recipe = WaitingRecipe.query.get_or_404(id_)
-        self.assertTrue(rejected_recipe.refused)
+        assert rejected_recipe.refused
 
-    def test_reject_waiting_sets_refused_to_true_when_true(self):
-        id_ = self.waiting_model_refused.id
-        reject_waiting(self.waiting_model_refused)
+    def test_reject_waiting_sets_refused_to_true_when_true(self, recipes_users_set):
+        user1, admin, recipe1, waiting_recipe1, waiting_recipe2 = recipes_users_set
+        id_ = waiting_recipe2.id
+        reject_waiting(waiting_recipe2)
         rejected_recipe = WaitingRecipe.query.get_or_404(id_)
-        self.assertTrue(rejected_recipe.refused)
+        assert rejected_recipe.refused
