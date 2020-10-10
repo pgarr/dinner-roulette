@@ -39,8 +39,8 @@ def refresh():
 
 @bp.route('/auth/fresh-login', methods=['POST'])
 def fresh_login():
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
+    username = request.json.get('username', '')
+    password = request.json.get('password', '')
     payload = get_fresh_jwt_token(username, password, with_refresh_token=False)
     if payload:
         return jsonify(payload), 200

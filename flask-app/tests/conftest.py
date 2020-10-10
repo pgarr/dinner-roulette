@@ -5,7 +5,7 @@ from app.models import User, Recipe, RecipeIngredient, WaitingRecipe, WaitingRec
 from tests.utils import TestConfig
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def test_client():
     # set up
     flask_app = create_app(TestConfig)
