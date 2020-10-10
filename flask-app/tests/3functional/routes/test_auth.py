@@ -1,4 +1,5 @@
 import pytest
+from flask_jwt_extended import create_refresh_token
 
 
 @pytest.mark.parametrize("username, password, code", [('test', 'test', 200),
@@ -85,3 +86,23 @@ def test_fresh_login_no_username(test_client, users_set):
     json = response.get_json()
     assert not json.get('access_token')
     assert not json.get('refresh_token')
+
+
+def test_refresh_no_token(test_client, users_set):
+    response = test_client.post('/api/auth/refresh')
+    assert response.status_code == 401
+
+    json = response.get_json()
+    assert not json.get('access_token')
+    assert not json.get('refresh_token')
+
+
+def test_refresh_correct_token(test_client, users_set):
+    user1, user2, admin = users_set
+    refresh_token = create_refresh_token(identity=user1.username)
+
+    response = test_client.post('/api/auth/refresh', headers={'Authorization': 'Bearer %s' % refresh_token})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert json.get('access_token')
