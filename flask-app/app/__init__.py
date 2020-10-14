@@ -48,6 +48,9 @@ def create_app(config_class=Config):
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    from app.api_auth import bp as api_auth_bp
+    app.register_blueprint(api_auth_bp, url_prefix='/api/auth')
+
     # elasticsearch
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None

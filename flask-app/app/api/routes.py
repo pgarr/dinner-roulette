@@ -1,11 +1,9 @@
 from flask import jsonify, request, current_app
-from flask_jwt_extended import create_access_token, jwt_refresh_token_required, get_jwt_identity, \
-    jwt_required, current_user
+from flask_jwt_extended import jwt_required, current_user
 
 from app.api import bp
 from app.api.errors import error_response, bad_request
-from app.api.helper_fun import save_recipe_from_schema, paginated_recipes_jsonify, SearchAPIPaginatedAdapter, \
-    get_fresh_jwt_token
+from app.api.helpers import save_recipe_from_schema, paginated_recipes_jsonify, SearchAPIPaginatedAdapter
 from app.api.schemas import recipe_schema, waiting_schema
 from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
     get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe, reject_waiting
@@ -14,38 +12,6 @@ from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiti
 @bp.route('/', methods=['GET'])
 def connection():
     return jsonify({'message': 'API is online!'}), 200
-
-
-@bp.route('/auth/login', methods=['POST'])
-def login():
-    username = request.json.get('username', '')
-    password = request.json.get('password', '')
-    payload = get_fresh_jwt_token(username, password, with_refresh_token=True)
-    if payload:
-        return jsonify(payload), 200
-    else:
-        return error_response(401, "Bad username or password")
-
-
-@bp.route('/auth/refresh', methods=['POST'])
-@jwt_refresh_token_required
-def refresh():
-    username = get_jwt_identity()
-    ret = {
-        'access_token': create_access_token(identity=username, fresh=False)
-    }
-    return jsonify(ret), 200
-
-
-@bp.route('/auth/fresh-login', methods=['POST'])
-def fresh_login():
-    username = request.json.get('username', '')
-    password = request.json.get('password', '')
-    payload = get_fresh_jwt_token(username, password, with_refresh_token=False)
-    if payload:
-        return jsonify(payload), 200
-    else:
-        return error_response(401, "Bad username or password")
 
 
 @bp.route('/recipes', methods=['GET'])

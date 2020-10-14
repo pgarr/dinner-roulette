@@ -106,3 +106,49 @@ def test_refresh_correct_token(test_client, users_set):
 
     json = response.get_json()
     assert json.get('access_token')
+
+
+def test_validate_no_username(test_client, users_set):
+    user1, user2, admin = users_set
+
+    response = test_client.get('/api/auth/validate', query_string={'email': 'sadadfa'})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert json.get('username') is None
+
+
+def test_validate_no_email(test_client, users_set):
+    response = test_client.get('/api/auth/validate', query_string={'username': 'sadadfa'})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert json.get('email') is None
+
+
+def test_validate_username_and_email_free(test_client, users_set):
+    response = test_client.get('/api/auth/validate', query_string={'email': 'newtest@test.pl', 'username': 'asdasf'})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert json.get('username').get('unique')
+    assert json.get('email').get('unique')
+
+
+def test_validate_username_and_email_occupied(test_client, users_set):
+    user1, user2, admin = users_set
+
+    response = test_client.get('/api/auth/validate', query_string={'email': user1.email, 'username': user2.username})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert not json.get('username').get('unique')
+    assert not json.get('email').get('unique')
+
+
+def test_validate_no_args(test_client, users_set):
+    response = test_client.get('/api/auth/validate')
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert not json
