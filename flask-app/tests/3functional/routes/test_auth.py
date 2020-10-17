@@ -1,6 +1,8 @@
 import pytest
 from flask_jwt_extended import create_refresh_token
 
+from app.models import User
+
 
 @pytest.mark.parametrize("username, password, code", [('test', 'test', 200),
                                                       ('addadas', 'test', 401),
@@ -43,6 +45,11 @@ def test_login_no_username(test_client, users_set):
     json = response.get_json()
     assert not json.get('access_token')
     assert not json.get('refresh_token')
+
+
+def test_login_no_json(test_client, users_set):
+    response = test_client.post('/api/auth/login')
+    assert response.status_code == 400
 
 
 @pytest.mark.parametrize("username, password, code", [('test', 'test', 200),
@@ -88,6 +95,11 @@ def test_fresh_login_no_username(test_client, users_set):
     assert not json.get('refresh_token')
 
 
+def test_fresh_login_no_json(test_client, users_set):
+    response = test_client.post('/api/auth/fresh-login')
+    assert response.status_code == 400
+
+
 def test_refresh_no_token(test_client, users_set):
     response = test_client.post('/api/auth/refresh')
     assert response.status_code == 401
@@ -131,8 +143,8 @@ def test_validate_username_and_email_free(test_client, users_set):
     assert response.status_code == 200
 
     json = response.get_json()
-    assert json.get('username').get('unique')
-    assert json.get('email').get('unique')
+    assert json.get('username').get('checks').get('unique')
+    assert json.get('email').get('checks').get('unique')
 
 
 def test_validate_username_and_email_occupied(test_client, users_set):
@@ -142,8 +154,8 @@ def test_validate_username_and_email_occupied(test_client, users_set):
     assert response.status_code == 200
 
     json = response.get_json()
-    assert not json.get('username').get('unique')
-    assert not json.get('email').get('unique')
+    assert not json.get('username').get('checks').get('unique')
+    assert not json.get('email').get('checks').get('unique')
 
 
 def test_validate_no_args(test_client, users_set):
@@ -152,3 +164,78 @@ def test_validate_no_args(test_client, users_set):
 
     json = response.get_json()
     assert not json
+
+
+def test_register_occupied_username(test_client, users_set):
+    user1, user2, admin = users_set
+    response = test_client.post('/api/auth/register',
+                                json={'username': user1.username, 'email': 'test12423@test.pl', 'password': 'password'})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('username').get('checks').get('unique')
+
+
+def test_register_occupied_email(test_client, users_set):
+    user1, user2, admin = users_set
+    response = test_client.post('/api/auth/register',
+                                json={'username': 'user1244123', 'email': user1.email, 'password': 'password'})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('email').get('checks').get('unique')
+
+
+def test_register_empty_username(test_client, users_set):
+    user1, user2, admin = users_set
+    response = test_client.post('/api/auth/register',
+                                json={'username': '', 'email': 'test12423@test.pl', 'password': 'password'})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('username').get('checks').get('min_length')
+
+
+def test_register_empty_email(test_client, users_set):
+    user1, user2, admin = users_set
+    response = test_client.post('/api/auth/register',
+                                json={'username': 'user3254234', 'email': '', 'password': 'password'})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('email').get('checks').get('min_length')
+
+
+def test_register_empty_password(test_client, users_set):
+    user1, user2, admin = users_set
+    response = test_client.post('/api/auth/register',
+                                json={'username': 'user3254234', 'email': 'test4324324@test.pl', 'password': ''})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('password').get('checks').get('min_length')
+
+
+def test_register_201(test_client, users_set):
+    user1, user2, admin = users_set
+    new_user_data = {'username': 'user3254234', 'email': 'test2341234@test.pl', 'password': 'password'}
+    response = test_client.post('/api/auth/register', json=new_user_data)
+
+    assert response.status_code == 201
+
+    user = User.query.filter_by(username=new_user_data['username']).first()
+
+    assert user
+    assert user.username == new_user_data['username']
+    assert user.email == new_user_data['email']
+
+
+def test_register_no_json(test_client):
+    response = test_client.post('/api/auth/register')
+
+    assert response.status_code == 400

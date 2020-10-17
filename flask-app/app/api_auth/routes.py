@@ -1,15 +1,22 @@
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token, jwt_refresh_token_required, get_jwt_identity
 
-from app.api.errors import error_response
+from app.api.errors import error_response, bad_request
 from app.api_auth import bp
-from app.api_auth.helpers import get_fresh_jwt_token, is_email_unique, is_username_unique
+from app.api_auth.helpers import get_fresh_jwt_token
+from app.services import create_user
+from app.validators import validate_email, validate_username, validate_password
 
 
 @bp.route('/login', methods=['POST'])
 def login():
-    username = request.json.get('username', '')
-    password = request.json.get('password', '')
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+    
     payload = get_fresh_jwt_token(username, password, with_refresh_token=True)
     if payload:
         return jsonify(payload), 200
@@ -29,8 +36,13 @@ def refresh():
 
 @bp.route('/fresh-login', methods=['POST'])
 def fresh_login():
-    username = request.json.get('username', '')
-    password = request.json.get('password', '')
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+
     payload = get_fresh_jwt_token(username, password, with_refresh_token=False)
     if payload:
         return jsonify(payload), 200
@@ -44,14 +56,39 @@ def validate():
     username = request.args.get('username', None)
     payload = {}
     if email:
-        payload['email'] = {'unique': is_email_unique(email)}
+        is_valid, check_dict = validate_email(email)
+        payload['email'] = {'valid': is_valid, 'checks': check_dict}
     if username:
-        payload['username'] = {'unique': is_username_unique(username)}
+        is_valid, check_dict = validate_username(username)
+        payload['username'] = {'valid': is_valid, 'checks': check_dict}
     return jsonify(payload), 200
 
 
 @bp.route('/register', methods=['POST'])
 def register():
-    username = request.json.get('username', '')
-    password = request.json.get('password', '')
-    email = request.json.get('email', '')
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+        email = json.get('email', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    payload = {}
+
+    is_email_valid, email_check_dict = validate_email(email)
+    payload['email'] = {'valid': is_email_valid, 'checks': email_check_dict}
+
+    is_username_valid, username_check_dict = validate_username(username)
+    payload['username'] = {'valid': is_username_valid, 'checks': username_check_dict}
+
+    is_password_valid, password_check_dict = validate_password(password)
+    payload['password'] = {'valid': is_password_valid, 'checks': password_check_dict}
+
+    if is_email_valid & is_password_valid & is_username_valid:
+        create_user(username, email, password)
+        status_code = 201
+    else:
+        status_code = 422
+
+    return jsonify(payload), status_code

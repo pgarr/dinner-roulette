@@ -1,6 +1,5 @@
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-from app.models import User
 from app.services import get_user_by_name
 
 
@@ -15,12 +14,3 @@ def get_fresh_jwt_token(username, password, with_refresh_token=False):
         return ret
     return None
 
-
-def is_email_unique(email):
-    user = User.query.filter_by(email=email).first()
-    return user is None
-
-
-def is_username_unique(username):
-    user = User.query.filter_by(username=username).first()
-    return user is None

@@ -110,6 +110,19 @@ def get_user_by_name(username):
     return User.query.filter_by(username=username).first()
 
 
+def get_user_by_email(email):
+    return User.query.filter_by(email=email).first()
+
+
+# TODO: Tests
+def create_user(username, email, password):
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
 def get_recipe_by_title(title):
     return Recipe.query.filter_by(title=title).first()
 
