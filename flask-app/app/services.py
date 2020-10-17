@@ -123,6 +123,16 @@ def create_user(username, email, password):
     return user
 
 
+# TODO: Tests
+def verify_reset_password_token(token):
+    return User.verify_reset_password_token(token)
+
+
+def set_new_password(user, password):
+    user.set_password(password)
+    db.session.commit()
+
+
 def get_recipe_by_title(title):
     return Recipe.query.filter_by(title=title).first()
 

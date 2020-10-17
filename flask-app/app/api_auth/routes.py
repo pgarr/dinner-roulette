@@ -5,7 +5,7 @@ from app.api.errors import error_response, bad_request
 from app.api_auth import bp
 from app.api_auth.helpers import get_fresh_jwt_token
 from app.auth.email import send_password_reset_email
-from app.services import create_user, get_user_by_email
+from app.services import create_user, get_user_by_email, verify_reset_password_token, set_new_password
 from app.validators import validate_email, validate_username, validate_password
 
 
@@ -109,3 +109,25 @@ def reset_password_request():
         send_password_reset_email(user)
 
     return jsonify({'message': 'Done!'}), 200
+
+
+@bp.route('/reset_password/<token>', methods=['POST'])
+def reset_password(token):
+    json = request.json
+    if json:
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    user = verify_reset_password_token(token)
+    if not user:
+        return error_response(422, 'Invalid token')
+
+    is_password_valid, password_check_dict = validate_password(password)
+
+    if is_password_valid:
+        set_new_password(user, password)
+        return jsonify({'message': 'Done!'}), 200
+    else:
+        payload = {'password': {'valid': is_password_valid, 'checks': password_check_dict}}
+        return jsonify(payload), 422

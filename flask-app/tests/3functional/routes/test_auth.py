@@ -274,3 +274,47 @@ def test_reset_password_request_wrong_email(test_client, users_set, mock_send_ma
 
     assert response.status_code == 200
     mock_send_mail.assert_not_called()
+
+
+def test_reset_password_no_json(test_client, users_set):
+    user1, user2, admin = users_set
+
+    token = user1.get_reset_password_token()
+    response = test_client.post('/api/auth/reset_password/' + token)
+
+    assert response.status_code == 400
+
+
+def test_reset_password_empty_password(test_client, users_set):
+    user1, user2, admin = users_set
+
+    token = user1.get_reset_password_token()
+    response = test_client.post('/api/auth/reset_password/' + token, json={'password': ''})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert not json.get('password').get('checks').get('min_length')
+
+
+def test_reset_password_200(test_client, users_set):
+    user1, user2, admin = users_set
+
+    token = user1.get_reset_password_token()
+    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+
+    assert response.status_code == 200
+
+
+def test_reset_password_invalid_token(test_client, users_set):
+    user1, user2, admin = users_set
+
+    not_user = User(id=7)
+
+    token = not_user.get_reset_password_token()
+    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+
+    assert response.status_code == 422
+
+    json = response.get_json()
+    assert json.get('password') is None  # shouldnt validate password
