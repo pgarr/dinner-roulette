@@ -4,7 +4,8 @@ from flask_jwt_extended import create_access_token, jwt_refresh_token_required, 
 from app.api.errors import error_response, bad_request
 from app.api_auth import bp
 from app.api_auth.helpers import get_fresh_jwt_token
-from app.services import create_user
+from app.auth.email import send_password_reset_email
+from app.services import create_user, get_user_by_email
 from app.validators import validate_email, validate_username, validate_password
 
 
@@ -16,7 +17,7 @@ def login():
         password = json.get('password', '')
     else:
         return bad_request("Lack of required payload data")
-    
+
     payload = get_fresh_jwt_token(username, password, with_refresh_token=True)
     if payload:
         return jsonify(payload), 200
@@ -92,3 +93,19 @@ def register():
         status_code = 422
 
     return jsonify(payload), status_code
+
+
+@bp.route('/reset_password', methods=['POST'])
+def reset_password_request():
+    json = request.json
+    if json:
+        email = json.get('email', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    user = get_user_by_email(email)
+
+    if user:
+        send_password_reset_email(user)
+
+    return jsonify({'message': 'Done!'}), 200

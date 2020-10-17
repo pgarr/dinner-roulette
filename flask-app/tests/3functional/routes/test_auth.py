@@ -1,7 +1,18 @@
+from unittest.mock import Mock
+
 import pytest
 from flask_jwt_extended import create_refresh_token
 
 from app.models import User
+
+
+@pytest.fixture
+def mock_send_mail(monkeypatch):
+    from app.api_auth import routes
+
+    mock = Mock()
+    monkeypatch.setattr(routes, 'send_password_reset_email', mock)
+    return mock
 
 
 @pytest.mark.parametrize("username, password, code", [('test', 'test', 200),
@@ -239,3 +250,27 @@ def test_register_no_json(test_client):
     response = test_client.post('/api/auth/register')
 
     assert response.status_code == 400
+
+
+def test_reset_password_request_no_json(test_client):
+    response = test_client.post('/api/auth/reset_password')
+
+    assert response.status_code == 400
+
+
+def test_reset_password_request_correct_email(test_client, users_set, mock_send_mail):
+    user1, user2, admin = users_set
+
+    response = test_client.post('/api/auth/reset_password', json={'email': user1.email})
+
+    assert response.status_code == 200
+    mock_send_mail.assert_called_once_with(user1)
+
+
+def test_reset_password_request_wrong_email(test_client, users_set, mock_send_mail):
+    user1, user2, admin = users_set
+
+    response = test_client.post('/api/auth/reset_password', json={'email': 'test423535@test.com'})
+
+    assert response.status_code == 200
+    mock_send_mail.assert_not_called()
