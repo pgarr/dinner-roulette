@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-
-import * as actions from "../../store/actions/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
+
+import styles from "./Auth.module.css";
+import * as actions from "../../store/actions/index";
+import { inputChangedHandler } from "../../shared/handlers";
 
 const Auth = ({
   loading,
@@ -14,10 +16,6 @@ const Auth = ({
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const inputChangedHandler = (event, setValue) => {
-    setValue(event.target.value);
-  };
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -53,7 +51,6 @@ const Auth = ({
             />
           </Col>
         </Form.Group>
-
         <Form.Group as={Row} controlId="formPassword">
           <Form.Label column sm={12}>
             Hasło
@@ -73,6 +70,11 @@ const Auth = ({
         <Button variant="secondary" type="submit">
           Zaloguj się
         </Button>
+        <div className={styles.ButtonsRow}>
+          <Button href="/register" variant="outline-info">
+            Nowy użytkownik?
+          </Button>
+        </div>
       </Form>
     </React.Fragment>
   );
