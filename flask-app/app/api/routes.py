@@ -32,7 +32,7 @@ def my_recipes():
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
-def recipe(pk):  # FIXME: nie zwraca autora
+def recipe(pk):
     recipe_model = get_recipe(pk)
     result = recipe_schema.dump(recipe_model)
     return jsonify({'recipe': result.data})

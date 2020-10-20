@@ -16,6 +16,7 @@ class RecipeSchema(Schema):
     link = fields.Str()
     preparation = fields.Str()
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
+    author = fields.Nested("self", only="username", dump_only=True)
 
 
 class WaitingRecipeSchema(RecipeSchema):
