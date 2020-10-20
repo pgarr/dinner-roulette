@@ -1,8 +1,7 @@
 from flask import url_for, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token
 
-from app.api.schemas import recipes_schema, waitings_schema
-from app.services import save_recipe, get_user_by_name
+from app.blueprints.api.schemas import waitings_schema, recipes_schema
+from app.services.services import save_recipe
 
 
 def save_recipe_from_schema(data, model):
@@ -39,6 +38,7 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, w
                         **kwargs) if paginated.has_prev else None
     }
     return jsonify({items_name: result.data, '_meta': meta, '_links': links})
+
 
 class SearchAPIPaginatedAdapter:
     """Adapter between search result and paginated_recipes_jsonify"""

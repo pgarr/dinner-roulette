@@ -1,8 +1,8 @@
 from flask import render_template, request
 
 from app import db
-from app.errors import bp
-from app.api.errors import error_response as api_error_response
+from app.blueprints.errors import bp
+from app.blueprints.api.errors import error_response as api_error_response
 
 
 def wants_json_response():
@@ -29,4 +29,3 @@ def forbidden_error(error):
     if wants_json_response():
         return api_error_response(401)
     return render_template('errors/401.html'), 401
-

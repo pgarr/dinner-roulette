@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
-from app.search import query_index, add_to_index, remove_from_index
+from app.services.search import query_index, add_to_index, remove_from_index
 
 
 class SearchableMixin(object):

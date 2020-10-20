@@ -1,7 +1,7 @@
 import pytest
 
 import app
-from app.validators import validate_email, validate_username, validate_password
+from app.utils.validators import validate_email, validate_username, validate_password
 
 
 def occupied(param):
@@ -14,22 +14,22 @@ def free(param):
 
 @pytest.fixture
 def username_free(monkeypatch):
-    monkeypatch.setattr(app.validators, 'get_user_by_name', free)
+    monkeypatch.setattr(app.utils.validators, 'get_user_by_name', free)
 
 
 @pytest.fixture
 def username_occupied(monkeypatch):
-    monkeypatch.setattr(app.validators, 'get_user_by_name', occupied)
+    monkeypatch.setattr(app.utils.validators, 'get_user_by_name', occupied)
 
 
 @pytest.fixture
 def email_free(monkeypatch):
-    monkeypatch.setattr(app.validators, 'get_user_by_email', free)
+    monkeypatch.setattr(app.utils.validators, 'get_user_by_email', free)
 
 
 @pytest.fixture
 def email_occupied(monkeypatch):
-    monkeypatch.setattr(app.validators, 'get_user_by_email', occupied)
+    monkeypatch.setattr(app.utils.validators, 'get_user_by_email', occupied)
 
 
 def test_validate_email_ok(email_free):

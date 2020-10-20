@@ -1,4 +1,5 @@
-from app import create_app, db, cli
+from app import create_app, db
+from app.utils import cli
 from app.models import User, Recipe, RecipeIngredient, WaitingRecipeIngredient, WaitingRecipe
 
 app = create_app()

@@ -4,7 +4,8 @@ from unittest.mock import patch, Mock, ANY
 
 import pytest
 
-from app import db, BackupScheduler, backup
+from app import db, BackupScheduler
+from app.utils import backup
 
 user_pattern = '{\"user\": \[{\"id\": 1, \"username\": \"test\", \"email\": \"test@test\.com\", \"password_hash\":' \
                ' \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 2, \"username\": \"test2\", \"email\": \"test2@test\.com\",' \

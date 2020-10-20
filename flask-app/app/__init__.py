@@ -11,7 +11,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from app.backup import BackupScheduler
+from app.utils.backup import BackupScheduler
 from config import Config
 
 db = SQLAlchemy()
@@ -36,19 +36,19 @@ def create_app(config_class=Config):
 
     CORS(app)
 
-    from app.errors import bp as errors_bp
+    from app.blueprints.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
-    from app.auth import bp as auth_bp
+    from app.blueprints.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
-    from app.main import bp as main_bp
+    from app.blueprints.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    from app.api import bp as api_bp
+    from app.blueprints.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
-    from app.api_auth import bp as api_auth_bp
+    from app.blueprints.api_auth import bp as api_auth_bp
     app.register_blueprint(api_auth_bp, url_prefix='/api/auth')
 
     # elasticsearch

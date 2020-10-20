@@ -1,7 +1,7 @@
 import pytest
 
 from app.models import Recipe, User, WaitingRecipe, RecipeIngredient, WaitingRecipeIngredient
-from app.services import clone_recipe_to_waiting, init_waiting_recipe, _push_updates_to_recipe
+from app.services.services import clone_recipe_to_waiting, init_waiting_recipe, _push_updates_to_recipe
 
 
 @pytest.fixture

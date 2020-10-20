@@ -1,6 +1,6 @@
 import re
 
-from app.services import get_user_by_email, get_user_by_name
+from app.services.services import get_user_by_email, get_user_by_name
 
 
 def validate_username(username):

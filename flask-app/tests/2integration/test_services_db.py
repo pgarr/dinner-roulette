@@ -5,7 +5,7 @@ import pytest
 from werkzeug.exceptions import NotFound
 
 from app.models import RecipeIngredient, Recipe, WaitingRecipe, WaitingRecipeIngredient
-from app.services import get_recipes, get_user_recipes, get_waiting_recipes, accept_waiting, get_recipe, \
+from app.services.services import get_recipes, get_user_recipes, get_waiting_recipes, accept_waiting, get_recipe, \
     get_user_by_name, get_waiting_recipe, save_recipe, search_recipe, reject_waiting, get_recipe_by_title, \
     get_user_by_email
 

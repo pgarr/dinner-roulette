@@ -1,12 +1,12 @@
 from flask import jsonify, request, current_app
 from flask_jwt_extended import jwt_required, current_user
 
-from app.api import bp
-from app.api.errors import error_response, bad_request
-from app.api.helpers import save_recipe_from_schema, paginated_recipes_jsonify, SearchAPIPaginatedAdapter
-from app.api.schemas import recipe_schema, waiting_schema
-from app.services import get_recipe, init_waiting_recipe, get_recipes, get_waiting_recipe, \
-    get_waiting_recipes, accept_waiting, clone_recipe_to_waiting, get_user_recipes, search_recipe, reject_waiting
+from app.blueprints.api import bp
+from app.blueprints.api.errors import error_response, bad_request
+from app.blueprints.api.helpers import paginated_recipes_jsonify, save_recipe_from_schema, SearchAPIPaginatedAdapter
+from app.blueprints.api.schemas import recipe_schema, waiting_schema
+from app.services.services import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, get_waiting_recipes, \
+    accept_waiting, reject_waiting, init_waiting_recipe, clone_recipe_to_waiting, search_recipe
 
 
 @bp.route('/', methods=['GET'])

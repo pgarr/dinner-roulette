@@ -2,12 +2,11 @@ from flask import abort, render_template, flash, redirect, url_for, g, request, 
 from flask_babel import _
 from flask_login import current_user, login_required
 
-from app.main import bp
-from app.main.forms import RecipeForm, SearchForm
-from app.main.helper_fun import save_recipe_from_form
-from app.services import init_waiting_recipe, get_recipe, get_recipes, get_waiting_recipe, \
-    clone_recipe_to_waiting, get_waiting_recipes, accept_waiting, get_user_recipes, search_recipe, reindex_es, \
-    reject_waiting
+from app.blueprints.main import bp
+from app.blueprints.main.forms import RecipeForm, SearchForm
+from app.blueprints.main.helper_fun import save_recipe_from_form
+from app.services.services import get_recipes, get_recipe, get_waiting_recipe, get_user_recipes, get_waiting_recipes, \
+    accept_waiting, init_waiting_recipe, clone_recipe_to_waiting, reject_waiting, search_recipe, reindex_es
 
 
 @bp.route('/')
