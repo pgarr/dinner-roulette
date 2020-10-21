@@ -24,9 +24,11 @@ import json
 import os
 
 from app import create_app, db
-from app.models import User, Recipe, WaitingRecipe
-from app.services import get_user_by_name, get_recipe_by_title
-from tests.test_config import TestConfig
+from app.models.auth import User
+from app.models.recipes import Recipe, WaitingRecipe
+from app.services.auth import get_user_by_name
+from app.services.recipes import get_recipe_by_title
+from tests.utils import TestConfig
 
 
 def set_up_data(data_dict):
