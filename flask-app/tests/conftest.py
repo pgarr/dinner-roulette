@@ -1,7 +1,8 @@
 import pytest
 
 from app import create_app, db
-from app.models import User, Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
+from app.models.auth import User
+from app.models.recipes import Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
 from tests.utils import TestConfig
 
 
@@ -49,7 +50,7 @@ def make_user(database):
 
 @pytest.fixture
 def make_recipe(database):
-    def _make_recipe(ingredients=[], **kwargs):
+    def _make_recipe(ingredients=(), **kwargs):
         recipe_model = Recipe(**kwargs,
                               ingredients=[RecipeIngredient(title=ingredient['title'], amount=ingredient['amount'],
                                                             unit=ingredient['unit']) for ingredient in ingredients])
@@ -64,7 +65,7 @@ def make_recipe(database):
 
 @pytest.fixture
 def make_waiting_recipe(database):
-    def _make_waiting_recipe(ingredients=[], **kwargs):
+    def _make_waiting_recipe(ingredients=(), **kwargs):
         waiting_recipe_model = WaitingRecipe(**kwargs, ingredients=[WaitingRecipeIngredient(title=ingredient['title'],
                                                                                             amount=ingredient['amount'],
                                                                                             unit=ingredient['unit']) for

@@ -1,4 +1,4 @@
-from app.models import Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
+from app.models.recipes import Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
 
 
 class AbstractRecipeTests(object):

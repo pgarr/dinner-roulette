@@ -5,7 +5,7 @@ from app.blueprints.api.errors import bad_request, error_response
 from app.blueprints.api_auth import bp
 from app.blueprints.api_auth.helpers import get_fresh_jwt_token
 from app.blueprints.auth.email import send_password_reset_email
-from app.services.services import create_user, get_user_by_email, verify_reset_password_token, set_new_password
+from app.services.auth import create_user, get_user_by_email, verify_reset_password_token, set_new_password
 
 from app.utils.validators import validate_email, validate_username, validate_password
 

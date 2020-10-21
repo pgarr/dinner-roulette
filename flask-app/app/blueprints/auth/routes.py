@@ -7,7 +7,7 @@ from app import db
 from app.blueprints.auth import bp
 from app.blueprints.auth.email import send_password_reset_email
 from app.blueprints.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.models import User
+from app.models.auth import User
 
 
 

@@ -5,8 +5,9 @@ from app.blueprints.api import bp
 from app.blueprints.api.errors import error_response, bad_request
 from app.blueprints.api.helpers import paginated_recipes_jsonify, save_recipe_from_schema, SearchAPIPaginatedAdapter
 from app.blueprints.api.schemas import recipe_schema, waiting_schema
-from app.services.services import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, get_waiting_recipes, \
-    accept_waiting, reject_waiting, init_waiting_recipe, clone_recipe_to_waiting, search_recipe
+from app.services.recipes import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, get_waiting_recipes, \
+    accept_waiting, reject_waiting, init_waiting_recipe, clone_recipe_to_waiting
+from app.services.search import search_recipe
 
 
 @bp.route('/', methods=['GET'])

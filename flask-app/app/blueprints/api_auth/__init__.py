@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app
 from flask_jwt_extended import JWTManager
 
-from app.services.services import get_user_by_name
+from app.services.auth import get_user_by_name
 
 bp = Blueprint('api_auth', __name__)
 

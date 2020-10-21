@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from flask_jwt_extended import create_refresh_token
 
-from app.models import User
+from app.models.auth import User
 
 
 @pytest.fixture

@@ -5,8 +5,9 @@ from flask_login import current_user, login_required
 from app.blueprints.main import bp
 from app.blueprints.main.forms import RecipeForm, SearchForm
 from app.blueprints.main.helper_fun import save_recipe_from_form
-from app.services.services import get_recipes, get_recipe, get_waiting_recipe, get_user_recipes, get_waiting_recipes, \
-    accept_waiting, init_waiting_recipe, clone_recipe_to_waiting, reject_waiting, search_recipe, reindex_es
+from app.services.recipes import get_recipes, get_recipe, get_waiting_recipe, get_user_recipes, get_waiting_recipes, \
+    accept_waiting, init_waiting_recipe, clone_recipe_to_waiting, reject_waiting
+from app.services.search import search_recipe, reindex_es
 
 
 @bp.route('/')

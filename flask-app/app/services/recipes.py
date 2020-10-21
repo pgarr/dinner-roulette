@@ -3,7 +3,7 @@ from sqlalchemy import desc, asc
 from sqlalchemy.orm import load_only
 
 from app import db
-from app.models import Recipe, WaitingRecipe, User
+from app.models.recipes import WaitingRecipe, Recipe
 
 
 def init_waiting_recipe(**kwargs):
@@ -106,41 +106,8 @@ def get_waiting_recipes(user, page, per_page):
     return paginated
 
 
-def get_user_by_name(username):
-    return User.query.filter_by(username=username).first()
-
-
-def get_user_by_email(email):
-    return User.query.filter_by(email=email).first()
-
-
-# TODO: Tests
-def create_user(username, email, password):
-    user = User(username=username, email=email)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-    return user
-
-
-# TODO: Tests
-def verify_reset_password_token(token):
-    return User.verify_reset_password_token(token)
-
-
-def set_new_password(user, password):
-    user.set_password(password)
-    db.session.commit()
-
-
 def get_recipe_by_title(title):
     return Recipe.query.filter_by(title=title).first()
-
-
-def search_recipe(string, page, per_page):
-    page = int(page)
-    per_page = int(per_page)
-    return Recipe.search(string, page, per_page)
 
 
 def reject_waiting(waiting_model):
@@ -149,7 +116,3 @@ def reject_waiting(waiting_model):
     db.session.commit()
     current_app.logger.info('Pending recipe refused - ID %d' % waiting_model.id)
     return waiting_model
-
-
-def reindex_es():
-    Recipe.reindex()

@@ -1,7 +1,7 @@
 from flask import url_for, jsonify
 
 from app.blueprints.api.schemas import waitings_schema, recipes_schema
-from app.services.services import save_recipe
+from app.services.recipes import save_recipe
 
 
 def save_recipe_from_schema(data, model):

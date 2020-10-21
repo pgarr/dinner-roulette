@@ -1,6 +1,6 @@
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-from app.services.services import get_user_by_name
+from app.services.auth import get_user_by_name
 
 
 def get_fresh_jwt_token(username, password, with_refresh_token=False):

@@ -1,4 +1,4 @@
-from app.services.services import save_recipe
+from app.services.recipes import save_recipe
 
 
 def save_recipe_from_form(form, model):
