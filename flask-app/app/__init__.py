@@ -9,7 +9,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from app.utils.loggers import set_stmp_handler, register_handler, set_stdout_logger, register_file_loggers
+from app.utils.loggers import set_smtp_handler, register_handler, set_stdout_logger, register_file_loggers
 from config import Config
 
 db = SQLAlchemy()
@@ -59,7 +59,7 @@ def create_app(config_class=Config):
     if not app.debug and not app.testing:
         # mail errors
         if app.config['MAIL_SERVER']:
-            handler = set_stmp_handler(app.config, level=logging.ERROR)
+            handler = set_smtp_handler(app.config, level=logging.ERROR)
             register_handler(app, module_loggers, handler)
 
         # stdout loggers

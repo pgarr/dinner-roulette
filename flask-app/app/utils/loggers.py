@@ -3,7 +3,7 @@ import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 
-def set_stmp_handler(config, level=logging.ERROR):
+def set_smtp_handler(config, level=logging.ERROR):
     auth = None
     if config['MAIL_USERNAME'] or config['MAIL_PASSWORD']:
         auth = (config['MAIL_USERNAME'], config['MAIL_PASSWORD'])
