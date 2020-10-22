@@ -1,6 +1,4 @@
 import logging
-import os
-from logging.handlers import RotatingFileHandler, SMTPHandler
 
 from elasticsearch import Elasticsearch
 from flask import Flask, current_app, request
@@ -11,7 +9,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from app.utils.backup import BackupScheduler
+from app.utils.loggers import set_stmp_handler, register_handler, set_stdout_logger, register_file_loggers
 from config import Config
 
 db = SQLAlchemy()
@@ -55,44 +53,26 @@ def create_app(config_class=Config):
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
 
-    if not app.debug and not app.testing:
-        if app.config['MAIL_SERVER']:
-            auth = None
-            if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
-                auth = (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
-            secure = None
-            if app.config['MAIL_USE_TLS']:
-                secure = ()
-            mail_handler = SMTPHandler(
-                mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
-                fromaddr='no-reply@' + app.config['MAIL_SERVER'],
-                toaddrs=app.config['ADMINS'], subject='Dinner-roulette Failure',
-                credentials=auth, secure=secure)
-            mail_handler.setLevel(logging.ERROR)
-            app.logger.addHandler(mail_handler)
+    # loggers
+    module_loggers = ['sqlalchemy', 'backup']
 
-        # app.logger
+    if not app.debug and not app.testing:
+        # mail errors
+        if app.config['MAIL_SERVER']:
+            handler = set_stmp_handler(app.config, level=logging.ERROR)
+            register_handler(app, module_loggers, handler)
+
+        # stdout loggers
         if app.config['LOG_TO_STDOUT']:
-            stream_handler = logging.StreamHandler()
-            stream_handler.setLevel(logging.INFO)
-            app.logger.addHandler(stream_handler)
+            handler = set_stdout_logger(level=logging.INFO)
+            register_handler(app, module_loggers, handler)
+
+        # file loggers
         else:
-            if not os.path.exists('logs'):
-                os.mkdir('logs')
-            file_handler = RotatingFileHandler('logs/dinner-roulette.log', maxBytes=102400, backupCount=100)
-            file_handler.setFormatter(logging.Formatter(
-                '%(asctime)s %(levelname)s: %(message)s '
-                '[in %(pathname)s:%(lineno)d]'))
-            file_handler.setLevel(logging.INFO)
-            app.logger.addHandler(file_handler)
+            register_file_loggers(app, module_loggers)
 
         app.logger.setLevel(logging.INFO)
         app.logger.info('dinner-roulette startup')
-
-        # backup schedule
-        if app.config['BACKUP_SCHEDULE']:
-            app.backup = BackupScheduler(db, int(app.config['BACKUP_SCHEDULE']))
-            app.backup.start()
 
     return app
 
