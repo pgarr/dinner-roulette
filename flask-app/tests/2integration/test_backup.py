@@ -4,27 +4,25 @@ from unittest.mock import patch, Mock, ANY
 
 import pytest
 
-from app import db, BackupScheduler
 from app.utils import backup
+from app.utils.backup import BackupScheduler
 
-user_pattern = '{\"user\": \[{\"id\": 1, \"username\": \"test\", \"email\": \"test@test\.com\", \"password_hash\":' \
-               ' \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 2, \"username\": \"test2\", \"email\": \"test2@test\.com\",' \
-               ' \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 3, \"username\": \"admin\", \"email\":' \
-               ' \"admin@test\.com\", \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}\],'
+user_pattern = r'{\"user\": \[{\"id\": 1, \"username\": \"test\", \"email\": \"test@test\.com\", \"password_hash\":' \
+               r' \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 2, \"username\": \"test2\", \"email\": \"test2@test\.com\",' \
+               r' \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}, {\"id\": 3, \"username\": \"admin\", \"email\":' \
+               r' \"admin@test\.com\", \"password_hash\": \"pbkdf2:sha256:150000\$.*\"}\],'
 
 
 @pytest.fixture
 def backup_scheduler(database):
-    return BackupScheduler(db, 10000)
+    return BackupScheduler(10000)
 
 
 def test_backup_users_created_and_other_tables_are_empty(test_client, database, backup_scheduler, users_set):
     result = backup_scheduler.dump_backup()
 
-    pattern = user_pattern + ' \"recipe\": \[\],' \
-                             ' \"recipe_ingredient\": \[\],' \
-                             ' \"waiting_recipe\": \[\],' \
-                             ' \"waiting_recipe_ingredient\": \[\]}'
+    pattern = user_pattern + r' \"recipe\": \[\], \"recipe_ingredient\": \[\], \"waiting_recipe\": \[\],' \
+                             r' \"waiting_recipe_ingredient\": \[\]}'
 
     match = re.fullmatch(pattern, result)
     assert match
@@ -53,25 +51,25 @@ def test_backup_users_created_and_populated_all_tables(test_client, database, ba
 
     result = backup_scheduler.dump_backup()
 
-    pattern = user_pattern + ' \"recipe\": \[{\"id\": 1, \"title\": \"test\", \"time\": 1, \"difficulty\": 1, ' \
-                             '\"link\": \"http://test\.com\", \"preparation\": \"test\", \"create_date\": ' \
-                             '\"2019-01-30 00:00:00\", \"last_modified\": \"2019-11-01 00:00:00\",' \
-                             ' \"author_id\": 1}, {\"id\": 2, \"title\": \"test2\", \"time\": 2, ' \
-                             '\"difficulty\": 2, \"link\": \"http://test2\.com\", \"preparation\": \"test\", ' \
-                             '\"create_date\": \"2019-01-30 00:00:00\", \"last_modified\": ' \
-                             '\"2019-11-01 00:00:00\", \"author_id\": 2}], \"recipe_ingredient\": \[{\"id\": ' \
-                             '1, \"title\": \"test1\", \"amount\": 1\.0, \"unit\": \"kg\", \"recipe_id\": 1}, ' \
-                             '{\"id\": 2, \"title\": \"test2\", \"amount\": 1\.0, \"unit\": \"kg\", ' \
-                             '\"recipe_id\": 1}, {\"id\": 3, \"title\": \"test1\", \"amount\": 2\.0, \"unit\": ' \
-                             '\"kg\", \"recipe_id\": 2}, {\"id\": 4, \"title\": \"test2\", \"amount\": 2\.0, ' \
-                             '\"unit\": \"dag\", \"recipe_id\": 2}\], \"waiting_recipe\": \[{\"id\": 1, ' \
-                             '\"title\": \"test\", \"time\": 3, \"difficulty\": 3, \"link\": ' \
-                             '\"http://test3\.com\", \"preparation\": \"test3\", \"create_date\": ' \
-                             '\"2019-01-30 00:00:00\", \"last_modified\": \"2019-11-01 00:00:00\", ' \
-                             '\"recipe_id\": null, \"refused\": false, \"author_id\": 2}\], ' \
-                             '\"waiting_recipe_ingredient\": \[{\"id\": 1, \"title\": \"test1\",' \
-                             ' \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}, {\"id\": 2, \"title\": ' \
-                             '\"test2\", \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}\]}'
+    pattern = user_pattern + r' \"recipe\": \[{\"id\": 1, \"title\": \"test\", \"time\": 1, \"difficulty\": 1, ' \
+                             r'\"link\": \"http://test\.com\", \"preparation\": \"test\", \"create_date\": ' \
+                             r'\"2019-01-30 00:00:00\", \"last_modified\": \"2019-11-01 00:00:00\",' \
+                             r' \"author_id\": 1}, {\"id\": 2, \"title\": \"test2\", \"time\": 2, ' \
+                             r'\"difficulty\": 2, \"link\": \"http://test2\.com\", \"preparation\": \"test\", ' \
+                             r'\"create_date\": \"2019-01-30 00:00:00\", \"last_modified\": ' \
+                             r'\"2019-11-01 00:00:00\", \"author_id\": 2}], \"recipe_ingredient\": \[{\"id\": ' \
+                             r'1, \"title\": \"test1\", \"amount\": 1\.0, \"unit\": \"kg\", \"recipe_id\": 1}, ' \
+                             r'{\"id\": 2, \"title\": \"test2\", \"amount\": 1\.0, \"unit\": \"kg\", ' \
+                             r'\"recipe_id\": 1}, {\"id\": 3, \"title\": \"test1\", \"amount\": 2\.0, \"unit\": ' \
+                             r'\"kg\", \"recipe_id\": 2}, {\"id\": 4, \"title\": \"test2\", \"amount\": 2\.0, ' \
+                             r'\"unit\": \"dag\", \"recipe_id\": 2}\], \"waiting_recipe\": \[{\"id\": 1, ' \
+                             r'\"title\": \"test\", \"time\": 3, \"difficulty\": 3, \"link\": ' \
+                             r'\"http://test3\.com\", \"preparation\": \"test3\", \"create_date\": ' \
+                             r'\"2019-01-30 00:00:00\", \"last_modified\": \"2019-11-01 00:00:00\", ' \
+                             r'\"recipe_id\": null, \"refused\": false, \"author_id\": 2}\], ' \
+                             r'\"waiting_recipe_ingredient\": \[{\"id\": 1, \"title\": \"test1\",' \
+                             r' \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}, {\"id\": 2, \"title\": ' \
+                             r'\"test2\", \"amount\": 3\.0, \"unit\": \"g\", \"recipe_id\": 1}\]}'
 
     match = re.fullmatch(pattern, result)
     assert match
