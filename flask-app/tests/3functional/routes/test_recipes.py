@@ -26,13 +26,52 @@ def recipes_set(users_set, make_recipe, make_waiting_recipe):
     refused_model = make_waiting_recipe(title='test4', time=4, difficulty=4, link='http://test4.com',
                                         preparation='test4',
                                         author=user2, create_date=datetime.datetime(2019, 1, 30),
-                                        last_modified=datetime.datetime(2019, 11, 1),
+                                        last_modified=datetime.datetime(2019, 11, 1), refused=True,
                                         ingredients=[{'title': 'test1', 'amount': 3, 'unit': 'g'},
                                                      {'title': 'test2', 'amount': 3, 'unit': 'g'}])
 
     return user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model
 
+
 def test_connection(test_client):
     response = test_client.get('/api/')
     assert response.status_code == 200
 
+
+class TestRecipesGet:
+    def test_recipes_get(self, test_client, recipes_set):
+        response = test_client.get('/api/recipes')
+        assert response.status_code == 200
+
+        json = response.get_json()
+
+        assert len(json.get('recipes')) == 2
+
+        required_keys = ("id", "title", "time", "difficulty")
+        assert all(keys in json.get("recipes")[0] for keys in required_keys)
+
+    def test_recipes_get_page_1(self, test_client, recipes_set):
+        response = test_client.get('/api/recipes', query_string={'page': 1, 'per_page': 1})
+        assert response.status_code == 200
+
+        recipes = response.get_json().get('recipes')
+        meta = response.get_json().get("_meta")
+
+        assert meta.get('page') == 1
+        assert meta.get('total_pages') == 2
+
+        assert len(recipes) == 1
+        assert recipes[0].get('id') == 2
+
+    def test_recipes_get_page_2(self, test_client, recipes_set):
+        response = test_client.get('/api/recipes', query_string={'page': 2, 'per_page': 1})
+        assert response.status_code == 200
+
+        recipes = response.get_json().get('recipes')
+        meta = response.get_json().get("_meta")
+
+        assert meta.get('page') == 2
+        assert meta.get('total_pages') == 2
+
+        assert len(recipes) == 1
+        assert recipes[0].get('id') == 1
