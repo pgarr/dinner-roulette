@@ -142,24 +142,6 @@ class TestServices:
         with pytest.raises(NotFound):
             get_waiting_recipe(id_)
 
-    def test_get_user_by_name_existing(self, recipes_users_set):
-        user1, user2, user3, admin, recipe1, recipe2, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
-        user = get_user_by_name(user1.username)
-        assert user1.__repr__() == user.__repr__()
-
-    def test_get_user_by_name_not_existing(self, recipes_users_set):
-        user = get_user_by_name('asdfgh')
-        assert user is None
-
-    def test_get_user_by_email_existing(self, recipes_users_set):
-        user1, user2, user3, admin, recipe1, recipe2, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
-        user = get_user_by_email(user1.email)
-        assert user1.__repr__() == user.__repr__()
-
-    def test_get_user_by_email_not_existing(self, recipes_users_set):
-        user = get_user_by_email('asdfgh@fasf.pl')
-        assert user is None
-
     def test_get_recipe_by_title_existing(self, recipes_users_set):
         user1, user2, user3, admin, recipe1, recipe2, waiting_recipe1, waiting_recipe2, waiting_recipe3 = recipes_users_set
         recipe = get_recipe_by_title(recipe1.title)
@@ -168,6 +150,27 @@ class TestServices:
     def test_get_recipe_by_title_not_existing(self, recipes_users_set):
         recipe = get_recipe_by_title('asdfgh')
         assert recipe is None
+
+
+class TestServicesAuth:
+
+    def test_get_user_by_name_existing(self, users_set):
+        user1, user2, admin = users_set
+        user = get_user_by_name(user1.username)
+        assert user1.__repr__() == user.__repr__()
+
+    def test_get_user_by_name_not_existing(self, users_set):
+        user = get_user_by_name('asdfgh')
+        assert user is None
+
+    def test_get_user_by_email_existing(self, users_set):
+        user1, user2, admin = users_set
+        user = get_user_by_email(user1.email)
+        assert user1.__repr__() == user.__repr__()
+
+    def test_get_user_by_email_not_existing(self, users_set):
+        user = get_user_by_email('asdfgh@fasf.pl')
+        assert user is None
 
 
 class TestServicesSortBasic:

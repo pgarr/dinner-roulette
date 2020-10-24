@@ -24,6 +24,7 @@ def verify_reset_password_token(token):
     return User.verify_reset_password_token(token)
 
 
+# TODO: Tests
 def set_new_password(user, password):
     user.set_password(password)
     db.session.commit()

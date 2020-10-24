@@ -7,7 +7,7 @@ from app.models.auth import User
 
 
 @pytest.fixture
-def mock_send_mail(monkeypatch):
+def mock_reset_mail(monkeypatch):
     from app.blueprints.api_auth import routes
 
     mock = Mock()
@@ -258,22 +258,22 @@ def test_reset_password_request_no_json(test_client):
     assert response.status_code == 400
 
 
-def test_reset_password_request_correct_email(test_client, users_set, mock_send_mail):
+def test_reset_password_request_correct_email(test_client, users_set, mock_reset_mail):
     user1, user2, admin = users_set
 
     response = test_client.post('/api/auth/reset_password', json={'email': user1.email})
 
     assert response.status_code == 200
-    mock_send_mail.assert_called_once_with(user1)
+    mock_reset_mail.assert_called_once_with(user1)
 
 
-def test_reset_password_request_wrong_email(test_client, users_set, mock_send_mail):
+def test_reset_password_request_wrong_email(test_client, users_set, mock_reset_mail):
     user1, user2, admin = users_set
 
     response = test_client.post('/api/auth/reset_password', json={'email': 'test423535@test.com'})
 
     assert response.status_code == 200
-    mock_send_mail.assert_not_called()
+    mock_reset_mail.assert_not_called()
 
 
 def test_reset_password_no_json(test_client, users_set):
@@ -317,4 +317,4 @@ def test_reset_password_invalid_token(test_client, users_set):
     assert response.status_code == 422
 
     json = response.get_json()
-    assert json.get('password') is None  # shouldnt validate password
+    assert json.get('password') is None  # shouldnt validate password if token is invalid
