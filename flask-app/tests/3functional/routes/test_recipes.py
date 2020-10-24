@@ -1,6 +1,7 @@
 import datetime
 
 import pytest
+from flask import current_app
 
 
 @pytest.fixture
@@ -75,3 +76,15 @@ class TestRecipesGet:
 
         assert len(recipes) == 1
         assert recipes[0].get('id') == 1
+
+    def test_recipes_get_pagination_invalid_page(self, test_client, recipes_set):
+        response = test_client.get('/api/recipes', query_string={'page': 'test', 'per_page': 'test'})
+        assert response.status_code == 200
+
+        recipes = response.get_json().get('recipes')
+        meta = response.get_json().get("_meta")
+
+        assert meta.get('page') == 1
+        assert meta.get('per_page') == current_app.config['RECIPES_PER_PAGE']
+
+        assert len(recipes) == 2

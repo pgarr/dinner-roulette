@@ -2,6 +2,7 @@ from flask import url_for, jsonify
 
 from app.blueprints.api.schemas import waitings_schema, recipes_schema
 from app.services.recipes import save_recipe
+from app.utils.helpers import page_handler
 
 
 def save_recipe_from_schema(data, model):
@@ -21,8 +22,7 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, w
         result = waitings_schema.dump(paginated.items)
     else:
         result = recipes_schema.dump(paginated.items)
-    page = int(page)
-    per_page = int(per_page)
+    page, per_page = page_handler(page, per_page)
     meta = {
         'page': page,
         'per_page': per_page,

@@ -4,6 +4,7 @@ from sqlalchemy.orm import load_only
 
 from app import db
 from app.models.recipes import WaitingRecipe, Recipe
+from app.utils.helpers import page_handler
 
 
 def init_waiting_recipe(**kwargs):
@@ -72,8 +73,8 @@ def get_waiting_recipe(pk):
 
 
 def get_recipes(page, per_page):
-    page = int(page)
-    per_page = int(per_page)
+    page, per_page = page_handler(page, per_page)
+
     paginated = Recipe.query.options(load_only("id", "title", "time", "difficulty")).order_by(
         desc(Recipe.create_date)).paginate(page, per_page, False)
     current_app.logger.debug('Page %d of list of recipes got' % page)
