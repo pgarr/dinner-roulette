@@ -59,7 +59,7 @@ const Auth = ({
             <Form.Control
               required
               type="password"
-              value={[password]}
+              value={password}
               onChange={(event) => inputChangedHandler(event, setPassword)}
             />
           </Col>

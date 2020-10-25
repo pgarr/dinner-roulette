@@ -3,26 +3,60 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
-import * as actions from "../../../store/actions/index";
 import { inputChangedHandler } from "../../../shared/handlers";
+import { validateUsername } from "./validators";
+import { useDebouncedEffect } from "../../../shared/customHooks";
 
-const Register = ({ onRegister, isAuthenticated, authRedirectPath }) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [passwordsEqual, setPasswordsEqual] = useState(false);
+const Register = ({ isAuthenticated, authRedirectPath }) => {
+  const [username, setUsername] = useState({ value: "", touched: false });
+  const [usernameValidation, setUsernameValidation] = useState({
+    valid: false,
+    validator: validateUsername,
+    error: "",
+  });
+  const [email, setEmail] = useState({ value: "", touched: false });
+  const [emailValidation, setEmailValidation] = useState({
+    valid: false,
+    validator: () => {},
+    error: "",
+  });
+  const [password, setPassword] = useState({ value: "", touched: false });
+  const [passwordValidation, setPasswordValidation] = useState({
+    valid: false,
+    validator: () => {},
+    error: "",
+  });
+  const [password2, setPassword2] = useState({ value: "", touched: false });
+  const [password2Validation, setPassword2Validation] = useState({
+    valid: false,
+    validator: () => {},
+    error: "",
+  });
+
+  const validationDelay = 1000;
+
+  const inputChangedHandler = (event, setValue) => {
+    setValue({ value: event.target.value, touched: true });
+  };
+
+  // validate username
+  useDebouncedEffect(
+    async () => {
+      if (username.touched) {
+        const result = await validateUsername(username.value);
+        setUsernameValidation({ ...usernameValidation, ...result });
+        console.log(result);
+      }
+    },
+    validationDelay,
+    [username]
+  );
 
   const submitHandler = (event) => {
     event.preventDefault();
-    comparePasswords();
-    if (passwordsEqual) {
-      onRegister(username, password, email);
-    }
-  };
-
-  const comparePasswords = () => {
-    setPasswordsEqual(password === password2);
+    // if (passwordsEqual) {
+    //   onRegister(username, password, email);
+    // }
   };
 
   let authRedirect = null;
@@ -43,7 +77,7 @@ const Register = ({ onRegister, isAuthenticated, authRedirectPath }) => {
             <Form.Control
               required
               type="text"
-              value={username}
+              value={username.value}
               onChange={(event) => inputChangedHandler(event, setUsername)}
             />
           </Col>
@@ -56,7 +90,7 @@ const Register = ({ onRegister, isAuthenticated, authRedirectPath }) => {
             <Form.Control
               required
               type="email"
-              value={email}
+              value={email.value}
               onChange={(event) => inputChangedHandler(event, setEmail)}
             />
           </Col>
@@ -69,7 +103,7 @@ const Register = ({ onRegister, isAuthenticated, authRedirectPath }) => {
             <Form.Control
               required
               type="password"
-              value={password}
+              value={password.value}
               onChange={(event) => inputChangedHandler(event, setPassword)}
             />
           </Col>
@@ -82,7 +116,7 @@ const Register = ({ onRegister, isAuthenticated, authRedirectPath }) => {
             <Form.Control
               required
               type="password"
-              value={password2}
+              value={password2.value}
               onChange={(event) => inputChangedHandler(event, setPassword2)}
             />
           </Col>
@@ -102,11 +136,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    // onRegister: (username, password, email) =>
-    //   dispatch(actions.register(username, password, email)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, null)(Register);
