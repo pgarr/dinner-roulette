@@ -51,16 +51,16 @@ def fresh_login():
     else:
         return error_response(401, "Bad username or password")
 
-
+# TODO: tests min_length
 @bp.route('/validate', methods=['GET'])
 def validate():
     email = request.args.get('email', None)
     username = request.args.get('username', None)
     payload = {}
-    if email:
+    if email is not None:
         is_valid, check_dict = validate_email(email)
         payload['email'] = {'valid': is_valid, 'checks': check_dict}
-    if username:
+    if username is not None:
         is_valid, check_dict = validate_username(username)
         payload['username'] = {'valid': is_valid, 'checks': check_dict}
     return jsonify(payload), 200
