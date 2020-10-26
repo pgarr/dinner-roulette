@@ -15,28 +15,54 @@ const passwordMessages = {
   equal: "Hasła różnią się od siebie",
 };
 
-export const validateUsername = async (username) => {
-  const queryParams = "?username=" + username;
+export const validateOnBackend = async (username, email) => {
+  let params = [];
+  if (username !== null) {
+    params.push("username=" + username);
+  }
+  if (email !== null) {
+    params.push("email=" + email);
+  }
 
   try {
-    const response = await axios.get("/auth/validate" + queryParams);
-    const result = response.data.username;
+    const response = await axios.get("/auth/validate?" + params.join("&"));
 
-    let error = null;
-    if (!result.valid) {
-      if (!result.checks.unique) {
-        error = usernameMessages.unique;
-      } else if (!result.checks.min_length) {
-        error = usernameMessages.min_length;
+    let validationObject = {};
+    for (const key in response.data) {
+      switch (key) {
+        case "username":
+          validationObject = {
+            ...validationObject,
+            username: buildValidationProp(response.data[key], usernameMessages),
+          };
+          break;
+        case "email":
+          validationObject = {
+            ...validationObject,
+            email: buildValidationProp(response.data[key], emailMessages),
+          };
+          break;
+        default:
+          console.warn("Unknown validated property: " + key);
+          break;
       }
     }
-    return {
-      valid: result.valid,
-      error,
-    };
+    return validationObject;
   } catch (error) {
     console.log(error); // TODO
   }
+};
+
+const buildValidationProp = (validationResult, messages) => {
+  const errors = [];
+
+  for (const check in validationResult.checks) {
+    if (!validationResult.checks[check]) {
+      errors.push(messages[check]);
+    }
+  }
+
+  return { valid: validationResult.valid, errors };
 };
 
 export const validateEmail = (email) => {};

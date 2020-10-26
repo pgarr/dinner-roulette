@@ -51,6 +51,7 @@ def fresh_login():
     else:
         return error_response(401, "Bad username or password")
 
+
 # TODO: tests min_length
 @bp.route('/validate', methods=['GET'])
 def validate():
