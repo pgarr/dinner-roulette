@@ -1,9 +1,13 @@
-import React, { isValidElement, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
-import { validateOnBackend } from "./validators";
+import {
+  validateOnBackend,
+  validatePassword,
+  validatePassword2,
+} from "./validators";
 import { useDebouncedEffect } from "../../../shared/customHooks";
 import RegisterFormField from "./RegisterFormField";
 
@@ -37,7 +41,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
     setValue({ value: event.target.value, touched: true });
   };
 
-  // validate username and email on backend
+  // validate username and email
   useDebouncedEffect(
     async () => {
       let usernameParam = null;
@@ -68,6 +72,30 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
     },
     validationDelay,
     [username, email]
+  );
+
+  // validate password
+  useDebouncedEffect(
+    () => {
+      if (password.touched) {
+        const result = validatePassword(password.value);
+        setPasswordValidation({ ...passwordValidation, ...result });
+      }
+    },
+    validationDelay,
+    [password]
+  );
+
+  // validate password2
+  useDebouncedEffect(
+    () => {
+      if (password2.touched) {
+        const result = validatePassword2(password.value, password2.value);
+        setPassword2Validation({ ...password2Validation, ...result });
+      }
+    },
+    validationDelay,
+    [password2]
   );
 
   const submitHandler = (event) => {

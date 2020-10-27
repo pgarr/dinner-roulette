@@ -65,6 +65,24 @@ const buildValidationProp = (validationResult, messages) => {
   return { valid: validationResult.valid, errors };
 };
 
-export const validateEmail = (email) => {};
+export const validatePassword = (password) => {
+  const errors = [];
 
-export const validatePasswords = (password, password2) => {};
+  const min_length = password.length > 5;
+  if (!min_length) {
+    errors.push(passwordMessages.min_length);
+  }
+
+  return { valid: min_length, errors };
+};
+
+export const validatePassword2 = (password, password2) => {
+  const errors = [];
+
+  const equal = password === password2;
+  if (!equal) {
+    errors.push(passwordMessages.equal);
+  }
+
+  return { valid: equal, errors };
+};
