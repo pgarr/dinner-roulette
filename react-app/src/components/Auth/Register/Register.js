@@ -8,6 +8,7 @@ import {
   validatePassword,
   validatePassword2,
 } from "./validators";
+import axios from "../../../shared/axios-recipes";
 import { useDebouncedEffect } from "../../../shared/customHooks";
 import RegisterFormField from "./RegisterFormField";
 
@@ -98,11 +99,21 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
     [password2]
   );
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
-    // if (passwordsEqual) {
-    //   onRegister(username, password, email);
-    // }
+
+    try {
+      const response = await axios.post("/auth/register", {
+        username: username.value,
+        password: password.value,
+        email: email.value,
+      });
+      setValidated(true);
+
+      console.log(response);
+    } catch (error) {
+      console.log(error); // TODO
+    }
   };
 
   let authRedirect = null;
@@ -163,7 +174,16 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           isValid={password2.touched && password2Validation.valid}
           isInvalid={password2.touched && !password2Validation.valid}
         />
-        <Button variant="secondary" type="submit">
+        <Button
+          variant="secondary"
+          type="submit"
+          disabled={
+            !usernameValidation.valid ||
+            !emailValidation.valid ||
+            !passwordValidation.valid ||
+            !password2Validation.valid
+          }
+        >
           Zarejestruj się
         </Button>
       </Form>
