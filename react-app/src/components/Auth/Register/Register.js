@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
 import {
+  buildValidationObject,
   validateOnBackend,
   validatePassword,
   validatePassword2,
@@ -11,9 +12,12 @@ import {
 import axios from "../../../shared/axios-recipes";
 import { useDebouncedEffect } from "../../../shared/customHooks";
 import RegisterFormField from "./RegisterFormField";
+import RegisteredModal from "./RegisteredModal";
 
 const Register = ({ isAuthenticated, authRedirectPath }) => {
   const [validated, setValidated] = useState(false);
+  const [registered, setRegistered] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const [username, setUsername] = useState({ value: "", touched: false });
   const [usernameValidation, setUsernameValidation] = useState({
@@ -57,18 +61,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
 
       if (usernameParam !== null || emailParam !== null) {
         const result = await validateOnBackend(usernameParam, emailParam);
-        for (const key in result) {
-          switch (key) {
-            case "username":
-              setUsernameValidation({ ...usernameValidation, ...result[key] });
-              break;
-            case "email":
-              setEmailValidation({ ...emailValidation, ...result[key] });
-              break;
-            default:
-              break;
-          }
-        }
+        setValidationResults(result);
       }
     },
     validationDelay,
@@ -99,6 +92,24 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
     [password2]
   );
 
+  const setValidationResults = (result) => {
+    for (const key in result) {
+      switch (key) {
+        case "username":
+          setUsernameValidation({ ...usernameValidation, ...result[key] });
+          break;
+        case "email":
+          setEmailValidation({ ...emailValidation, ...result[key] });
+          break;
+        case "password":
+          setPasswordValidation({ ...passwordValidation, ...result[key] });
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -110,20 +121,39 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
       });
       setValidated(true);
 
-      console.log(response);
+      if (response.status === 201) {
+        setRegistered(true);
+      } else {
+        console.log(response); // TODO
+      }
     } catch (error) {
-      console.log(error); // TODO
+      if (error.response.status === 422) {
+        const result = buildValidationObject(error.response.data);
+        setValidationResults(result);
+      } else {
+        console.log(error.response); // TODO
+      }
     }
   };
 
-  let authRedirect = null;
+  let redirect = null;
   if (isAuthenticated) {
-    authRedirect = <Redirect to={authRedirectPath} />;
+    redirect = <Redirect to={authRedirectPath} />;
+  } else if (confirmed) {
+    redirect = <Redirect to={"/login"} />;
   }
 
   return (
     <React.Fragment>
-      {authRedirect}
+      {redirect}
+
+      <RegisteredModal
+        show={registered && !confirmed}
+        onHide={() => {
+          setConfirmed(true);
+        }}
+      />
+
       <h1>Zarejestruj się</h1>
       <Form noValidate validated={validated} onSubmit={submitHandler}>
         <RegisterFormField

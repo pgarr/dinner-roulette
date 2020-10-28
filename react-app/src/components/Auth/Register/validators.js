@@ -27,30 +27,40 @@ export const validateOnBackend = async (username, email) => {
   try {
     const response = await axios.get("/auth/validate?" + params.join("&"));
 
-    let validationObject = {};
-    for (const key in response.data) {
-      switch (key) {
-        case "username":
-          validationObject = {
-            ...validationObject,
-            username: buildValidationProp(response.data[key], usernameMessages),
-          };
-          break;
-        case "email":
-          validationObject = {
-            ...validationObject,
-            email: buildValidationProp(response.data[key], emailMessages),
-          };
-          break;
-        default:
-          console.warn("Unknown validated property: " + key);
-          break;
-      }
-    }
-    return validationObject;
+    return buildValidationObject(response.data);
   } catch (error) {
     console.log(error); // TODO
   }
+};
+
+export const buildValidationObject = (data) => {
+  let validationObject = {};
+  for (const key in data) {
+    switch (key) {
+      case "username":
+        validationObject = {
+          ...validationObject,
+          username: buildValidationProp(data[key], usernameMessages),
+        };
+        break;
+      case "email":
+        validationObject = {
+          ...validationObject,
+          email: buildValidationProp(data[key], emailMessages),
+        };
+        break;
+      case "password":
+        validationObject = {
+          ...validationObject,
+          password: buildValidationProp(data[key], passwordMessages),
+        };
+        break;
+      default:
+        console.warn("Unknown validated property: " + key);
+        break;
+    }
+  }
+  return validationObject;
 };
 
 const buildValidationProp = (validationResult, messages) => {
