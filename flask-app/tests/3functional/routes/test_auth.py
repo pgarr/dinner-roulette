@@ -134,7 +134,7 @@ def test_refresh_correct_token(test_client, users_set):
 def test_validate_no_username(test_client, users_set):
     user1, user2, admin = users_set
 
-    response = test_client.get('/api/auth/validate', query_string={'email': 'sadadfa'})
+    response = test_client.post('/api/auth/validate', json={'email': 'sadadfa'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -142,7 +142,7 @@ def test_validate_no_username(test_client, users_set):
 
 
 def test_validate_no_email(test_client, users_set):
-    response = test_client.get('/api/auth/validate', query_string={'username': 'sadadfa'})
+    response = test_client.post('/api/auth/validate', json={'username': 'sadadfa'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -150,7 +150,7 @@ def test_validate_no_email(test_client, users_set):
 
 
 def test_validate_username_and_email_free(test_client, users_set):
-    response = test_client.get('/api/auth/validate', query_string={'email': 'newtest@test.pl', 'username': 'asdasf'})
+    response = test_client.post('/api/auth/validate', json={'email': 'newtest@test.pl', 'username': 'asdasf'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -161,7 +161,7 @@ def test_validate_username_and_email_free(test_client, users_set):
 def test_validate_username_and_email_occupied(test_client, users_set):
     user1, user2, admin = users_set
 
-    response = test_client.get('/api/auth/validate', query_string={'email': user1.email, 'username': user2.username})
+    response = test_client.post('/api/auth/validate', json={'email': user1.email, 'username': user2.username})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -170,11 +170,8 @@ def test_validate_username_and_email_occupied(test_client, users_set):
 
 
 def test_validate_no_args(test_client, users_set):
-    response = test_client.get('/api/auth/validate')
-    assert response.status_code == 200
-
-    json = response.get_json()
-    assert not json
+    response = test_client.post('/api/auth/validate')
+    assert response.status_code == 400
 
 
 def test_register_occupied_username(test_client, users_set):

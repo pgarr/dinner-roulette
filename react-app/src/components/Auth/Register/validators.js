@@ -16,16 +16,16 @@ const passwordMessages = {
 };
 
 export const validateOnBackend = async (username, email) => {
-  let params = [];
+  let params = {};
   if (username !== null) {
-    params.push("username=" + username);
+    params = { ...params, username };
   }
   if (email !== null) {
-    params.push("email=" + email);
+    params = { ...params, email };
   }
 
   try {
-    const response = await axios.get("/auth/validate?" + params.join("&"));
+    const response = await axios.post("/auth/validate", params);
 
     return buildValidationObject(response.data);
   } catch (error) {

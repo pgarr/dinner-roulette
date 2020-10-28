@@ -53,11 +53,17 @@ def fresh_login():
 
 
 # TODO: tests min_length
-@bp.route('/validate', methods=['GET'])
+@bp.route('/validate', methods=['POST'])
 def validate():
-    email = request.args.get('email', None)
-    username = request.args.get('username', None)
+    json = request.json
+    if json:
+        email = json.get('email', None)
+        username = json.get('username', None)
+    else:
+        return bad_request("Lack of required payload data")
+
     payload = {}
+
     if email is not None:
         is_valid, check_dict = validate_email(email)
         payload['email'] = {'valid': is_valid, 'checks': check_dict}
