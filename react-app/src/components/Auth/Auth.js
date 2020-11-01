@@ -5,7 +5,6 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 
 import styles from "./Auth.module.css";
 import * as actions from "../../store/actions/index";
-import { inputChangedHandler } from "../../shared/handlers";
 
 const Auth = ({
   loading,
@@ -16,6 +15,10 @@ const Auth = ({
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const inputChangedHandler = (event, setValue) => {
+    setValue(event.target.value);
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();

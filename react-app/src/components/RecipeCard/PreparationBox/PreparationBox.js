@@ -1,10 +1,10 @@
 import React from "react";
 
-const PreparationBox = (props) => {
+const PreparationBox = ({ preparation }) => {
   return (
     <div>
       <h3>Przygotowanie</h3>
-      <p>{props.preparation}</p>
+      <p>{preparation}</p>
     </div>
   );
 };
