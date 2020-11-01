@@ -9,7 +9,7 @@ const Toolbar = () => (
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href="#home">
+        <Nav.Link href="/newrecipe">
           <FontAwesomeIcon icon="plus" /> Dodaj przepis
         </Nav.Link>
         <UserDropdown />
