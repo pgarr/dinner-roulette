@@ -9,6 +9,7 @@ import IngredientList from "./IngredientList/IngredientList";
 import PreparationBox from "./PreparationBox/PreparationBox";
 import * as actions from "../../store/actions/index";
 
+// TODO: remove redux, just useState for component
 const RecipeCard = ({
   title,
   author,

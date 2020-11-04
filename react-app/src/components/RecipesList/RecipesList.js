@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Recipe from "./Recipe/Recipe";
 import * as actions from "../../store/actions/index";
 
+// TODO: remove redux, just useState for component
 const RecipesList = ({
   recipes,
   onFetchRecipes,
