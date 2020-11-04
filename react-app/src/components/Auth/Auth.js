@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
+import { inputChangedHandler } from "../../shared/handlers";
 import styles from "./Auth.module.css";
 import * as actions from "../../store/actions/index";
 
@@ -15,10 +16,6 @@ const Auth = ({
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const inputChangedHandler = (event, setValue) => {
-    setValue(event.target.value);
-  };
 
   const submitHandler = (event) => {
     event.preventDefault();
