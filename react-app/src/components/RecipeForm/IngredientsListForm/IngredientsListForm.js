@@ -1,4 +1,3 @@
-import { faRainbow } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 
@@ -11,29 +10,29 @@ const IngredientsListForm = ({
   return (
     <React.Fragment>
       <Row>
-        <Col lg={6}>
+        <Col lg={6} md={6} sm={6}>
           <Form.Label>Nazwa</Form.Label>
         </Col>
-        <Col lg={2}>
+        <Col lg={2} md={2} sm={2}>
           <Form.Label>Ilość</Form.Label>
         </Col>
-        <Col lg={2}>
+        <Col lg={2} md={2} sm={2}>
           <Form.Label>Jednostka</Form.Label>
         </Col>
       </Row>
       {ingredients.map((ingredient) => {
         return (
           <Row key={ingredient.id}>
-            <Col lg={6}>
+            <Col lg={6} md={6} sm={6}>
               <Form.Control
                 type="text"
-                value={ingredient.name}
+                value={ingredient.title}
                 onChange={(event) =>
-                  handleChange(ingredient.id, { name: event.target.value })
+                  handleChange(ingredient.id, { title: event.target.value })
                 }
               />
             </Col>
-            <Col lg={2}>
+            <Col lg={2} md={2} sm={2}>
               <Form.Control
                 type="text"
                 value={ingredient.amount}
@@ -42,7 +41,7 @@ const IngredientsListForm = ({
                 }
               />
             </Col>
-            <Col lg={2}>
+            <Col lg={2} md={2} sm={2}>
               <Form.Control
                 type="text"
                 value={ingredient.unit}
@@ -51,12 +50,13 @@ const IngredientsListForm = ({
                 }
               />
             </Col>
-            <Col lg={2}>
+            <Col lg={2} md={2} sm={2}>
               <Button
                 variant="danger"
                 onClick={(event) => {
                   handleRemove(ingredient.id);
                 }}
+                size="sm"
               >
                 X
               </Button>
