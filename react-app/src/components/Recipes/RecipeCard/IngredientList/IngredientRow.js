@@ -1,6 +1,6 @@
 import React from "react";
 
-const Ingredient = ({ title, amount, unit }) => {
+const IngredientRow = ({ title, amount, unit }) => {
   return (
     <tr>
       <td>{title}</td>
@@ -9,4 +9,4 @@ const Ingredient = ({ title, amount, unit }) => {
   );
 };
 
-export default Ingredient;
+export default IngredientRow;

@@ -1,7 +1,6 @@
 import { takeEvery, all } from "redux-saga/effects";
 
 import * as actionTypes from "../actions/actionTypes";
-import { loadDetailsSaga } from "./details";
 import {
   logoutSaga,
   checkAuthTimeoutSaga,
@@ -9,10 +8,6 @@ import {
   authCheckStateSaga,
   refreshAuthSaga,
 } from "./auth";
-
-export function* watchDetails() {
-  yield takeEvery(actionTypes.LOAD_DETAILS, loadDetailsSaga);
-}
 
 export function* watchAuth() {
   yield all([

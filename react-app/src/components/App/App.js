@@ -12,7 +12,7 @@ import { faStar as farFaStar } from "@fortawesome/free-regular-svg-icons";
 
 import Layout from "../Layout/Layout";
 import RecipesList from "../Recipes/RecipesList/RecipesList";
-import RecipeCard from "../RecipeCard/RecipeCard";
+import RecipeCard from "../Recipes/RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import * as actions from "../../store/actions/index";

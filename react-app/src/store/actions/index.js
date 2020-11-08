@@ -1,10 +1,4 @@
 export {
-  loadDetails,
-  loadDetailsStart,
-  loadDetailsFail,
-  loadDetailsSuccess,
-} from "./details";
-export {
   auth,
   logout,
   setAuthRedirectPath,

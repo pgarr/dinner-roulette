@@ -2,7 +2,7 @@ import React from "react";
 import { Table } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-import Ingredient from "./Ingredient/Ingredient";
+import IngredientRow from "./IngredientRow";
 
 const IngredientList = ({ ingredients }) => {
   return (
@@ -15,7 +15,7 @@ const IngredientList = ({ ingredients }) => {
       </thead>
       <tbody>
         {ingredients.map((ingredient, index) => {
-          return <Ingredient key={index} {...ingredient} />;
+          return <IngredientRow key={index} {...ingredient} />;
         })}
       </tbody>
     </Table>
