@@ -11,7 +11,7 @@ import {
 import { faStar as farFaStar } from "@fortawesome/free-regular-svg-icons";
 
 import Layout from "../Layout/Layout";
-import RecipesList from "../RecipesList/RecipesList";
+import RecipesList from "../Recipes/RecipesList/RecipesList";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";

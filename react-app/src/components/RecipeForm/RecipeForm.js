@@ -6,7 +6,7 @@ import RangeSlider from "react-bootstrap-range-slider";
 import { v4 as uuidv4 } from "uuid";
 
 import styles from "./RecipeForm.module.css";
-import axios from "../../shared/axios-recipes";
+import axios from "../../shared/axios-api";
 import { inputChangedHandler } from "../../shared/handlers";
 import * as actions from "../../store/actions/index";
 import IngredientsListForm from "./IngredientsListForm/IngredientsListForm";

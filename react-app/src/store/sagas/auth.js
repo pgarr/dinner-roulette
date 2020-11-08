@@ -1,6 +1,6 @@
 import { delay, put, call } from "redux-saga/effects";
 
-import axios from "../../shared/axios-recipes";
+import axios from "../../shared/axios-api";
 import * as actions from "../actions/index";
 import jwt from "jsonwebtoken";
 

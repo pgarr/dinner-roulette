@@ -1,4 +1,4 @@
-import axios from "../../../shared/axios-recipes";
+import axios from "../../../shared/axios-api";
 
 const usernameMessages = {
   unique: "Nazwa jest już zajęta",

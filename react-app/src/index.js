@@ -10,10 +10,9 @@ import createSagaMiddleware from "redux-saga";
 import "./index.css";
 import App from "./components/App/App";
 import * as serviceWorker from "./serviceWorker";
-import recipesReducer from "./store/reducers/recipes";
 import detailsReducer from "./store/reducers/details";
 import authReducer from "./store/reducers/auth";
-import { watchRecipes, watchDetails, watchAuth } from "./store/sagas/index";
+import { watchDetails, watchAuth } from "./store/sagas/index";
 
 const composeEnhancers =
   process.env.NODE_ENV === "development"
@@ -21,7 +20,6 @@ const composeEnhancers =
     : null || compose;
 
 const rootReducer = combineReducers({
-  recipes: recipesReducer,
   details: detailsReducer,
   auth: authReducer,
 });
@@ -33,7 +31,6 @@ const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
-sagaMiddleware.run(watchRecipes);
 sagaMiddleware.run(watchDetails);
 sagaMiddleware.run(watchAuth);
 

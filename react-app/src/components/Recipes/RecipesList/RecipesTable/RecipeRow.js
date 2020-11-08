@@ -1,6 +1,6 @@
 import React from "react";
 
-import DifficultySymbol from "../../UI/DifficultySymbol/DifficultySymbol";
+import DifficultySymbol from "../../../UI/DifficultySymbol/DifficultySymbol";
 
 const Recipe = ({ index, title, time, difficulty, clicked }) => {
   return (

@@ -1,6 +1,6 @@
 import { put } from "redux-saga/effects";
 
-import axios from "../../shared/axios-recipes";
+import axios from "../../shared/axios-api";
 import * as actions from "../actions/index";
 
 export function* loadDetailsSaga(action) {
