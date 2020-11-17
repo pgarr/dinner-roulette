@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap";
 
 import Recipe from "./RecipeRow";
 
-const RecipesTable = ({ recipes, onSelectedRecipe }) => {
+const RecipesTable = ({ recipes, onSelectRecipe }) => {
   return (
     <Table hover>
       <thead>
@@ -21,7 +21,7 @@ const RecipesTable = ({ recipes, onSelectedRecipe }) => {
               index={index + 1}
               {...recipe}
               key={recipe.id}
-              clicked={() => onSelectedRecipe(recipe.id)}
+              clicked={() => onSelectRecipe(recipe.id)}
             />
           );
         })}
