@@ -16,9 +16,9 @@ const UserDropdown = ({ payload }) => {
         }
         id="basic-nav-dropdown"
       >
-        <NavDropdown.Item href="#action/3.1">Moje przepisy</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">
-          Oczekujące przepisy
+        <NavDropdown.Item href="/myrecipes">Moje przepisy</NavDropdown.Item>
+        <NavDropdown.Item href="/pendingrecipes">
+          Niezatwierdzone przepisy
         </NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item href="/logout">Wyloguj się</NavDropdown.Item>
