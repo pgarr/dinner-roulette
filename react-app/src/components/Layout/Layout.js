@@ -4,7 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import styles from "./Layout.module.css";
 import Toolbar from "../Toolbar/Toolbar";
 
-const Layout = (props) => (
+const Layout = ({ children }) => (
   <Container fluid>
     <Row>
       <Col>
@@ -13,7 +13,7 @@ const Layout = (props) => (
     </Row>
     <Row>
       <Col>
-        <main className={styles.Content}>{props.children}</main>
+        <main className={styles.Content}>{children}</main>
       </Col>
     </Row>
   </Container>
