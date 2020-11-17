@@ -72,6 +72,7 @@ def get_waiting_recipe(pk):
     return waiting_recipe
 
 
+# TODO: tests - page is str
 def get_recipes(page, per_page):
     page, per_page = page_handler(page, per_page)
 
@@ -81,7 +82,10 @@ def get_recipes(page, per_page):
     return paginated
 
 
+# TODO: tests - page is str
 def get_user_recipes(author, page, per_page):
+    page, per_page = page_handler(page, per_page)
+
     paginated = Recipe.query.filter(Recipe.author == author).options(
         load_only("id", "title", "time", "difficulty")).order_by(desc(Recipe.create_date)).paginate(page, per_page,
                                                                                                     False)
@@ -89,7 +93,10 @@ def get_user_recipes(author, page, per_page):
     return paginated
 
 
+# TODO: tests - page is str
 def get_waiting_recipes(user, page, per_page):
+    page, per_page = page_handler(page, per_page)
+
     if user.admin:  # TODO: DRY - if else are nearly same
         paginated = WaitingRecipe.query \
             .filter(WaitingRecipe.refused == False) \
