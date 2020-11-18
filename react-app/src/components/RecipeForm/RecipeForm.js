@@ -184,7 +184,6 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.access_token !== null,
     authToken: state.auth.access_token,
-    authRedirectPath: state.auth.authRedirectPath,
   };
 };
 
