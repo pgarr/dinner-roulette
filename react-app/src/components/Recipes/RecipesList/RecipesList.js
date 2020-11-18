@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useFetchApi } from "../../../shared/customHooks";
+import useFetchApi from "../../../shared/customHooks/useFetchApi";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 

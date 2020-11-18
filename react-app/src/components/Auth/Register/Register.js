@@ -10,7 +10,7 @@ import {
   validatePassword2,
 } from "./validators";
 import axios from "../../../shared/axios-api";
-import { useDebouncedEffect } from "../../../shared/customHooks";
+import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import RegisterFormField from "./RegisterFormField";
 import RegisteredModal from "./RegisteredModal";
 
