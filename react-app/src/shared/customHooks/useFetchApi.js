@@ -12,15 +12,21 @@ const useFetchApi = (initialUrl, initialData) => {
   });
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchData = async () => {
       dispatch({ type: "FETCH_INIT" });
 
       try {
         const result = await axios.get(url);
 
-        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+        if (!cancelled) {
+          dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+        }
       } catch (error) {
-        dispatch({ type: "FETCH_FAILURE" });
+        if (!cancelled) {
+          dispatch({ type: "FETCH_FAILURE" });
+        }
       }
     };
 
