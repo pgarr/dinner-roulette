@@ -41,10 +41,7 @@ const RecipesList = ({ history }) => {
 
   return (
     <React.Fragment>
-      <RecipesTable
-        recipes={recipes}
-        onSelectedRecipe={recipeSelectedHandler}
-      />
+      <RecipesTable recipes={recipes} onSelectRecipe={recipeSelectedHandler} />
       <NumberedPagination
         activePage={activePage}
         totalPages={totalPages}
