@@ -5,14 +5,16 @@ import PropTypes from "prop-types";
 const DifficultySymbol = (props) => {
   const max = 5; //TODO: ustalić w globalnej konfiguracji
   return (
-    <span>
-      {[...Array(props.difficulty)].map((e, i) => (
-        <FontAwesomeIcon key={i} icon="star" />
-      ))}
-      {[...Array(max - props.difficulty)].map((e, i) => (
-        <FontAwesomeIcon key={i} icon={["far", "star"]} />
-      ))}
-    </span>
+    props.difficulty <= max && (
+      <span>
+        {[...Array(props.difficulty)].map((e, i) => (
+          <FontAwesomeIcon key={i} icon="star" />
+        ))}
+        {[...Array(max - props.difficulty)].map((e, i) => (
+          <FontAwesomeIcon key={i} icon={["far", "star"]} />
+        ))}
+      </span>
+    )
   );
 };
 
