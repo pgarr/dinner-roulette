@@ -13,6 +13,7 @@ import { faStar as farFaStar } from "@fortawesome/free-regular-svg-icons";
 import Layout from "../Layout/Layout";
 import RecipesList from "../Recipes/RecipesList/RecipesList";
 import MyRecipesList from "../Recipes/RecipesList/MyRecipesList";
+import WaitingRecipesList from "../Recipes/RecipesList/WaitingRecipesList";
 import RecipeCard from "../Recipes/RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
@@ -32,6 +33,7 @@ const App = ({ onTryAutoSingup }) => {
     <Switch>
       <Route path="/recipes" exact component={RecipesList} />
       <Route path="/myrecipes" component={MyRecipesList} />
+      <Route path="/pendingrecipes" component={WaitingRecipesList} />
       <Route path="/recipes/:id" component={RecipeCard} />
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />

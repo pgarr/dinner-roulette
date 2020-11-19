@@ -1,8 +1,9 @@
 import React from "react";
+import { Badge } from "react-bootstrap";
 
 import DifficultySymbol from "../../../UI/DifficultySymbol/DifficultySymbol";
 
-const Recipe = ({ index, title, time, difficulty, clicked }) => {
+const Recipe = ({ index, title, time, difficulty, clicked, refused }) => {
   return (
     <tr onClick={clicked}>
       <th scope="row">{index}</th>
@@ -11,6 +12,15 @@ const Recipe = ({ index, title, time, difficulty, clicked }) => {
       <td>
         {difficulty ? <DifficultySymbol difficulty={difficulty} /> : null}
       </td>
+      {refused !== null && (
+        <td>
+          {refused ? (
+            <Badge variant="danger">Odrzucony</Badge>
+          ) : (
+            <Badge variant="primary">Oczekujący</Badge>
+          )}
+        </td>
+      )}
     </tr>
   );
 };
