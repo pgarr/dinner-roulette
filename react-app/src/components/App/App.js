@@ -21,7 +21,7 @@ import Logout from "../Auth/Logout/Logout";
 import Register from "../Auth/Register/Register";
 import RecipeForm from "../RecipeForm/RecipeForm";
 
-const App = ({ onTryAutoSingup, isAuthenticated }) => {
+const App = ({ onTryAutoSingup }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
 
   useEffect(() => {
@@ -42,18 +42,6 @@ const App = ({ onTryAutoSingup, isAuthenticated }) => {
     </Switch>
   );
 
-  // if (isAuthenticated) {
-  //   routes = (
-  //     <Switch>
-  //       <Route path="/recipes" exact component={RecipesList} />
-  //       <Route path="/recipes/:id" component={RecipeCard} />
-  //       <Route path="/logout" component={Logout} />
-  //       <Route path="/" exact component={Home} />
-  //       <Redirect to="/" />
-  //     </Switch>
-  //   );
-  // }
-
   return (
     <div>
       <Layout>
@@ -64,9 +52,7 @@ const App = ({ onTryAutoSingup, isAuthenticated }) => {
 };
 
 const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.access_token !== null,
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch) => {
