@@ -2,8 +2,8 @@ import { useEffect, useState, useReducer } from "react";
 
 import axios from "../axios-api";
 
-const useFetchApi = (initialUrl, initialData) => {
-  const [url, setUrl] = useState(initialUrl);
+const useFetchApi = (initialRequest, initialData, shouldFetch = true) => {
+  const [request, setRequest] = useState(initialRequest);
 
   const [state, dispatch] = useReducer(dataFetchReducer, {
     isLoading: false,
@@ -18,7 +18,7 @@ const useFetchApi = (initialUrl, initialData) => {
       dispatch({ type: "FETCH_INIT" });
 
       try {
-        const result = await axios.get(url);
+        const result = await axios(request);
 
         if (!cancelled) {
           dispatch({ type: "FETCH_SUCCESS", payload: result.data });
@@ -30,13 +30,15 @@ const useFetchApi = (initialUrl, initialData) => {
       }
     };
 
-    fetchData();
+    if (shouldFetch) {
+      fetchData();
+    }
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [request, shouldFetch]);
 
-  return [state, setUrl];
+  return [state, setRequest];
 };
 
 const dataFetchReducer = (state, action) => {
