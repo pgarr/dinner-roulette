@@ -24,7 +24,7 @@ const Auth = ({
 
   let errorMessage = null;
   if (error) {
-    errorMessage = <p>{error.description}</p>;
+    errorMessage = <p>{error.message}</p>; // TODO
   }
 
   let authRedirect = null;
