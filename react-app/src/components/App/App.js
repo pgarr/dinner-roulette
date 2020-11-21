@@ -14,13 +14,13 @@ import Layout from "../Layout/Layout";
 import RecipesList from "../Recipes/RecipesList/RecipesList";
 import MyRecipesList from "../Recipes/RecipesList/MyRecipesList";
 import WaitingRecipesList from "../Recipes/RecipesList/WaitingRecipesList";
-import RecipeCard from "../Recipes/RecipeCard/RecipeCard";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import * as actions from "../../store/actions/index";
 import Logout from "../Auth/Logout/Logout";
 import Register from "../Auth/Register/Register";
 import RecipeForm from "../RecipeForm/RecipeForm";
+import RecipeDetails from "../Recipes/RecipesDetails/RecipeDetails";
 
 const App = ({ onTryAutoSingup }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
@@ -34,7 +34,7 @@ const App = ({ onTryAutoSingup }) => {
       <Route path="/recipes" exact component={RecipesList} />
       <Route path="/myrecipes" component={MyRecipesList} />
       <Route path="/pendingrecipes" component={WaitingRecipesList} />
-      <Route path="/recipes/:id" component={RecipeCard} />
+      <Route path="/recipes/:id" component={RecipeDetails} />
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
