@@ -1,6 +1,7 @@
 import React from "react";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
+import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
@@ -22,7 +23,7 @@ const RecipesList = ({ history }) => {
   };
 
   return (
-    <React.Fragment>
+    <LoadingContainer isLoading={isLoading}>
       <RecipesTable
         recipes={data.recipes}
         onSelectRecipe={recipeSelectedHandler}
@@ -32,7 +33,7 @@ const RecipesList = ({ history }) => {
         totalPages={data._meta.total_pages}
         onChangePage={pageChangedHandler}
       />
-    </React.Fragment>
+    </LoadingContainer>
   );
 };
 

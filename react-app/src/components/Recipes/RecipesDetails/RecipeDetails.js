@@ -2,6 +2,7 @@ import React from "react";
 // import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
+import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 import RecipeCard from "./RecipeCard/RecipeCard";
 
 const RecipeDetails = ({ match }) => {
@@ -21,7 +22,7 @@ const RecipeDetails = ({ match }) => {
   );
 
   return (
-    <React.Fragment>
+    <LoadingContainer isLoading={isLoading}>
       {/* <Row>
         <Col>
           <Button variant="primary">Edytuj</Button>{" "}
@@ -32,7 +33,7 @@ const RecipeDetails = ({ match }) => {
         </Col>
       </Row> */}
       <RecipeCard recipe={data.recipe} />
-    </React.Fragment>
+    </LoadingContainer>
   );
 };
 

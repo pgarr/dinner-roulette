@@ -6,6 +6,7 @@ import useFetchApi from "../../../shared/customHooks/useFetchApi";
 import * as actions from "../../../store/actions/index";
 import RecipeCard from "./RecipeCard/RecipeCard";
 import RefusedBadge from "../../UI/RefusedBadge/RefusedBadge";
+import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 
 const WaitingRecipeDetails = ({
   isAuthenticated,
@@ -44,8 +45,10 @@ const WaitingRecipeDetails = ({
   return (
     <React.Fragment>
       {redirect}
-      <RefusedBadge refused={data.pending_recipe.refused} />
-      <RecipeCard recipe={data.pending_recipe} />
+      <LoadingContainer isLoading={isLoading}>
+        <RefusedBadge refused={data.pending_recipe.refused} />
+        <RecipeCard recipe={data.pending_recipe} />
+      </LoadingContainer>
     </React.Fragment>
   );
 };

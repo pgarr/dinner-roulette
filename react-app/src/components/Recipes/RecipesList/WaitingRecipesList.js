@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
 import * as actions from "../../../store/actions/index";
+import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
@@ -49,16 +50,18 @@ const WaitingRecipesList = ({
   return (
     <React.Fragment>
       {redirect}
-      <RecipesTable
-        recipes={data.pending_recipes}
-        onSelectRecipe={recipeSelectedHandler}
-        showPendingStatus={true}
-      />
-      <NumberedPagination
-        activePage={data._meta.page}
-        totalPages={data._meta.total_pages}
-        onChangePage={pageChangedHandler}
-      />
+      <LoadingContainer isLoading={isLoading}>
+        <RecipesTable
+          recipes={data.pending_recipes}
+          onSelectRecipe={recipeSelectedHandler}
+          showPendingStatus={true}
+        />
+        <NumberedPagination
+          activePage={data._meta.page}
+          totalPages={data._meta.total_pages}
+          onChangePage={pageChangedHandler}
+        />
+      </LoadingContainer>
     </React.Fragment>
   );
 };
