@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap";
 
 import Recipe from "./RecipeRow";
 
-const RecipesTable = ({ recipes, onSelectRecipe, isPending }) => {
+const RecipesTable = ({ recipes, onSelectRecipe, showPendingStatus }) => {
   return (
     <Table hover>
       <thead>
@@ -12,7 +12,7 @@ const RecipesTable = ({ recipes, onSelectRecipe, isPending }) => {
           <th scope="col">Nazwa</th>
           <th scope="col">Czas</th>
           <th scope="col">Trudność</th>
-          {isPending && <th scope="col">Status</th>}
+          {showPendingStatus && <th scope="col">Status</th>}
         </tr>
       </thead>
       <tbody>
@@ -23,7 +23,7 @@ const RecipesTable = ({ recipes, onSelectRecipe, isPending }) => {
               {...recipe}
               key={recipe.id}
               clicked={() => onSelectRecipe(recipe.id)}
-              refused={isPending ? recipe.refused : null}
+              refused={showPendingStatus ? recipe.refused : null}
             />
           );
         })}

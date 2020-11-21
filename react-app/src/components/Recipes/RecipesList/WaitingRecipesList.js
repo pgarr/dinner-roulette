@@ -28,7 +28,7 @@ const WaitingRecipesList = ({
   );
 
   const recipeSelectedHandler = (id) => {
-    // history.push({ pathname: "/recipes/" + id });
+    history.push({ pathname: "/pendingrecipes/" + id });
   };
 
   const pageChangedHandler = (page) => {
@@ -52,7 +52,7 @@ const WaitingRecipesList = ({
       <RecipesTable
         recipes={data.pending_recipes}
         onSelectRecipe={recipeSelectedHandler}
-        isPending={true}
+        showPendingStatus={true}
       />
       <NumberedPagination
         activePage={data._meta.page}

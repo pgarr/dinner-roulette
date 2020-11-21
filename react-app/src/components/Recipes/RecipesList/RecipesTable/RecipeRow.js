@@ -1,7 +1,7 @@
 import React from "react";
-import { Badge } from "react-bootstrap";
 
 import DifficultySymbol from "../../../UI/DifficultySymbol/DifficultySymbol";
+import RefusedBadge from "../../../UI/RefusedBadge/RefusedBadge";
 
 const Recipe = ({ index, title, time, difficulty, clicked, refused }) => {
   return (
@@ -14,11 +14,7 @@ const Recipe = ({ index, title, time, difficulty, clicked, refused }) => {
       </td>
       {refused !== null && (
         <td>
-          {refused ? (
-            <Badge variant="danger">Odrzucony</Badge>
-          ) : (
-            <Badge variant="primary">Oczekujący</Badge>
-          )}
+          <RefusedBadge refused={refused} />
         </td>
       )}
     </tr>
