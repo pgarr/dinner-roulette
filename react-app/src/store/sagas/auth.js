@@ -13,7 +13,7 @@ export function* logoutSaga(action) {
 export function* checkAuthTimeoutSaga(action) {
   yield delay(action.expirationTime);
   if (action.refresh_token) {
-    yield put(actions.refresh(action.refresh_token)); // TODO: sprawdzić expiration date
+    yield put(actions.refresh(action.refresh_token)); // TODO: check expiration date
   } else {
     yield put(actions.logout());
   }
@@ -58,7 +58,7 @@ export function* authCheckStateSaga(action) {
     const expirationDate = yield new Date(payload.exp * 1000);
     if (expirationDate <= new Date()) {
       if (refresh_token) {
-        yield put(actions.refresh(refresh_token)); // TODO: sprawdzić expiration date
+        yield put(actions.refresh(refresh_token)); // TODO: check expiration date
       } else {
         yield put(actions.logout());
       }

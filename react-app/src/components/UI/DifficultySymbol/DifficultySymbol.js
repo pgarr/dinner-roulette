@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 
 const DifficultySymbol = (props) => {
-  const max = 5; //TODO: ustalić w globalnej konfiguracji
+  const max = 5;
   return (
     props.difficulty <= max && (
       <span>

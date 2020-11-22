@@ -25,7 +25,7 @@ const useFetchApi = (initialRequest, initialData, shouldFetch = true) => {
         }
       } catch (error) {
         if (!cancelled) {
-          dispatch({ type: "FETCH_FAILURE" });
+          dispatch({ type: "FETCH_FAILURE" }); //TODO: error as payload, next steps?
         }
       }
     };
