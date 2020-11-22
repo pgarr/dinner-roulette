@@ -19,7 +19,7 @@ const RecipesList = ({ history }) => {
   };
 
   const pageChangedHandler = (page) => {
-    doFetch({ url: `/recipes?page=${page}` });
+    doFetch({ url: "/recipes", params: { page } });
   };
 
   return (

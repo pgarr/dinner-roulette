@@ -34,7 +34,8 @@ const WaitingRecipesList = ({
 
   const pageChangedHandler = (page) => {
     doFetch({
-      url: `/waiting?page=${page}`,
+      url: "/waiting",
+      params: { page },
       headers: {
         Authorization: `Bearer ${authToken}`,
       },

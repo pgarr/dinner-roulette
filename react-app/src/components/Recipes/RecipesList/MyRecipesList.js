@@ -34,7 +34,8 @@ const MyRecipesList = ({
 
   const pageChangedHandler = (page) => {
     doFetch({
-      url: `/recipes/my?page=${page}`,
+      url: `/recipes/my`,
+      params: { page },
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
