@@ -11,6 +11,7 @@ import "./index.css";
 import App from "./components/App/App";
 import * as serviceWorker from "./serviceWorker";
 import authReducer from "./store/reducers/auth";
+import searchReducer from "./store/reducers/search";
 import { watchAuth } from "./store/sagas/index";
 
 const composeEnhancers =
@@ -20,6 +21,7 @@ const composeEnhancers =
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  search: searchReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

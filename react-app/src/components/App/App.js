@@ -14,6 +14,7 @@ import Layout from "../Layout/Layout";
 import RecipesList from "../Recipes/RecipesList/RecipesList";
 import MyRecipesList from "../Recipes/RecipesList/MyRecipesList";
 import WaitingRecipesList from "../Recipes/RecipesList/WaitingRecipesList";
+import SearchRecipesList from "../Search/SearchRecipesList";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import * as actions from "../../store/actions/index";
@@ -37,6 +38,7 @@ const App = ({ onTryAutoSingup }) => {
       <Route path="/pendingrecipes" exact component={WaitingRecipesList} />
       <Route path="/recipes/:id" component={RecipeDetails} />
       <Route path="/pendingrecipes/:id" component={WaitingRecipeDetails} />
+      <Route path="/search" component={SearchRecipesList} />
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />

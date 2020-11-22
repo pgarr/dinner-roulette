@@ -10,3 +10,5 @@ export {
   checkAuthTimeout,
   refresh,
 } from "./auth";
+
+export { setSearchQ, setSearchFunction, setSearchBadges } from "./search";
