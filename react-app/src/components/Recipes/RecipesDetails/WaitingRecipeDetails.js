@@ -14,7 +14,7 @@ const WaitingRecipeDetails = ({
   authToken,
   match,
 }) => {
-  const [{ data, isLoading, isError }, doFetch] = useFetchApi(
+  const [{ data, isLoading, isError }] = useFetchApi(
     {
       url: "/waiting/" + match.params.id,
       headers: {
