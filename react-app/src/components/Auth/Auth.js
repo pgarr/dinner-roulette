@@ -48,6 +48,7 @@ const Auth = ({
               type="text"
               value={username}
               onChange={(event) => inputChangedHandler(event, setUsername)}
+              disabled={loading}
             />
           </Col>
         </Form.Group>
@@ -61,17 +62,15 @@ const Auth = ({
               type="password"
               value={password}
               onChange={(event) => inputChangedHandler(event, setPassword)}
+              disabled={loading}
             />
           </Col>
         </Form.Group>
-        <Form.Group controlId="formRememberCheckbox">
-          <Form.Check type="checkbox" label="Zapamiętaj mnie" />
-        </Form.Group>
-        <Button variant="secondary" type="submit">
-          Zaloguj się
+        <Button variant="secondary" type="submit" disabled={loading}>
+          {loading ? "Wczytuję..." : "Zaloguj się"}
         </Button>
         <div className={styles.ButtonsRow}>
-          <Button href="/register" variant="outline-info">
+          <Button href="/register" variant="outline-info" disabled={loading}>
             Nowy użytkownik?
           </Button>
         </div>
