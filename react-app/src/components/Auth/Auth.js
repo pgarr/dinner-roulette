@@ -22,11 +22,6 @@ const Auth = ({
     onAuth(username, password);
   };
 
-  let errorMessage = null;
-  if (error) {
-    errorMessage = <p>{error.message}</p>; // TODO
-  }
-
   let authRedirect = null;
   if (isAuthenticated) {
     authRedirect = <Redirect to={authRedirectPath} />;
@@ -36,7 +31,6 @@ const Auth = ({
     <React.Fragment>
       {authRedirect}
       <h1>Zaloguj się</h1>
-      {errorMessage}
       <Form onSubmit={submitHandler}>
         <Form.Group as={Row} controlId="formUsername">
           <Form.Label column sm={12}>
@@ -49,6 +43,7 @@ const Auth = ({
               value={username}
               onChange={(event) => inputChangedHandler(event, setUsername)}
               disabled={loading}
+              isInvalid={error !== null}
             />
           </Col>
         </Form.Group>
@@ -63,7 +58,11 @@ const Auth = ({
               value={password}
               onChange={(event) => inputChangedHandler(event, setPassword)}
               disabled={loading}
+              isInvalid={error !== null}
             />
+            <Form.Control.Feedback type="invalid">
+              {error}
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
         <Button variant="secondary" type="submit" disabled={loading}>

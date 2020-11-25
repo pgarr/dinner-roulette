@@ -21,7 +21,14 @@ const reducer = (state = initialState, action) => {
         loading: false,
       };
     case actionTypes.AUTH_FAIL:
-      return { ...state, error: action.error, loading: false };
+      const res = action.errorResponse;
+      let error = null;
+      if (res.status === 401) {
+        error = "Niepoprawna nazwa użytkownika lub hasło";
+      } else {
+        error = res.data.message;
+      }
+      return { ...state, error, loading: false };
     case actionTypes.AUTH_LOGOUT:
       return { ...state, access_token: null, refresh_token: null };
     case actionTypes.SET_AUTH_REDIRECT_PATH:
