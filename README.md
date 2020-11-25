@@ -3,7 +3,11 @@
 ## What's this?
 
 Web app to store dishes recipes.
-It has users who create recipes and admin who accepts recipes before they are visible for others.
+It has users who create recipes and admin who accepts them before they are visible for others.
+
+Project contains separated frontend and backend RESTful API. 
+Frontend is created in React.js.
+Backend is created in Python, uses Flask and SQLAlchemy.
 
 ## Useful commands.
 
