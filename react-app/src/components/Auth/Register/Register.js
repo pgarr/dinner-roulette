@@ -12,7 +12,7 @@ import {
 import axios from "../../../shared/axios-api";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import RegisterFormField from "./RegisterFormField";
-import RegisteredModal from "./RegisteredModal";
+import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 
 const Register = ({ isAuthenticated, authRedirectPath }) => {
   const [validated, setValidated] = useState(false);
@@ -113,6 +113,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
+    // TODO: loading state (disabled form)
     try {
       const response = await axios.post("/auth/register", {
         username: username.value,
@@ -147,11 +148,13 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
     <React.Fragment>
       {redirect}
 
-      <RegisteredModal
+      <ModalWithBackdrop
         show={registered && !confirmed}
         onHide={() => {
           setConfirmed(true);
         }}
+        title="Sukces!"
+        text="Zarejestrowałeś się. Zaloguj się za pomocą podanych danych."
       />
 
       <h1>Zarejestruj się</h1>

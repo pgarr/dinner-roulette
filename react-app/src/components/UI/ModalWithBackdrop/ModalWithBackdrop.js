@@ -1,15 +1,13 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
-const RegisteredModal = ({ show, onHide }) => {
+const ModalWithBackdrop = ({ show, onHide, title, text }) => {
   return (
     <Modal show={show} onHide={onHide} backdrop="static" keyboard={false}>
       <Modal.Header closeButton>
-        <Modal.Title>Sukces!</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        Zarejestrowałeś się. Zaloguj się za pomocą podanych danych.
-      </Modal.Body>
+      <Modal.Body>{text}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Ok
@@ -19,4 +17,4 @@ const RegisteredModal = ({ show, onHide }) => {
   );
 };
 
-export default RegisteredModal;
+export default ModalWithBackdrop;
