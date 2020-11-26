@@ -23,6 +23,7 @@ import Register from "../Auth/Register/Register";
 import RecipeForm from "../RecipeForm/RecipeForm";
 import RecipeDetails from "../Recipes/RecipesDetails/RecipeDetails";
 import WaitingRecipeDetails from "../Recipes/RecipesDetails/WaitingRecipeDetails";
+import ResetPassword from "../Auth/ResetPassword/ResetPassword";
 
 const App = ({ onTryAutoSingup }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
@@ -42,6 +43,7 @@ const App = ({ onTryAutoSingup }) => {
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
+      <Route path="/resetpassword" component={ResetPassword} />
       <Route path="/newrecipe" component={RecipeForm} />
       <Route path="/" exact component={Home} />
       <Redirect to="/" />

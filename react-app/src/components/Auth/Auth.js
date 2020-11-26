@@ -72,6 +72,13 @@ const Auth = ({
           <Button href="/register" variant="outline-info" disabled={loading}>
             Nowy użytkownik?
           </Button>
+          <Button
+            href="/resetpassword"
+            variant="outline-info"
+            disabled={loading}
+          >
+            Zapomniałeś hasła?
+          </Button>
         </div>
       </Form>
     </React.Fragment>
