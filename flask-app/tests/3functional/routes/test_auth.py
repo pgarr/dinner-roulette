@@ -269,7 +269,7 @@ def test_reset_password_request_wrong_email(test_client, users_set, mock_reset_m
 
     response = test_client.post('/api/auth/reset_password', json={'email': 'test423535@test.com'})
 
-    assert response.status_code == 200
+    assert response.status_code == 422
     mock_reset_mail.assert_not_called()
 
 

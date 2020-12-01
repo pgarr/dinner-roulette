@@ -22,3 +22,5 @@ class Config:
     BACKUP_SCHEDULE = os.environ.get('BACKUP_SCHEDULE') or None
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     RECIPES_PER_PAGE = 15
+
+    FRONT_URL = os.environ.get('FRONT_URL')

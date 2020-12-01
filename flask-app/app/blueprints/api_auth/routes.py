@@ -115,8 +115,9 @@ def reset_password_request():
 
     if user:
         send_password_reset_email(user)
-
-    return jsonify({'message': 'Done!'}), 200
+        return jsonify({'message': 'Done!'}), 200
+    else:
+        return error_response(422, "Email address not registered")
 
 
 @bp.route('/reset_password/<token>', methods=['POST'])
