@@ -24,3 +24,4 @@ class Config:
     RECIPES_PER_PAGE = 15
 
     FRONT_URL = os.environ.get('FRONT_URL')
+    RESET_PASSWORD_TOKEN_EXPIRES_IN=os.environ.get('RESET_PASSWORD_TOKEN_EXPIRES_IN') or 15*600
