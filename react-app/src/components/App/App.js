@@ -33,6 +33,7 @@ const App = ({ onTryAutoSingup }) => {
   }, [onTryAutoSingup]);
 
   let routes = (
+    // TODO: move routes to separate file
     <Switch>
       <Route path="/recipes" exact component={RecipesList} />
       <Route path="/myrecipes" exact component={MyRecipesList} />
@@ -43,7 +44,7 @@ const App = ({ onTryAutoSingup }) => {
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
-      <Route path="/resetpassword" component={ResetPassword} />
+      <Route path="/resetrequest" component={ResetPassword} />
       <Route path="/newrecipe" component={RecipeForm} />
       <Route path="/" exact component={Home} />
       <Redirect to="/" />

@@ -73,7 +73,7 @@ const Auth = ({
             Nowy użytkownik?
           </Button>
           <Button
-            href="/resetpassword"
+            href="/resetrequest"
             variant="outline-info"
             disabled={loading}
           >
