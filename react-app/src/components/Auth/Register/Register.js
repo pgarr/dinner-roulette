@@ -10,8 +10,9 @@ import {
   validatePassword2,
 } from "./validators";
 import axios from "../../../shared/axios-api";
+import { inputTouchedChangedHandler as inputChangedHandler } from "../../../shared/handlers";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
-import RegisterFormField from "./RegisterFormField";
+import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 
 const Register = ({ isAuthenticated, authRedirectPath }) => {
@@ -41,10 +42,6 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
   });
 
   const validationDelay = 1000;
-
-  const inputChangedHandler = (event, setValue) => {
-    setValue({ value: event.target.value, touched: true });
-  };
 
   // validate username and email
   useDebouncedEffect(
@@ -122,17 +119,23 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
       });
       setValidated(true);
 
-      if (response.status === 201) {
-        setRegistered(true);
-      } else {
-        console.log(response); // TODO
+      switch (response.status) {
+        case 201:
+          setRegistered(true);
+          break;
+        default:
+          console.log(response); // TODO
+          break;
       }
     } catch (error) {
-      if (error.response.status === 422) {
-        const result = buildValidationObject(error.response.data);
-        setValidationResults(result);
-      } else {
-        console.log(error.response); // TODO
+      switch (error.response.status422) {
+        case 422:
+          const result = buildValidationObject(error.response.data);
+          setValidationResults(result);
+          break;
+        default:
+          console.log(error.response); // TODO
+          break;
       }
     }
   };
@@ -159,7 +162,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
 
       <h1>Zarejestruj się</h1>
       <Form noValidate validated={validated} onSubmit={submitHandler}>
-        <RegisterFormField
+        <InlineFormField
           controlId="formUsername"
           labelText="Nazwa użytkownika"
           type="text"
@@ -171,7 +174,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           isValid={username.touched && usernameValidation.valid}
           isInvalid={username.touched && !usernameValidation.valid}
         />
-        <RegisterFormField
+        <InlineFormField
           controlId="formEmail"
           labelText="E-mail"
           type="email"
@@ -183,7 +186,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           isValid={email.touched && emailValidation.valid}
           isInvalid={email.touched && !emailValidation.valid}
         />
-        <RegisterFormField
+        <InlineFormField
           controlId="formPassword"
           labelText="Hasło"
           type="password"
@@ -195,7 +198,7 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           isValid={password.touched && passwordValidation.valid}
           isInvalid={password.touched && !passwordValidation.valid}
         />
-        <RegisterFormField
+        <InlineFormField
           controlId="formPassword2"
           labelText="Powtórz hasło"
           type="password"
