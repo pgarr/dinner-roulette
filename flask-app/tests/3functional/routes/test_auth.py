@@ -294,13 +294,13 @@ def test_reset_password_empty_password(test_client, users_set):
     assert not json.get('password').get('checks').get('min_length')
 
 
-def test_reset_password_200(test_client, users_set):
+def test_reset_password_202(test_client, users_set):
     user1, user2, admin = users_set
 
     token = user1.get_reset_password_token()
     response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
-    assert response.status_code == 200
+    assert response.status_code == 202
 
 
 def test_reset_password_invalid_token(test_client, users_set):
@@ -311,7 +311,19 @@ def test_reset_password_invalid_token(test_client, users_set):
     token = not_user.get_reset_password_token()
     response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
-    assert response.status_code == 422
+    assert response.status_code == 401
 
     json = response.get_json()
     assert json.get('password') is None  # shouldnt validate password if token is invalid
+
+
+def test_reset_password_expired_token(test_client, users_set):
+    user1, user2, admin = users_set
+
+    token = user1.get_reset_password_token(expires_in=-1000)
+    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+
+    assert response.status_code == 401
+
+    json = response.get_json()
+    assert json.get('password') is None

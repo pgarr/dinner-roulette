@@ -9,20 +9,20 @@ import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 
 const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
-  const [done, setDone] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
+  const [error, setError] = useState(null); // TODO: reducer
+  const [done, setDone] = useState(false); // TODO: reducer
+  const [confirmed, setConfirmed] = useState(false); // TODO: reducer
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
     // TODO: loading state (disabled form)
     try {
-      const response = await axios.post("/auth/reset_password_request", {
+      const response = await axios.post("/auth/reset_password", {
         email,
       });
-
       if (response.status === 202) {
+        setConfirmed(false);
         setDone(true);
       } else {
         console.log(response); // TODO
@@ -39,8 +39,6 @@ const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
   let redirect = null; // TODO: DRY problem, could be HOC
   if (isAuthenticated) {
     redirect = <Redirect to={authRedirectPath} />;
-  } else if (confirmed) {
-    redirect = <Redirect to={"/login"} />;
   }
 
   return (
@@ -51,6 +49,7 @@ const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
         show={done && !confirmed}
         onHide={() => {
           setConfirmed(true);
+          setDone(false);
         }}
         title="Sukces"
         text="Sprawdź swoją skrzynkę e-mail, aby zresetować hasło."
@@ -76,7 +75,7 @@ const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
           </Col>
         </Form.Group>
         <Button variant="secondary" type="submit">
-          Resetuj hasło
+          {confirmed || done ? "Wyślij ponownie" : "Resetuj hasło"}
         </Button>
       </Form>
     </React.Fragment>

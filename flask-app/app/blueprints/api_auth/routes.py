@@ -115,7 +115,7 @@ def reset_password_request():
 
     if user:
         send_password_reset_email(user)
-        return jsonify({'message': 'Done!'}), 200
+        return jsonify({'message': 'Done!'}), 202
     else:
         return error_response(422, "Email address not registered")
 
@@ -130,7 +130,7 @@ def reset_password(token):
 
     user = verify_reset_password_token(token)
     if not user:
-        return error_response(422, 'Invalid token')
+        return error_response(401, 'Invalid token')
 
     is_password_valid, password_check_dict = validate_password(password)
 

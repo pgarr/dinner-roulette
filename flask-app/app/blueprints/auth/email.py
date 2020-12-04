@@ -5,7 +5,7 @@ from app.utils.email import send_email
 
 
 def send_password_reset_email(user):
-    token = user.get_reset_password_token()
+    token = user.get_reset_password_token(current_app.config['RESET_PASSWORD_TOKEN_EXPIRES_IN'])
     reset_url = current_app.config['FRONT_URL'] + '/reset_password/' + token
     send_email(_('[Dinner-roulette] Reset Your Password'),
                sender=current_app.config['ADMINS'][0],

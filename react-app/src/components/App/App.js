@@ -24,6 +24,7 @@ import RecipeForm from "../RecipeForm/RecipeForm";
 import RecipeDetails from "../Recipes/RecipesDetails/RecipeDetails";
 import WaitingRecipeDetails from "../Recipes/RecipesDetails/WaitingRecipeDetails";
 import ResetPassword from "../Auth/ResetPassword/ResetPassword";
+import SetPassword from "../Auth/ResetPassword/SetPassword";
 
 const App = ({ onTryAutoSingup }) => {
   library.add(faClock, faPlus, farFaStar, fasFaStar, faUser);
@@ -33,7 +34,6 @@ const App = ({ onTryAutoSingup }) => {
   }, [onTryAutoSingup]);
 
   let routes = (
-    // TODO: move routes to separate file
     <Switch>
       <Route path="/recipes" exact component={RecipesList} />
       <Route path="/myrecipes" exact component={MyRecipesList} />
@@ -45,6 +45,7 @@ const App = ({ onTryAutoSingup }) => {
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
       <Route path="/resetrequest" component={ResetPassword} />
+      <Route path="/reset_password/:token" component={SetPassword} />
       <Route path="/newrecipe" component={RecipeForm} />
       <Route path="/" exact component={Home} />
       <Redirect to="/" />
