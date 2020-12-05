@@ -2,7 +2,7 @@ import React from "react";
 // import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
+import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import RecipeCard from "./RecipeCard/RecipeCard";
 
 const RecipeDetails = ({ match }) => {

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import * as actions from "../../store/actions/index";
 import useFetchApi from "../../shared/customHooks/useFetchApi";
-import LoadingContainer from "../UI/LoadingContainer/LoadingContainer";
+import LoadingContainer from "../HOC/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "../Recipes/RecipesList/RecipesTable/RecipesTable";
 import SearchBadges from "./SearchBadges/SearchBadges";

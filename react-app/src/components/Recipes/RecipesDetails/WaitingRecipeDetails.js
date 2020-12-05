@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
 import RecipeCard from "./RecipeCard/RecipeCard";
 import RefusedBadge from "../../UI/RefusedBadge/RefusedBadge";
-import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
+import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import AuthRequired from "../../HOC/AuthRequired";
 
 const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {

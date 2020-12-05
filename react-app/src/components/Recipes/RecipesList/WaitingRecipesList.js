@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
+import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
