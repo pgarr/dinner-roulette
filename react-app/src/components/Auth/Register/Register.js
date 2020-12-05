@@ -16,26 +16,26 @@ import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 
 const Register = ({ isAuthenticated, authRedirectPath }) => {
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(false); // TODO useReducer
   const [registered, setRegistered] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
-  const [username, setUsername] = useState({ value: "", touched: false });
+  const [username, setUsername] = useState({ value: "", touched: false }); // TODO useReducer
   const [usernameValidation, setUsernameValidation] = useState({
     valid: false,
     errors: [],
   });
-  const [email, setEmail] = useState({ value: "", touched: false });
+  const [email, setEmail] = useState({ value: "", touched: false }); // TODO useReducer
   const [emailValidation, setEmailValidation] = useState({
     valid: false,
     errors: [],
   });
-  const [password, setPassword] = useState({ value: "", touched: false });
+  const [password, setPassword] = useState({ value: "", touched: false }); // TODO useReducer
   const [passwordValidation, setPasswordValidation] = useState({
     valid: false,
     errors: [],
   });
-  const [password2, setPassword2] = useState({ value: "", touched: false });
+  const [password2, setPassword2] = useState({ value: "", touched: false }); // TODO useReducer
   const [password2Validation, setPassword2Validation] = useState({
     valid: false,
     errors: [],

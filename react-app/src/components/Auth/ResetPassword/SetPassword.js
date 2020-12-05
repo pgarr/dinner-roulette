@@ -16,17 +16,17 @@ import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 
 const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(false); // TODO useReducer
   const [changed, setChanged] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [error401, setError401] = useState(false);
 
-  const [password, setPassword] = useState({ value: "", touched: false });
+  const [password, setPassword] = useState({ value: "", touched: false }); // TODO useReducer
   const [passwordValidation, setPasswordValidation] = useState({
     valid: false,
     errors: [],
   });
-  const [password2, setPassword2] = useState({ value: "", touched: false });
+  const [password2, setPassword2] = useState({ value: "", touched: false }); // TODO useReducer
   const [password2Validation, setPassword2Validation] = useState({
     valid: false,
     errors: [],

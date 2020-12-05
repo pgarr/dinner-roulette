@@ -2,7 +2,7 @@ import { delay, put, call } from "redux-saga/effects";
 
 import axios from "../../shared/axios-api";
 import * as actions from "../actions/index";
-import jwt from "jsonwebtoken";
+import getPayload from "../../shared/tokenDecode";
 
 export function* logoutSaga(action) {
   yield call([localStorage, "removeItem"], "access_token");
@@ -13,7 +13,7 @@ export function* logoutSaga(action) {
 export function* checkAuthTimeoutSaga(action) {
   yield delay(action.expirationTime);
   if (action.refresh_token) {
-    yield put(actions.refresh(action.refresh_token)); // TODO: check expiration date
+    yield put(actions.refresh(action.refresh_token));
   } else {
     yield put(actions.logout());
   }
@@ -37,7 +37,7 @@ export function* authUserSaga(action) {
         response.data.refresh_token
       )
     );
-    const payload = jwt.decode(response.data.access_token);
+    const payload = getPayload(response.data.access_token);
     const expirationTime = yield payload.exp * 1000 - new Date().getTime();
     yield put(
       actions.checkAuthTimeout(expirationTime, response.data.refresh_token)
@@ -54,11 +54,11 @@ export function* authCheckStateSaga(action) {
   if (!access_token) {
     yield put(actions.logout());
   } else {
-    const payload = jwt.decode(access_token);
+    const payload = getPayload(access_token);
     const expirationDate = yield new Date(payload.exp * 1000);
     if (expirationDate <= new Date()) {
       if (refresh_token) {
-        yield put(actions.refresh(refresh_token)); // TODO: check expiration date
+        yield put(actions.refresh(refresh_token));
       } else {
         yield put(actions.logout());
       }
