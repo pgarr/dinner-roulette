@@ -1,19 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import * as actions from "../../../store/actions/index";
 import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
-const WaitingRecipesList = ({
-  isAuthenticated,
-  onSetAuthRedirectPath,
-  authToken,
-  history,
-}) => {
+const WaitingRecipesList = ({ isAuthenticated, authToken, history }) => {
   const [{ data, isLoading, isError }, doFetch] = useFetchApi(
     {
       url: "/waiting",
@@ -42,15 +35,8 @@ const WaitingRecipesList = ({
     });
   };
 
-  let redirect = null;
-  if (!isAuthenticated) {
-    redirect = <Redirect to={"/login"} />;
-    onSetAuthRedirectPath("/pendingrecipes");
-  }
-
   return (
     <React.Fragment>
-      {redirect}
       <LoadingContainer isLoading={isLoading}>
         <RecipesTable
           recipes={data.pending_recipes}
@@ -74,11 +60,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSetAuthRedirectPath: (path) =>
-      dispatch(actions.setAuthRedirectPath(path)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(WaitingRecipesList);
+export default connect(mapStateToProps)(WaitingRecipesList);

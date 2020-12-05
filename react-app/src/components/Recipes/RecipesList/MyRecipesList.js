@@ -1,19 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import * as actions from "../../../store/actions/index";
+import AuthRequired from "../../HOC/AuthRequired";
 import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
-const MyRecipesList = ({
-  isAuthenticated,
-  onSetAuthRedirectPath,
-  authToken,
-  history,
-}) => {
+const MyRecipesList = ({ isAuthenticated, authToken, history }) => {
   const [{ data, isLoading, isError }, doFetch] = useFetchApi(
     {
       url: "/recipes/my",
@@ -42,15 +36,8 @@ const MyRecipesList = ({
     });
   };
 
-  let redirect = null;
-  if (!isAuthenticated) {
-    redirect = <Redirect to={"/login"} />;
-    onSetAuthRedirectPath("/myrecipes");
-  }
-
   return (
-    <React.Fragment>
-      {redirect}
+    <AuthRequired>
       <LoadingContainer isLoading={isLoading}>
         <RecipesTable
           recipes={data.recipes}
@@ -62,7 +49,7 @@ const MyRecipesList = ({
           onChangePage={pageChangedHandler}
         />
       </LoadingContainer>
-    </React.Fragment>
+    </AuthRequired>
   );
 };
 
@@ -73,11 +60,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSetAuthRedirectPath: (path) =>
-      dispatch(actions.setAuthRedirectPath(path)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyRecipesList);
+export default connect(mapStateToProps)(MyRecipesList);

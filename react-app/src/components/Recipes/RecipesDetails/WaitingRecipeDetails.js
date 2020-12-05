@@ -1,19 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import * as actions from "../../../store/actions/index";
 import RecipeCard from "./RecipeCard/RecipeCard";
 import RefusedBadge from "../../UI/RefusedBadge/RefusedBadge";
 import LoadingContainer from "../../UI/LoadingContainer/LoadingContainer";
+import AuthRequired from "../../HOC/AuthRequired";
 
-const WaitingRecipeDetails = ({
-  isAuthenticated,
-  onSetAuthRedirectPath,
-  authToken,
-  match,
-}) => {
+const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
   const [{ data, isLoading, isError }] = useFetchApi(
     {
       url: "/waiting/" + match.params.id,
@@ -36,20 +30,13 @@ const WaitingRecipeDetails = ({
     }
   );
 
-  let redirect = null;
-  if (!isAuthenticated) {
-    redirect = <Redirect to={"/login"} />;
-    onSetAuthRedirectPath("/waiting/" + match.params.id);
-  }
-
   return (
-    <React.Fragment>
-      {redirect}
+    <AuthRequired>
       <LoadingContainer isLoading={isLoading}>
         <RefusedBadge refused={data.pending_recipe.refused} />
         <RecipeCard recipe={data.pending_recipe} />
       </LoadingContainer>
-    </React.Fragment>
+    </AuthRequired>
   );
 };
 
@@ -60,14 +47,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSetAuthRedirectPath: (path) =>
-      dispatch(actions.setAuthRedirectPath(path)),
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WaitingRecipeDetails);
+export default connect(mapStateToProps)(WaitingRecipeDetails);

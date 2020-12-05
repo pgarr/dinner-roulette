@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from "uuid";
 import styles from "./RecipeForm.module.css";
 import axios from "../../shared/axios-api";
 import { inputChangedHandler } from "../../shared/handlers";
-import * as actions from "../../store/actions/index";
 import IngredientsListForm from "./IngredientsListForm/IngredientsListForm";
+import AuthRequired from "../HOC/AuthRequired";
 
 const newIngredient = () => ({ id: uuidv4(), title: "", amount: "", unit: "" });
 
@@ -32,7 +32,7 @@ const ingredientReducer = (state, action) => {
   }
 };
 
-const RecipeForm = ({ isAuthenticated, onSetAuthRedirectPath, authToken }) => {
+const RecipeForm = ({ authToken }) => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(0);
   const [difficulty, setDifficulty] = useState(0);
@@ -89,16 +89,13 @@ const RecipeForm = ({ isAuthenticated, onSetAuthRedirectPath, authToken }) => {
   };
 
   let redirect = null;
-  if (!isAuthenticated) {
-    redirect = <Redirect to={"/login"} />;
-    onSetAuthRedirectPath("/newrecipe");
-  } else if (saved) {
+  if (saved) {
     redirect = <Redirect to={"/"} />;
     //TODO: redirect to view of waiting recipe
   }
 
   return (
-    <React.Fragment>
+    <AuthRequired>
       {redirect}
       <h1>Utwórz nowy przepis</h1>
       <Form onSubmit={submitHandler}>
@@ -176,22 +173,14 @@ const RecipeForm = ({ isAuthenticated, onSetAuthRedirectPath, authToken }) => {
           Zapisz
         </Button>
       </Form>
-    </React.Fragment>
+    </AuthRequired>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.access_token !== null,
     authToken: state.auth.access_token,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSetAuthRedirectPath: (path) =>
-      dispatch(actions.setAuthRedirectPath(path)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeForm);
+export default connect(mapStateToProps)(RecipeForm);
