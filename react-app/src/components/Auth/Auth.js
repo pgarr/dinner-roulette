@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
 import { inputChangedHandler } from "../../shared/handlers";
 import styles from "./Auth.module.css";
 import * as actions from "../../store/actions/index";
+import AuthForbidden from "../HOC/AuthForbidden";
 
-const Auth = ({
-  loading,
-  error,
-  isAuthenticated,
-  authRedirectPath,
-  onAuth,
-}) => {
+const Auth = ({ loading, error, onAuth }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,14 +16,8 @@ const Auth = ({
     onAuth(username, password);
   };
 
-  let authRedirect = null;
-  if (isAuthenticated) {
-    authRedirect = <Redirect to={authRedirectPath} />;
-  }
-
   return (
-    <React.Fragment>
-      {authRedirect}
+    <AuthForbidden>
       <h1>Zaloguj się</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group as={Row} controlId="formUsername">
@@ -81,7 +69,7 @@ const Auth = ({
           </Button>
         </div>
       </Form>
-    </React.Fragment>
+    </AuthForbidden>
   );
 };
 
@@ -89,8 +77,6 @@ const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
     error: state.auth.error,
-    isAuthenticated: state.auth.access_token !== null,
-    authRedirectPath: state.auth.authRedirectPath,
   };
 };
 

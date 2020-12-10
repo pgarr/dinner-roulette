@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
@@ -15,8 +14,9 @@ import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import { httpError } from "../../../shared/errors";
+import AuthForbidden from "../../HOC/AuthForbidden";
 
-const Register = ({ isAuthenticated, authRedirectPath }) => {
+const Register = () => {
   const [validated, setValidated] = useState(false); // TODO useReducer
   const [registered, setRegistered] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -141,14 +141,12 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
   };
 
   let redirect = null;
-  if (isAuthenticated) {
-    redirect = <Redirect to={authRedirectPath} />;
-  } else if (confirmed) {
+  if (confirmed) {
     redirect = <Redirect to={"/login"} />;
   }
 
   return (
-    <React.Fragment>
+    <AuthForbidden>
       {redirect}
 
       <ModalWithBackdrop
@@ -223,15 +221,8 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           Zarejestruj się
         </Button>
       </Form>
-    </React.Fragment>
+    </AuthForbidden>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.access_token !== null,
-    authRedirectPath: state.auth.authRedirectPath,
-  };
-};
-
-export default connect(mapStateToProps, null)(Register);
+export default Register;

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
@@ -15,8 +14,9 @@ import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import { httpError } from "../../../shared/errors";
+import AuthForbidden from "../../HOC/AuthForbidden";
 
-const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
+const SetPassword = ({ match }) => {
   const [validated, setValidated] = useState(false); // TODO useReducer
   const [changed, setChanged] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -97,14 +97,12 @@ const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
   };
 
   let redirect = null;
-  if (isAuthenticated) {
-    redirect = <Redirect to={authRedirectPath} />;
-  } else if (confirmed) {
+  if (confirmed) {
     redirect = <Redirect to={"/login"} />;
   }
 
   return (
-    <React.Fragment>
+    <AuthForbidden>
       {redirect}
 
       <ModalWithBackdrop
@@ -159,15 +157,8 @@ const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
           </Button>
         </Form>
       )}
-    </React.Fragment>
+    </AuthForbidden>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.access_token !== null,
-    authRedirectPath: state.auth.authRedirectPath,
-  };
-};
-
-export default connect(mapStateToProps, null)(SetPassword);
+export default SetPassword;

@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
 import { inputChangedHandler } from "../../../shared/handlers";
 import axios from "../../../shared/axios-api";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import { httpError } from "../../../shared/errors";
+import AuthForbidden from "../../HOC/AuthForbidden";
 
-const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
+const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null); // TODO: reducer
   const [done, setDone] = useState(false); // TODO: reducer
@@ -42,15 +41,8 @@ const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
     }
   };
 
-  let redirect = null; // TODO: DRY problem, could be HOC
-  if (isAuthenticated) {
-    redirect = <Redirect to={authRedirectPath} />;
-  }
-
   return (
-    <React.Fragment>
-      {redirect}
-
+    <AuthForbidden>
       <ModalWithBackdrop
         show={done && !confirmed}
         onHide={() => {
@@ -84,15 +76,8 @@ const ResetPassword = ({ isAuthenticated, authRedirectPath }) => {
           {confirmed || done ? "Wyślij ponownie" : "Resetuj hasło"}
         </Button>
       </Form>
-    </React.Fragment>
+    </AuthForbidden>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.access_token !== null,
-    authRedirectPath: state.auth.authRedirectPath,
-  };
-};
-
-export default connect(mapStateToProps, null)(ResetPassword);
+export default ResetPassword;
