@@ -14,6 +14,7 @@ import { inputTouchedChangedHandler as inputChangedHandler } from "../../../shar
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
+import { httpError } from "../../../shared/errors";
 
 const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
   const [validated, setValidated] = useState(false); // TODO useReducer
@@ -76,7 +77,6 @@ const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
           setChanged(true);
           break;
         default:
-          console.log(response); // TODO
           break;
       }
     } catch (error) {
@@ -90,7 +90,7 @@ const SetPassword = ({ authRedirectPath, isAuthenticated, match }) => {
           setError401(true);
           break;
         default:
-          console.log(error.response); // TODO
+          httpError(error.response.status, error.response);
           break;
       }
     }

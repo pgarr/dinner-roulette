@@ -6,7 +6,7 @@ import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
 const RecipesList = ({ history }) => {
-  const [{ data, isLoading, isError }, doFetch] = useFetchApi(
+  const [{ data, isLoading }, doFetch] = useFetchApi(
     { url: "/recipes" },
     {
       recipes: [],

@@ -7,7 +7,7 @@ import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
 
 const WaitingRecipesList = ({ isAuthenticated, authToken, history }) => {
-  const [{ data, isLoading, isError }, doFetch] = useFetchApi(
+  const [{ data, isLoading }, doFetch] = useFetchApi(
     {
       url: "/waiting",
       headers: {

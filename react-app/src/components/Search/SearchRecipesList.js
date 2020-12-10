@@ -9,7 +9,7 @@ import RecipesTable from "../Recipes/RecipesList/RecipesTable/RecipesTable";
 import SearchBadges from "./SearchBadges/SearchBadges";
 
 const SearchRecipesList = ({ history, q, onSetSearchFunction }) => {
-  const [{ data, isLoading, isError }, doFetch] = useFetchApi(
+  const [{ data, isLoading }, doFetch] = useFetchApi(
     { url: "/search", params: { q } },
     {
       recipes: [],

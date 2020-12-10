@@ -8,7 +8,7 @@ import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import AuthRequired from "../../HOC/AuthRequired";
 
 const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
-  const [{ data, isLoading, isError }] = useFetchApi(
+  const [{ data, isLoading }] = useFetchApi(
     {
       url: "/waiting/" + match.params.id,
       headers: {

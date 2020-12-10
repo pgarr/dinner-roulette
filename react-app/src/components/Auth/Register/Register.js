@@ -14,6 +14,7 @@ import { inputTouchedChangedHandler as inputChangedHandler } from "../../../shar
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
+import { httpError } from "../../../shared/errors";
 
 const Register = ({ isAuthenticated, authRedirectPath }) => {
   const [validated, setValidated] = useState(false); // TODO useReducer
@@ -124,17 +125,16 @@ const Register = ({ isAuthenticated, authRedirectPath }) => {
           setRegistered(true);
           break;
         default:
-          console.log(response); // TODO
           break;
       }
     } catch (error) {
-      switch (error.response.status422) {
+      switch (error.response.status) {
         case 422:
           const result = buildValidationObject(error.response.data);
           setValidationResults(result);
           break;
         default:
-          console.log(error.response); // TODO
+          httpError(error.response.status, error.response);
           break;
       }
     }

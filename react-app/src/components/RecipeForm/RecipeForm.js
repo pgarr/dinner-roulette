@@ -10,6 +10,7 @@ import axios from "../../shared/axios-api";
 import { inputChangedHandler } from "../../shared/handlers";
 import IngredientsListForm from "./IngredientsListForm/IngredientsListForm";
 import AuthRequired from "../HOC/AuthRequired";
+import { httpError } from "../../shared/errors";
 
 const newIngredient = () => ({ id: uuidv4(), title: "", amount: "", unit: "" });
 
@@ -76,15 +77,16 @@ const RecipeForm = ({ authToken }) => {
           },
         }
       );
-
-      if (response.status === 201) {
-        setSaved(true);
-        console.log(response); // TODO
-      } else {
-        console.log(response); // TODO
+      switch (response.status) {
+        case 201:
+          setSaved(true);
+          console.log(response); // TODO
+          break;
+        default:
+          break;
       }
     } catch (error) {
-      console.log(error.response); // TODO
+      httpError(error.response.status, error.response); // TODO
     }
   };
 

@@ -1,3 +1,4 @@
+import { httpError } from "../../shared/errors";
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
@@ -26,7 +27,7 @@ const reducer = (state = initialState, action) => {
       if (res.status === 401) {
         error = "Niepoprawna nazwa użytkownika lub hasło";
       } else {
-        error = res.data.message;
+        httpError(res.status, res);
       }
       return { ...state, error, loading: false };
     case actionTypes.AUTH_LOGOUT:

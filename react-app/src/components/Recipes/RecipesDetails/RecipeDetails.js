@@ -6,7 +6,7 @@ import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import RecipeCard from "./RecipeCard/RecipeCard";
 
 const RecipeDetails = ({ match }) => {
-  const [{ data, isLoading, isError }] = useFetchApi(
+  const [{ data, isLoading }] = useFetchApi(
     { url: "/recipe/" + match.params.id },
     {
       recipe: {

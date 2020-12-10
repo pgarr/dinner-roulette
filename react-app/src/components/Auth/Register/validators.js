@@ -1,5 +1,7 @@
 import axios from "../../../shared/axios-api";
 
+import { httpError } from "../../../shared/errors";
+
 const usernameMessages = {
   unique: "Nazwa jest już zajęta",
   min_length: "Nazwa zbyt krótka",
@@ -29,7 +31,7 @@ export const validateOnBackend = async (username, email) => {
 
     return buildValidationObject(response.data);
   } catch (error) {
-    console.log(error); // TODO
+    httpError(error.response.status, error.response);
   }
 };
 
