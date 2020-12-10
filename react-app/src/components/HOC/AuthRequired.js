@@ -13,7 +13,6 @@ const AuthRequired = ({
   let redirect = null;
   if (!isAuthenticated) {
     redirect = <Redirect to={"/login"} />;
-    console.log(location.pathname);
     onSetAuthRedirectPath(location.pathname);
   }
 
