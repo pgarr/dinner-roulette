@@ -10,8 +10,8 @@ import AuthForbidden from "../../HOC/AuthForbidden";
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null); // TODO: reducer
-  const [done, setDone] = useState(false); // TODO: reducer
-  const [confirmed, setConfirmed] = useState(false); // TODO: reducer
+  const [done, setDone] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const submitHandler = async (event) => {
     event.preventDefault();

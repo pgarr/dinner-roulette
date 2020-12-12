@@ -9,12 +9,13 @@ import {
 } from "../Register/validators";
 import { isExpired } from "../../../shared/tokenDecode";
 import axios from "../../../shared/axios-api";
-import { inputTouchedChangedHandler as inputChangedHandler } from "../../../shared/handlers";
+import { inputChangedDispatch } from "../../../shared/handlers";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import { httpError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
+import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
 const SetPassword = ({ match }) => {
   const [validated, setValidated] = useState(false); // TODO useReducer
@@ -22,16 +23,8 @@ const SetPassword = ({ match }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [error401, setError401] = useState(false);
 
-  const [password, setPassword] = useState({ value: "", touched: false }); // TODO useReducer
-  const [passwordValidation, setPasswordValidation] = useState({
-    valid: false,
-    errors: [],
-  });
-  const [password2, setPassword2] = useState({ value: "", touched: false }); // TODO useReducer
-  const [password2Validation, setPassword2Validation] = useState({
-    valid: false,
-    errors: [],
-  });
+  const [password, dispatchPassword] = useValueValidation("");
+  const [password2, dispatchPassword2] = useValueValidation("");
 
   const validationDelay = 1000;
 
@@ -40,11 +33,11 @@ const SetPassword = ({ match }) => {
     () => {
       if (password.touched) {
         const result = validatePassword(password.value);
-        setPasswordValidation({ ...passwordValidation, ...result });
+        dispatchPassword({ type: "SET_VALIDATION", ...result });
       }
     },
     validationDelay,
-    [password]
+    [password.value]
   );
 
   // validate password2
@@ -52,11 +45,11 @@ const SetPassword = ({ match }) => {
     () => {
       if (password2.touched) {
         const result = validatePassword2(password.value, password2.value);
-        setPassword2Validation({ ...password2Validation, ...result });
+        dispatchPassword2({ type: "SET_VALIDATION", ...result });
       }
     },
     validationDelay,
-    [password2]
+    [password.value, password2.value]
   );
 
   const submitHandler = async (event) => {
@@ -84,7 +77,7 @@ const SetPassword = ({ match }) => {
       switch (error.response.status) {
         case 422:
           const result = buildValidationObject(error.response.data);
-          setPasswordValidation({ ...passwordValidation, ...result.password });
+          dispatchPassword({ type: "SET_VALIDATION", ...result.password });
           break;
         case 401:
           setError401(true);
@@ -128,30 +121,30 @@ const SetPassword = ({ match }) => {
             controlId="formPassword"
             labelText="Hasło"
             type="password"
-            errors={passwordValidation.errors}
+            errors={password.errors}
             value={password.value}
             onChangeHandler={(event) => {
-              inputChangedHandler(event, setPassword);
+              inputChangedDispatch(event, dispatchPassword);
             }}
-            isValid={password.touched && passwordValidation.valid}
-            isInvalid={password.touched && !passwordValidation.valid}
+            isValid={password.touched && password.valid}
+            isInvalid={password.touched && !password.valid}
           />
           <InlineFormField
             controlId="formPassword2"
             labelText="Powtórz hasło"
             type="password"
-            errors={password2Validation.errors}
+            errors={password2.errors}
             value={password2.value}
             onChangeHandler={(event) => {
-              inputChangedHandler(event, setPassword2);
+              inputChangedDispatch(event, dispatchPassword2);
             }}
-            isValid={password2.touched && password2Validation.valid}
-            isInvalid={password2.touched && !password2Validation.valid}
+            isValid={password2.touched && password2.valid}
+            isInvalid={password2.touched && !password2.valid}
           />
           <Button
             variant="secondary"
             type="submit"
-            disabled={!passwordValidation.valid || !password2Validation.valid}
+            disabled={!password.valid || !password2.valid}
           >
             Zmień hasło
           </Button>
