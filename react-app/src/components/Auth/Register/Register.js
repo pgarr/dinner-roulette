@@ -9,38 +9,23 @@ import {
   validatePassword2,
 } from "./validators";
 import axios from "../../../shared/axios-api";
-import { inputTouchedChangedHandler as inputChangedHandler } from "../../../shared/handlers";
+import { inputChangedDispatch } from "../../../shared/handlers";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import { httpError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
+import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
 const Register = () => {
   const [validated, setValidated] = useState(false); // TODO useReducer
   const [registered, setRegistered] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
-  const [username, setUsername] = useState({ value: "", touched: false }); // TODO useReducer
-  const [usernameValidation, setUsernameValidation] = useState({
-    valid: false,
-    errors: [],
-  });
-  const [email, setEmail] = useState({ value: "", touched: false }); // TODO useReducer
-  const [emailValidation, setEmailValidation] = useState({
-    valid: false,
-    errors: [],
-  });
-  const [password, setPassword] = useState({ value: "", touched: false }); // TODO useReducer
-  const [passwordValidation, setPasswordValidation] = useState({
-    valid: false,
-    errors: [],
-  });
-  const [password2, setPassword2] = useState({ value: "", touched: false }); // TODO useReducer
-  const [password2Validation, setPassword2Validation] = useState({
-    valid: false,
-    errors: [],
-  });
+  const [username, dispatchUsername] = useValueValidation("");
+  const [email, dispatchEmail] = useValueValidation("");
+  const [password, dispatchPassword] = useValueValidation("");
+  const [password2, dispatchPassword2] = useValueValidation("");
 
   const validationDelay = 1000;
 
@@ -63,7 +48,7 @@ const Register = () => {
       }
     },
     validationDelay,
-    [username, email]
+    [username.value, email.value]
   );
 
   // validate password
@@ -71,11 +56,11 @@ const Register = () => {
     () => {
       if (password.touched) {
         const result = validatePassword(password.value);
-        setPasswordValidation({ ...passwordValidation, ...result });
+        dispatchPassword({ type: "SET_VALIDATION", ...result });
       }
     },
     validationDelay,
-    [password]
+    [password.value]
   );
 
   // validate password2
@@ -83,24 +68,24 @@ const Register = () => {
     () => {
       if (password2.touched) {
         const result = validatePassword2(password.value, password2.value);
-        setPassword2Validation({ ...password2Validation, ...result });
+        dispatchPassword2({ type: "SET_VALIDATION", ...result });
       }
     },
     validationDelay,
-    [password2]
+    [password.value, password2.value]
   );
 
   const setValidationResults = (result) => {
     for (const key in result) {
       switch (key) {
         case "username":
-          setUsernameValidation({ ...usernameValidation, ...result[key] });
+          dispatchUsername({ type: "SET_VALIDATION", ...result[key] });
           break;
         case "email":
-          setEmailValidation({ ...emailValidation, ...result[key] });
+          dispatchEmail({ type: "SET_VALIDATION", ...result[key] });
           break;
         case "password":
-          setPasswordValidation({ ...passwordValidation, ...result[key] });
+          dispatchPassword({ type: "SET_VALIDATION", ...result[key] });
           break;
         default:
           break;
@@ -164,58 +149,58 @@ const Register = () => {
           controlId="formUsername"
           labelText="Nazwa użytkownika"
           type="text"
-          errors={usernameValidation.errors}
+          errors={username.errors}
           value={username.value}
           onChangeHandler={(event) => {
-            inputChangedHandler(event, setUsername);
+            inputChangedDispatch(event, dispatchUsername);
           }}
-          isValid={username.touched && usernameValidation.valid}
-          isInvalid={username.touched && !usernameValidation.valid}
+          isValid={username.touched && username.valid}
+          isInvalid={username.touched && !username.valid}
         />
         <InlineFormField
           controlId="formEmail"
           labelText="E-mail"
           type="email"
-          errors={emailValidation.errors}
+          errors={email.errors}
           value={email.value}
           onChangeHandler={(event) => {
-            inputChangedHandler(event, setEmail);
+            inputChangedDispatch(event, dispatchEmail);
           }}
-          isValid={email.touched && emailValidation.valid}
-          isInvalid={email.touched && !emailValidation.valid}
+          isValid={email.touched && email.valid}
+          isInvalid={email.touched && !email.valid}
         />
         <InlineFormField
           controlId="formPassword"
           labelText="Hasło"
           type="password"
-          errors={passwordValidation.errors}
+          errors={password.errors}
           value={password.value}
           onChangeHandler={(event) => {
-            inputChangedHandler(event, setPassword);
+            inputChangedDispatch(event, dispatchPassword);
           }}
-          isValid={password.touched && passwordValidation.valid}
-          isInvalid={password.touched && !passwordValidation.valid}
+          isValid={password.touched && password.valid}
+          isInvalid={password.touched && !password.valid}
         />
         <InlineFormField
           controlId="formPassword2"
           labelText="Powtórz hasło"
           type="password"
-          errors={password2Validation.errors}
+          errors={password2.errors}
           value={password2.value}
           onChangeHandler={(event) => {
-            inputChangedHandler(event, setPassword2);
+            inputChangedDispatch(event, dispatchPassword2);
           }}
-          isValid={password2.touched && password2Validation.valid}
-          isInvalid={password2.touched && !password2Validation.valid}
+          isValid={password2.touched && password2.valid}
+          isInvalid={password2.touched && !password2.valid}
         />
         <Button
           variant="secondary"
           type="submit"
           disabled={
-            !usernameValidation.valid ||
-            !emailValidation.valid ||
-            !passwordValidation.valid ||
-            !password2Validation.valid
+            !username.valid ||
+            !email.valid ||
+            !password.valid ||
+            !password2.valid
           }
         >
           Zarejestruj się

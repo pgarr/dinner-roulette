@@ -5,3 +5,7 @@ export const inputChangedHandler = (event, setValue) => {
 export const inputTouchedChangedHandler = (event, setValue) => {
   setValue({ value: event.target.value, touched: true });
 };
+
+export const inputChangedDispatch = (event, dispatch) => {
+  dispatch({ type: "SET_VALUE", value: event.target.value });
+};
