@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
-from flask_jwt_extended import create_refresh_token
+from flask_jwt_extended import create_refresh_token, decode_token
 
 from app.models.auth import User
 
@@ -36,6 +36,28 @@ def test_login(test_client, users_set, username, password, code):
     if code == 200:
         assert json.get('access_token')
         assert json.get('refresh_token')
+
+
+def test_login_user_is_not_admin(test_client, users_set):
+    response = test_client.post('/api/auth/login', json={'username': 'test', 'password': 'test'})
+
+    assert response.status_code == 200
+
+    json = response.get_json()
+    payload = decode_token(json['access_token'], allow_expired=True)
+
+    assert not payload['user_claims']['is_admin']
+
+
+def test_login_admin_is_admin(test_client, users_set):
+    response = test_client.post('/api/auth/login', json={'username': 'admin', 'password': 'test'})
+
+    assert response.status_code == 200
+
+    json = response.get_json()
+    payload = decode_token(json['access_token'], allow_expired=True)
+
+    assert payload['user_claims']['is_admin']
 
 
 def test_login_no_password(test_client, users_set):
@@ -122,7 +144,7 @@ def test_refresh_no_token(test_client, users_set):
 
 def test_refresh_correct_token(test_client, users_set):
     user1, user2, admin = users_set
-    refresh_token = create_refresh_token(identity=user1.username)
+    refresh_token = create_refresh_token(identity=user1)
 
     response = test_client.post('/api/auth/refresh', headers={'Authorization': 'Bearer %s' % refresh_token})
     assert response.status_code == 200
@@ -260,7 +282,7 @@ def test_reset_password_request_correct_email(test_client, users_set, mock_reset
 
     response = test_client.post('/api/auth/reset_password', json={'email': user1.email})
 
-    assert response.status_code == 200
+    assert response.status_code == 202
     mock_reset_mail.assert_called_once_with(user1)
 
 
@@ -300,7 +322,7 @@ def test_reset_password_202(test_client, users_set):
     token = user1.get_reset_password_token()
     response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
-    assert response.status_code == 202
+    assert response.status_code == 200
 
 
 def test_reset_password_invalid_token(test_client, users_set):

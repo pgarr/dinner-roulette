@@ -1,12 +1,11 @@
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, jwt_refresh_token_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_refresh_token_required, get_current_user
 
 from app.blueprints.api.errors import bad_request, error_response
 from app.blueprints.api_auth import bp
 from app.blueprints.api_auth.helpers import get_fresh_jwt_token
 from app.blueprints.auth.email import send_password_reset_email
 from app.services.auth import create_user, get_user_by_email, verify_reset_password_token, set_new_password
-
 from app.utils.validators import validate_email, validate_username, validate_password
 
 
@@ -29,9 +28,9 @@ def login():
 @bp.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh():
-    username = get_jwt_identity()
+    user = get_current_user()
     ret = {
-        'access_token': create_access_token(identity=username, fresh=False)
+        'access_token': create_access_token(identity=user, fresh=False)
     }
     return jsonify(ret), 200
 
