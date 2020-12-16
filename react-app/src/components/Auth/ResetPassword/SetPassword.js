@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
@@ -17,11 +17,41 @@ import { axiosError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
 import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
+const setPasswordReducer = (state, action) => {
+  switch (action.type) {
+    case "INIT_REQUEST":
+      return {
+        ...state,
+        validated: false,
+        changed: false,
+        confirmed: false,
+        error401: false,
+        loading: true,
+      };
+    case "REQUEST_SUCCESS":
+      return { ...state, validated: true, changed: true, loading: false };
+    case "REQUEST_FAIL":
+      return { ...state, loading: false };
+    case "ERROR_401":
+      return { ...state, error401: true };
+    case "MODAL_CONFIRMED":
+      return { ...state, confirmed: true };
+    default:
+      return { ...state };
+  }
+};
+
 const SetPassword = ({ match }) => {
-  const [validated, setValidated] = useState(false); // TODO useReducer
-  const [changed, setChanged] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [error401, setError401] = useState(false);
+  const [
+    { validated, changed, confirmed, error401, loading },
+    dispatch,
+  ] = useReducer(setPasswordReducer, {
+    validated: false,
+    changed: false,
+    confirmed: false,
+    error401: false,
+    loading: false,
+  });
 
   const [password, dispatchPassword] = useValueValidation("");
   const [password2, dispatchPassword2] = useValueValidation("");
@@ -54,23 +84,21 @@ const SetPassword = ({ match }) => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-
-    // TODO: loading state (disabled form)
+    dispatch({ type: "INIT_REQUEST" });
     try {
       await axios.post("/auth/reset_password/" + match.params.token, {
         password: password.value,
       });
-      setValidated(true);
-      setChanged(true);
+      dispatch({ type: "REQUEST_SUCCESS" });
     } catch (error) {
-      setValidated(false);
       if (isErrorStatus(error, 422)) {
         const result = buildValidationObject(error.response.data);
         dispatchPassword({ type: "SET_VALIDATION", ...result.password });
       } else if (isErrorStatus(error, 401)) {
-        setError401(true);
+        dispatch("ERROR_401");
       } else {
         axiosError(error);
+        dispatch({ type: "REQUEST_FAIL" });
       }
     }
   };
@@ -87,7 +115,7 @@ const SetPassword = ({ match }) => {
       <ModalWithBackdrop
         show={changed && !confirmed}
         onHide={() => {
-          setConfirmed(true);
+          dispatch({ type: "MODAL_CONFIRMED" });
         }}
         title="Sukces!"
         text="Hasło zostało zmienione. Zaloguj się za pomocą podanych danych."
@@ -114,6 +142,7 @@ const SetPassword = ({ match }) => {
             }}
             isValid={password.touched && password.valid}
             isInvalid={password.touched && !password.valid}
+            disabled={loading}
           />
           <InlineFormField
             controlId="formPassword2"
@@ -126,11 +155,12 @@ const SetPassword = ({ match }) => {
             }}
             isValid={password2.touched && password2.valid}
             isInvalid={password2.touched && !password2.valid}
+            disabled={loading}
           />
           <Button
             variant="secondary"
             type="submit"
-            disabled={!password.valid || !password2.valid}
+            disabled={!password.valid || !password2.valid || loading}
           >
             Zmień hasło
           </Button>
