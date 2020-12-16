@@ -10,6 +10,7 @@ const InlineFormField = ({
   onChangeHandler,
   isInvalid,
   isValid,
+  disabled,
 }) => {
   return (
     <Form.Group as={Row} controlId={controlId}>
@@ -24,6 +25,7 @@ const InlineFormField = ({
           onChange={onChangeHandler}
           isInvalid={isInvalid}
           isValid={isValid}
+          disabled={disabled}
         />
         <Form.Control.Feedback type="invalid">
           {errors[0]}

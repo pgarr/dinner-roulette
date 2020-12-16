@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 
@@ -17,10 +17,37 @@ import { axiosError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
 import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
+const registerReducer = (state, action) => {
+  switch (action.type) {
+    case "INIT_REQUEST":
+      return {
+        ...state,
+        validated: false,
+        registered: false,
+        confirmed: false,
+        loading: true,
+      };
+    case "REQUEST_SUCCESS":
+      return { ...state, validated: true, registered: true, loading: false };
+    case "REQUEST_FAIL":
+      return { ...state, loading: false };
+    case "MODAL_CONFIRMED":
+      return { ...state, confirmed: true };
+    default:
+      return { ...state };
+  }
+};
+
 const Register = () => {
-  const [validated, setValidated] = useState(false); // TODO useReducer
-  const [registered, setRegistered] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
+  const [{ validated, registered, confirmed, loading }, dispatch] = useReducer(
+    registerReducer,
+    {
+      validated: false,
+      registered: false,
+      confirmed: false,
+      loading: false,
+    }
+  );
 
   const [username, dispatchUsername] = useValueValidation("");
   const [email, dispatchEmail] = useValueValidation("");
@@ -95,16 +122,14 @@ const Register = () => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-
-    // TODO: loading state (disabled form)
+    dispatch({ type: "INIT_REQUEST" });
     try {
       await axios.post("/auth/register", {
         username: username.value,
         password: password.value,
         email: email.value,
       });
-      setValidated(true);
-      setRegistered(true);
+      dispatch({ type: "REQUEST_SUCCESS" });
     } catch (error) {
       if (isErrorStatus(error, 422)) {
         const result = buildValidationObject(error.response.data);
@@ -112,6 +137,7 @@ const Register = () => {
       } else {
         axiosError(error);
       }
+      dispatch({ type: "REQUEST_FAIL" });
     }
   };
 
@@ -127,7 +153,7 @@ const Register = () => {
       <ModalWithBackdrop
         show={registered && !confirmed}
         onHide={() => {
-          setConfirmed(true);
+          dispatch({ type: "MODAL_CONFIRMED" });
         }}
         title="Sukces!"
         text="Zarejestrowałeś się. Zaloguj się za pomocą podanych danych."
@@ -146,6 +172,7 @@ const Register = () => {
           }}
           isValid={username.touched && username.valid}
           isInvalid={username.touched && !username.valid}
+          disabled={loading}
         />
         <InlineFormField
           controlId="formEmail"
@@ -158,6 +185,7 @@ const Register = () => {
           }}
           isValid={email.touched && email.valid}
           isInvalid={email.touched && !email.valid}
+          disabled={loading}
         />
         <InlineFormField
           controlId="formPassword"
@@ -170,6 +198,7 @@ const Register = () => {
           }}
           isValid={password.touched && password.valid}
           isInvalid={password.touched && !password.valid}
+          disabled={loading}
         />
         <InlineFormField
           controlId="formPassword2"
@@ -182,6 +211,7 @@ const Register = () => {
           }}
           isValid={password2.touched && password2.valid}
           isInvalid={password2.touched && !password2.valid}
+          disabled={loading}
         />
         <Button
           variant="secondary"
@@ -190,7 +220,8 @@ const Register = () => {
             !username.valid ||
             !email.valid ||
             !password.valid ||
-            !password2.valid
+            !password2.valid ||
+            loading
           }
         >
           Zarejestruj się
