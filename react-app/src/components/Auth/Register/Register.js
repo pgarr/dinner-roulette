@@ -98,7 +98,7 @@ const Register = () => {
 
     // TODO: loading state (disabled form)
     try {
-      await axios.post("/auth/register1", {
+      await axios.post("/auth/register", {
         username: username.value,
         password: password.value,
         email: email.value,
