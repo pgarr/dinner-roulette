@@ -8,12 +8,12 @@ import {
   validatePassword,
   validatePassword2,
 } from "./validators";
-import axios from "../../../shared/axios-api";
+import axios, { isErrorStatus } from "../../../shared/axios-api";
 import { inputChangedDispatch } from "../../../shared/handlers";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
-import { httpError } from "../../../shared/errors";
+import { axiosError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
 import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
@@ -98,29 +98,19 @@ const Register = () => {
 
     // TODO: loading state (disabled form)
     try {
-      const response = await axios.post("/auth/register", {
+      await axios.post("/auth/register1", {
         username: username.value,
         password: password.value,
         email: email.value,
       });
       setValidated(true);
-
-      switch (response.status) {
-        case 201:
-          setRegistered(true);
-          break;
-        default:
-          break;
-      }
+      setRegistered(true);
     } catch (error) {
-      switch (error.response.status) {
-        case 422:
-          const result = buildValidationObject(error.response.data);
-          setValidationResults(result);
-          break;
-        default:
-          httpError(error.response.status, error.response);
-          break;
+      if (isErrorStatus(error, 422)) {
+        const result = buildValidationObject(error.response.data);
+        setValidationResults(result);
+      } else {
+        axiosError(error);
       }
     }
   };

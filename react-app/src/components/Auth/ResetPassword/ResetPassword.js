@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
 import { inputChangedHandler } from "../../../shared/handlers";
-import axios from "../../../shared/axios-api";
+import axios, { isErrorStatus } from "../../../shared/axios-api";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
-import { httpError } from "../../../shared/errors";
+import { axiosError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
 
 const ResetPassword = () => {
@@ -18,25 +18,16 @@ const ResetPassword = () => {
 
     // TODO: loading state (disabled form)
     try {
-      const response = await axios.post("/auth/reset_password", {
+      await axios.post("/auth/reset_password", {
         email,
       });
-      switch (response.status) {
-        case 202:
-          setConfirmed(false);
-          setDone(true);
-          break;
-        default:
-          break;
-      }
+      setConfirmed(false);
+      setDone(true);
     } catch (error) {
-      switch (error.response.status) {
-        case 422:
-          setError("Podany adres email nie jest zarejestrowany");
-          break;
-        default:
-          httpError(error.response.status, error.response);
-          break;
+      if (isErrorStatus(error, 422)) {
+        setError("Podany adres email nie jest zarejestrowany");
+      } else {
+        axiosError(error);
       }
     }
   };

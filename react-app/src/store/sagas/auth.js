@@ -43,7 +43,7 @@ export function* authUserSaga(action) {
       actions.checkAuthTimeout(expirationTime, response.data.refresh_token)
     );
   } catch (error) {
-    yield put(actions.authFail(error.response));
+    yield put(actions.authFail(error));
   }
 }
 

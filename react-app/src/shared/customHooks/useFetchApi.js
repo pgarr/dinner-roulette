@@ -1,7 +1,7 @@
 import { useEffect, useState, useReducer } from "react";
 
 import axios from "../axios-api";
-import { httpError } from "../errors";
+import { axiosError } from "../errors";
 
 const useFetchApi = (initialRequest, initialData, shouldFetch = true) => {
   const [request, setRequest] = useState(initialRequest);
@@ -27,7 +27,7 @@ const useFetchApi = (initialRequest, initialData, shouldFetch = true) => {
       } catch (error) {
         if (!cancelled) {
           dispatch({ type: "FETCH_FAILURE" });
-          httpError(error.response.status, error.response);
+          axiosError(error);
         }
       }
     };

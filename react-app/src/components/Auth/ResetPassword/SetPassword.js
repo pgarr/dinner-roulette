@@ -8,12 +8,12 @@ import {
   buildValidationObject,
 } from "../Register/validators";
 import { isExpired } from "../../../shared/tokenDecode";
-import axios from "../../../shared/axios-api";
+import axios, { isErrorStatus } from "../../../shared/axios-api";
 import { inputChangedDispatch } from "../../../shared/handlers";
 import useDebouncedEffect from "../../../shared/customHooks/useDebouncedEffect";
 import ModalWithBackdrop from "../../UI/ModalWithBackdrop/ModalWithBackdrop";
 import InlineFormField from "../../UI/InlineFormField/InlineFormField";
-import { httpError } from "../../../shared/errors";
+import { axiosError } from "../../../shared/errors";
 import AuthForbidden from "../../HOC/AuthForbidden";
 import useValueValidation from "../../../shared/customHooks/useValueValidation";
 
@@ -57,34 +57,20 @@ const SetPassword = ({ match }) => {
 
     // TODO: loading state (disabled form)
     try {
-      const response = await axios.post(
-        "/auth/reset_password/" + match.params.token,
-        {
-          password: password.value,
-        }
-      );
+      await axios.post("/auth/reset_password/" + match.params.token, {
+        password: password.value,
+      });
       setValidated(true);
-
-      switch (response.status) {
-        case 200:
-          setChanged(true);
-          break;
-        default:
-          break;
-      }
+      setChanged(true);
     } catch (error) {
       setValidated(false);
-      switch (error.response.status) {
-        case 422:
-          const result = buildValidationObject(error.response.data);
-          dispatchPassword({ type: "SET_VALIDATION", ...result.password });
-          break;
-        case 401:
-          setError401(true);
-          break;
-        default:
-          httpError(error.response.status, error.response);
-          break;
+      if (isErrorStatus(error, 422)) {
+        const result = buildValidationObject(error.response.data);
+        dispatchPassword({ type: "SET_VALIDATION", ...result.password });
+      } else if (isErrorStatus(error, 401)) {
+        setError401(true);
+      } else {
+        axiosError(error);
       }
     }
   };

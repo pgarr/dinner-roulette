@@ -1,6 +1,6 @@
 import axios from "../../../shared/axios-api";
 
-import { httpError } from "../../../shared/errors";
+import { axiosError } from "../../../shared/errors";
 
 const usernameMessages = {
   unique: "Nazwa jest już zajęta",
@@ -31,7 +31,7 @@ export const validateOnBackend = async (username, email) => {
 
     return buildValidationObject(response.data);
   } catch (error) {
-    httpError(error.response.status, error.response);
+    axiosError(error);
   }
 };
 

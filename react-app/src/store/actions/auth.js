@@ -14,10 +14,10 @@ export const authSuccess = (access_token, refresh_token) => {
   };
 };
 
-export const authFail = (errorResponse) => {
+export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
-    errorResponse,
+    error,
   };
 };
 

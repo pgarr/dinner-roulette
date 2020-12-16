@@ -1,5 +1,6 @@
-import { httpError } from "../../shared/errors";
+import { axiosError } from "../../shared/errors";
 import * as actionTypes from "../actions/actionTypes";
+import { isErrorStatus } from "../../shared/axios-api";
 
 const initialState = {
   access_token: null,
@@ -22,12 +23,11 @@ const reducer = (state = initialState, action) => {
         loading: false,
       };
     case actionTypes.AUTH_FAIL:
-      const res = action.errorResponse;
       let error = null;
-      if (res.status === 401) {
+      if (isErrorStatus(action.error, 401)) {
         error = "Niepoprawna nazwa użytkownika lub hasło";
       } else {
-        httpError(res.status, res);
+        axiosError(action.error);
       }
       return { ...state, error, loading: false };
     case actionTypes.AUTH_LOGOUT:
