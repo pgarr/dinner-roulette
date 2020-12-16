@@ -95,7 +95,7 @@ const SetPassword = ({ match }) => {
         const result = buildValidationObject(error.response.data);
         dispatchPassword({ type: "SET_VALIDATION", ...result.password });
       } else if (isErrorStatus(error, 401)) {
-        dispatch("ERROR_401");
+        dispatch({ type: "ERROR_401" });
       } else {
         axiosError(error);
         dispatch({ type: "REQUEST_FAIL" });
