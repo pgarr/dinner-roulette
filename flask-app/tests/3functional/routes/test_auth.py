@@ -15,16 +15,17 @@ def mock_reset_mail(monkeypatch):
     return mock
 
 
-@pytest.mark.parametrize("username, password, code", [('test', 'test', 200),
-                                                      ('addadas', 'test', 401),
-                                                      ('test', 'safdfaa', 401),
-                                                      ('test', '', 401),
-                                                      ('', 'test', 401),
-                                                      ('test', 'Test', 401),
-                                                      ('test', 'teSt', 401),
-                                                      ('test', 'test ', 401),
-                                                      ('TEST', 'test', 401),
-                                                      ('Test', 'test', 401)])
+@pytest.mark.parametrize("username, password, code",
+                         [('test', 'test', 200),
+                          ('addadas', 'test', 401),
+                          ('test', 'safdfaa', 401),
+                          ('test', '', 401),
+                          ('', 'test', 401),
+                          ('test', 'Test', 401),
+                          ('test', 'teSt', 401),
+                          ('test', 'test ', 401),
+                          ('TEST', 'test', 401),
+                          ('Test', 'test', 401)])
 def test_login(test_client, users_set, username, password, code):
     response = test_client.post('/api/auth/login', json={'username': username, 'password': password})
     assert response.status_code == code
