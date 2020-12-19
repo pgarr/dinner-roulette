@@ -1,11 +1,19 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, pre_load
 
 
 class RecipeIngredientSchema(Schema):
     id = fields.Int(dump_only=True)
     title = fields.Str(required=True)
-    amount = fields.Float()
+    amount = fields.Float(allow_none=True)
     unit = fields.Str()
+
+    @pre_load
+    def replace_empty_strings_with_nones(self, data, **kwargs):
+        keys = ['amount']
+        for key in keys:
+            if key in data.keys():
+                data[key] = data[key] or None
+        return data
 
 
 class RecipeSchema(Schema):

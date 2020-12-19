@@ -2,6 +2,9 @@ import datetime
 
 import pytest
 from flask import current_app
+from flask_jwt_extended import create_access_token
+
+from app.models.auth import User
 
 
 @pytest.fixture
@@ -39,52 +42,141 @@ def test_connection(test_client):
     assert response.status_code == 200
 
 
-class TestRecipesGet:
-    def test_recipes_get(self, test_client, recipes_set):
-        response = test_client.get('/api/recipes')
-        assert response.status_code == 200
+def test_recipes_get(test_client, recipes_set):
+    response = test_client.get('/api/recipes')
+    assert response.status_code == 200
 
-        json = response.get_json()
+    json = response.get_json()
 
-        assert len(json.get('recipes')) == 2
+    assert len(json.get('recipes')) == 2
 
-        required_keys = ("id", "title", "time", "difficulty")
-        assert all(keys in json.get("recipes")[0] for keys in required_keys)
+    required_keys = ("id", "title", "time", "difficulty")
+    assert all(keys in json.get("recipes")[0] for keys in required_keys)
 
-    def test_recipes_get_page_1(self, test_client, recipes_set):
-        response = test_client.get('/api/recipes', query_string={'page': 1, 'per_page': 1})
-        assert response.status_code == 200
 
-        recipes = response.get_json().get('recipes')
-        meta = response.get_json().get("_meta")
+def test_recipes_get_page_1(test_client, recipes_set):
+    response = test_client.get('/api/recipes', query_string={'page': 1, 'per_page': 1})
+    assert response.status_code == 200
 
-        assert meta.get('page') == 1
-        assert meta.get('total_pages') == 2
+    recipes = response.get_json().get('recipes')
+    meta = response.get_json().get("_meta")
 
-        assert len(recipes) == 1
-        assert recipes[0].get('id') == 2
+    assert meta.get('page') == 1
+    assert meta.get('total_pages') == 2
 
-    def test_recipes_get_page_2(self, test_client, recipes_set):
-        response = test_client.get('/api/recipes', query_string={'page': 2, 'per_page': 1})
-        assert response.status_code == 200
+    assert len(recipes) == 1
+    assert recipes[0].get('id') == 2
 
-        recipes = response.get_json().get('recipes')
-        meta = response.get_json().get("_meta")
 
-        assert meta.get('page') == 2
-        assert meta.get('total_pages') == 2
+def test_recipes_get_page_2(test_client, recipes_set):
+    response = test_client.get('/api/recipes', query_string={'page': 2, 'per_page': 1})
+    assert response.status_code == 200
 
-        assert len(recipes) == 1
-        assert recipes[0].get('id') == 1
+    recipes = response.get_json().get('recipes')
+    meta = response.get_json().get("_meta")
 
-    def test_recipes_get_pagination_invalid_page(self, test_client, recipes_set):
-        response = test_client.get('/api/recipes', query_string={'page': 'test', 'per_page': 'test'})
-        assert response.status_code == 200
+    assert meta.get('page') == 2
+    assert meta.get('total_pages') == 2
 
-        recipes = response.get_json().get('recipes')
-        meta = response.get_json().get("_meta")
+    assert len(recipes) == 1
+    assert recipes[0].get('id') == 1
 
-        assert meta.get('page') == 1
-        assert meta.get('per_page') == current_app.config['RECIPES_PER_PAGE']
 
-        assert len(recipes) == 2
+def test_recipes_get_pagination_invalid_page(test_client, recipes_set):
+    response = test_client.get('/api/recipes', query_string={'page': 'test', 'per_page': 'test'})
+    assert response.status_code == 200
+
+    recipes = response.get_json().get('recipes')
+    meta = response.get_json().get("_meta")
+
+    assert meta.get('page') == 1
+    assert meta.get('per_page') == current_app.config['RECIPES_PER_PAGE']
+
+    assert len(recipes) == 2
+
+
+def test_create_recipe_no_token(test_client, recipes_set):
+    response = test_client.post('/api/recipe', json={})
+    assert response.status_code == 401
+
+
+def test_create_recie_invalid_token(test_client, recipes_set):
+    not_user = User(id=7)
+
+    token = create_access_token(identity=not_user, fresh=True)
+    response = test_client.post('/api/recipe', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 401
+
+
+def test_create_recipe_no_data(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.post('/api/recipe', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 400
+
+
+def test_create_recipe_no_title(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    recipe_json = {'ingredients': []}
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.post('/api/recipe', json=recipe_json, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 422
+    assert response.get_json().get('title')
+
+
+@pytest.mark.parametrize("title, amount, unit",
+                         [('test', '', 'a'),
+                          ('test', '1', 'a'),
+                          ('test', '1.2', 'a'),
+                          ('test', None, ''),
+                          ('test', 1, ''),
+                          ('test', 1.2, '')])
+def test_create_recipe_ingredients_formats_ok(test_client, recipes_set, title, amount, unit):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    recipe_json = {'title': 'qwert', 'ingredients': [{'title': title, 'amount': amount, 'unit': unit}]}
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.post('/api/recipe', json=recipe_json, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 201
+
+    ingredient_data = response.get_json().get('pending_recipe').get('ingredients')[0]
+
+    assert ingredient_data.get('title') == title
+    assert ingredient_data.get('amount') == (float(amount) if amount else None)
+    assert ingredient_data.get('unit') == unit
+
+
+def test_create_recipe_correct_data_saved(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+    title = 'test'
+    time = 15
+    difficulty = 4
+    link = 'http://test.pl'
+    preparation = 'qwerty asdfg zxcv 123 ąćęłóńśźż'
+    ingredients = []
+
+    recipe_json = {'title': title, 'time': time, 'difficulty': difficulty, 'link': link, 'preparation': preparation,
+                   'ingredients': ingredients}
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.post('/api/recipe', json=recipe_json, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 201
+    data = response.get_json().get('pending_recipe')
+
+    assert data.get('title') == title
+    assert data.get('time') == time
+    assert data.get('difficulty') == difficulty
+    assert data.get('link') == link
+    assert data.get('preparation') == preparation
+    assert data.get('ingredients') == ingredients
+
+    assert data.get('author') == user1.username

@@ -1,11 +1,15 @@
 import React from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 
+// eslint-disable-next-line no-unused-vars
+import styles from "./IngredientsListForm.module.css";
+
 const IngredientsListForm = ({
   ingredients,
   handleChange,
   handleAdd,
   handleRemove,
+  disabled,
 }) => {
   return (
     <React.Fragment>
@@ -30,15 +34,17 @@ const IngredientsListForm = ({
                 onChange={(event) =>
                   handleChange(ingredient.id, { title: event.target.value })
                 }
+                disabled={disabled}
               />
             </Col>
             <Col lg={2} md={2} sm={2}>
               <Form.Control
-                type="text"
+                type="number"
                 value={ingredient.amount}
                 onChange={(event) =>
                   handleChange(ingredient.id, { amount: event.target.value })
                 }
+                disabled={disabled}
               />
             </Col>
             <Col lg={2} md={2} sm={2}>
@@ -48,6 +54,7 @@ const IngredientsListForm = ({
                 onChange={(event) =>
                   handleChange(ingredient.id, { unit: event.target.value })
                 }
+                disabled={disabled}
               />
             </Col>
             <Col lg={2} md={2} sm={2}>
@@ -57,6 +64,7 @@ const IngredientsListForm = ({
                   handleRemove(ingredient.id);
                 }}
                 size="sm"
+                disabled={disabled}
               >
                 X
               </Button>
@@ -66,7 +74,7 @@ const IngredientsListForm = ({
       })}
       <Row>
         <Col>
-          <Button variant="success" onClick={handleAdd}>
+          <Button variant="success" onClick={handleAdd} disabled={disabled}>
             + składnik
           </Button>
         </Col>

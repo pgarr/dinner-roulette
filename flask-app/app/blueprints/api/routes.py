@@ -25,7 +25,7 @@ def recipes():
 
 @bp.route('/recipes/my', methods=['GET'])
 @jwt_required
-def my_recipes():
+def my_recipes():  # TODO tests
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     my_models = get_user_recipes(author=current_user, page=page, per_page=per_page)
@@ -33,7 +33,7 @@ def my_recipes():
 
 
 @bp.route('/recipe/<int:pk>', methods=['GET'])
-def recipe(pk):
+def recipe(pk):  # TODO tests
     recipe_model = get_recipe(pk)
     result = recipe_schema.dump(recipe_model)
     return jsonify({'recipe': result.data})
@@ -41,7 +41,7 @@ def recipe(pk):
 
 @bp.route('/waiting/<int:pk>', methods=['GET'])
 @jwt_required
-def waiting_recipe(pk):
+def waiting_recipe(pk):  # TODO tests
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
         result = waiting_schema.dump(waiting_model)
@@ -52,7 +52,7 @@ def waiting_recipe(pk):
 
 @bp.route('/waiting', methods=['GET'])
 @jwt_required
-def waiting_recipes():
+def waiting_recipes():  # TODO tests
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     waitings_models = get_waiting_recipes(user=current_user, page=page,
@@ -63,7 +63,7 @@ def waiting_recipes():
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
 @jwt_required
-def accept(pk):
+def accept(pk):  # TODO tests
     if current_user.admin:
         waiting_model = get_waiting_recipe(pk)
         recipe_model = accept_waiting(waiting_model)
@@ -76,7 +76,7 @@ def accept(pk):
 
 @bp.route('/waiting/<int:pk>/reject', methods=['GET'])
 @jwt_required
-def reject(pk):
+def reject(pk):  # TODO tests
     if current_user.admin:
         waiting_model = get_waiting_recipe(pk)
         reject_waiting(waiting_model)
@@ -90,6 +90,9 @@ def reject(pk):
 @bp.route('/recipe', methods=['POST'])
 @jwt_required
 def create_recipe():
+    if not current_user:
+        return jsonify({"message": "Unauthorized"}), 401
+
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')
@@ -106,7 +109,7 @@ def create_recipe():
 
 @bp.route('/recipe/<int:pk>', methods=['PATCH'])
 @jwt_required
-def update_recipe(pk):
+def update_recipe(pk):  # TODO tests
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')
@@ -132,7 +135,7 @@ def update_recipe(pk):
 
 @bp.route('/waiting/<int:pk>', methods=['PATCH'])
 @jwt_required
-def update_waiting_recipe(pk):
+def update_waiting_recipe(pk):  # TODO tests
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')
@@ -151,7 +154,7 @@ def update_waiting_recipe(pk):
 
 
 @bp.route('/search', methods=['GET'])
-def search():
+def search():  # TODO tests
     q = request.args.get('q', '')
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])

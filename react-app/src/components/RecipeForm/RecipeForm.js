@@ -34,6 +34,7 @@ const ingredientReducer = (state, action) => {
 };
 
 const RecipeForm = ({ authToken }) => {
+  //form data
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(0);
   const [difficulty, setDifficulty] = useState(0);
@@ -43,7 +44,9 @@ const RecipeForm = ({ authToken }) => {
   const [link, setLink] = useState("");
   const [preparation, setPreparation] = useState("");
 
-  const [saved, setSaved] = useState(false);
+  // component state
+  const [pendingId, setPendingId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleAddIngredient = () => {
     dispatchIngredients({ type: "ADD" });
@@ -60,6 +63,7 @@ const RecipeForm = ({ authToken }) => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
+    setLoading(true);
     try {
       const response = await axios.post(
         "/recipe",
@@ -77,17 +81,17 @@ const RecipeForm = ({ authToken }) => {
           },
         }
       );
-      setSaved(true);
-      console.log(response); // TODO
+      setPendingId(response.data.pending_recipe.id);
     } catch (error) {
-      axiosError(error); // TODO
+      axiosError(error);
+      setLoading(false);
     }
   };
 
   let redirect = null;
-  if (saved) {
-    redirect = <Redirect to={"/"} />;
-    //TODO: redirect to view of waiting recipe
+  if (pendingId) {
+    redirect = <Redirect to={"/pendingrecipes/" + pendingId} />;
+    //TODO toast
   }
 
   return (
@@ -102,6 +106,7 @@ const RecipeForm = ({ authToken }) => {
             type="text"
             value={title}
             onChange={(event) => inputChangedHandler(event, setTitle)}
+            disabled={loading}
           />
         </Form.Group>
         <Row className={styles.TopForm}>
@@ -118,6 +123,7 @@ const RecipeForm = ({ authToken }) => {
                 min={0}
                 max={180}
                 step={5}
+                disabled={loading}
               />
             </Form.Group>
           </Col>
@@ -128,6 +134,7 @@ const RecipeForm = ({ authToken }) => {
                 type="text"
                 value={difficulty}
                 onChange={(event) => inputChangedHandler(event, setDifficulty)}
+                disabled={loading}
               />
             </Form.Group>
           </Col>
@@ -140,6 +147,7 @@ const RecipeForm = ({ authToken }) => {
               handleChange={handleChange}
               handleAdd={handleAddIngredient}
               handleRemove={handleRemoveIngredient}
+              disabled={loading}
             />
           </Col>
           <Col lg={6} sm={12}>
@@ -152,20 +160,21 @@ const RecipeForm = ({ authToken }) => {
                 rows={10}
                 value={preparation}
                 onChange={(event) => inputChangedHandler(event, setPreparation)}
+                disabled={loading}
               />
             </Form.Group>
             <Form.Group controlId="formSource">
               <Form.Label>Źródło</Form.Label>
               <Form.Control
-                required
                 type="text"
                 value={link}
                 onChange={(event) => inputChangedHandler(event, setLink)}
+                disabled={loading}
               />
             </Form.Group>
           </Col>
         </Row>
-        <Button variant="secondary" type="submit">
+        <Button variant="secondary" type="submit" disabled={loading}>
           Zapisz
         </Button>
       </Form>
