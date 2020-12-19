@@ -4,7 +4,7 @@ const IngredientRow = ({ title, amount, unit }) => {
   return (
     <tr>
       <td>{title}</td>
-      {amount && <td>{`${amount} ${unit}`}</td>}
+      <td>{amount ? `${amount} ${unit}` : unit}</td>
     </tr>
   );
 };

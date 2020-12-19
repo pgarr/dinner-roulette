@@ -19,27 +19,27 @@ const RecipeCard = ({ recipe }) => {
         <Col>Autor: {recipe.author}</Col>
       </Row>
       <Row>
-        {recipe.time && (
+        {recipe.time ? (
           <Col xs={2}>
             <FontAwesomeIcon icon="clock" />
             {recipe.time}'
           </Col>
-        )}
-        {recipe.difficulty && (
+        ) : null}
+        {recipe.difficulty ? (
           <Col xs={2}>
             <React.Fragment>
               <span>Trudność: </span>
               <DifficultySymbol difficulty={recipe.difficulty} />
             </React.Fragment>
           </Col>
-        )}
+        ) : null}
       </Row>
       <Row className={styles.Data}>
-        <Col xs lg="4">
-          {recipe.ingredients && (
+        {recipe.ingredients.length > 0 ? (
+          <Col xs lg="4">
             <IngredientList ingredients={recipe.ingredients} />
-          )}
-        </Col>
+          </Col>
+        ) : null}
         <Col xs lg="8">
           {recipe.preparation && (
             <PreparationBox preparation={recipe.preparation} />
