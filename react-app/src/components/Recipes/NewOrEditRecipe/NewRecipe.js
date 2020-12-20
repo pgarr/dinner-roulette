@@ -2,6 +2,7 @@ import React, { useReducer, useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 import AuthRequired from "../../HOC/AuthRequired";
 import RecipeForm from "./RecipeForm/RecipeForm";
@@ -65,6 +66,9 @@ const NewRecipe = ({ authToken }) => {
         type: "CHANGE",
         data: { id: response.data.pending_recipe.id },
       });
+      toast.info(
+        "Przepis będzie widoczny dla innych użytkowników po zatwierdzeniu przez administratora."
+      );
       setSaved(true);
     } catch (error) {
       axiosError(error);
@@ -72,15 +76,12 @@ const NewRecipe = ({ authToken }) => {
     }
   };
 
-  let redirect = null;
   if (saved && recipe.id) {
-    redirect = <Redirect to={"/pendingrecipes/" + recipe.id} />;
-    //TODO toast
+    return <Redirect to={"/pendingrecipes/" + recipe.id} />;
   }
 
   return (
     <AuthRequired>
-      {redirect}
       <h1>Utwórz nowy przepis</h1>
       <RecipeForm
         recipe={recipe}
