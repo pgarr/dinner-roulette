@@ -141,15 +141,12 @@ const Register = () => {
     }
   };
 
-  let redirect = null;
   if (confirmed) {
-    redirect = <Redirect to={"/login"} />;
+    return <Redirect to={"/login"} />;
   }
 
   return (
     <AuthForbidden>
-      {redirect}
-
       <ModalWithBackdrop
         show={registered && !confirmed}
         onHide={() => {

@@ -10,18 +10,12 @@ const AuthRequired = ({
   onSetAuthRedirectPath,
   location,
 }) => {
-  let redirect = null;
   if (!isAuthenticated) {
-    redirect = <Redirect to={"/login"} />;
     onSetAuthRedirectPath(location.pathname);
+    return <Redirect to={"/login"} />;
   }
 
-  return (
-    <React.Fragment>
-      {redirect}
-      {children}
-    </React.Fragment>
-  );
+  return <React.Fragment>{children}</React.Fragment>;
 };
 
 const mapStateToProps = (state) => {

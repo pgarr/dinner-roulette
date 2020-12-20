@@ -3,17 +3,11 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 const AuthForbidden = ({ children, isAuthenticated, authRedirectPath }) => {
-  let redirect = null;
   if (isAuthenticated) {
-    redirect = <Redirect to={authRedirectPath} />;
+    return <Redirect to={authRedirectPath} />;
   }
 
-  return (
-    <React.Fragment>
-      {redirect}
-      {children}
-    </React.Fragment>
-  );
+  return <React.Fragment>{children}</React.Fragment>;
 };
 
 const mapStateToProps = (state) => {
