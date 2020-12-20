@@ -14,6 +14,7 @@ import WaitingRecipeDetails from "../Recipes/RecipesDetails/WaitingRecipeDetails
 import ResetPassword from "../Auth/ResetPassword/ResetPassword";
 import SetPassword from "../Auth/ResetPassword/SetPassword";
 import NewRecipe from "../Recipes/NewOrEditRecipe/NewRecipe";
+import EditWaitingRecipe from "../Recipes/NewOrEditRecipe/EditWaitingRecipe";
 
 const RoutesList = () => {
   return (
@@ -22,7 +23,16 @@ const RoutesList = () => {
       <Route path="/myrecipes" exact component={MyRecipesList} />
       <Route path="/pendingrecipes" exact component={WaitingRecipesList} />
       <Route path="/recipes/:id" component={RecipeDetails} />
-      <Route path="/pendingrecipes/:id" component={WaitingRecipeDetails} />
+      <Route
+        path="/pendingrecipes/:id"
+        exact
+        component={WaitingRecipeDetails}
+      />
+      <Route
+        path="/pendingrecipes/:id/edit"
+        exact
+        component={EditWaitingRecipe}
+      />
       <Route path="/search" component={SearchRecipesList} />
       <Route path="/login" component={Auth} />
       <Route path="/logout" component={Logout} />

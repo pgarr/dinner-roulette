@@ -6,6 +6,7 @@ import RecipeCard from "./RecipeCard/RecipeCard";
 import RefusedBadge from "../../UI/RefusedBadge/RefusedBadge";
 import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import AuthRequired from "../../HOC/AuthRequired";
+import { newPendingRecipe } from "../utils/baseRecipeObjects";
 
 const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
   const [{ data, isLoading }] = useFetchApi(
@@ -16,18 +17,9 @@ const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
       },
     },
     {
-      pending_recipe: {
-        author: "",
-        difficulty: 0,
-        ingredients: [],
-        link: "",
-        preparation: "",
-        time: 0,
-        title: "",
-        refused: false,
-      },
-      isAuthenticated,
-    }
+      pending_recipe: newPendingRecipe(),
+    },
+    isAuthenticated
   );
 
   return (

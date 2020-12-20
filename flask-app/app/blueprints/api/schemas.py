@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, pre_load
+from marshmallow import Schema, fields, pre_load, pre_dump, post_dump
 
 
 class RecipeIngredientSchema(Schema):
@@ -15,6 +15,13 @@ class RecipeIngredientSchema(Schema):
                 data[key] = data[key] or None
         return data
 
+    @post_dump
+    def replace_nones_with_empty_strings(self, data, **kwargs):
+        keys = ['unit', 'amount']
+        for key in keys:
+            if key in data.keys():
+                data[key] = data[key] or ''
+
 
 class RecipeSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -25,6 +32,13 @@ class RecipeSchema(Schema):
     preparation = fields.Str()
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
     author = fields.Nested("self", only="username", dump_only=True)
+
+    @post_dump
+    def replace_nones_with_empty_strings(self, data, **kwargs):
+        keys = ['preparation', 'link']
+        for key in keys:
+            if key in data.keys():
+                data[key] = data[key] or ''
 
 
 class WaitingRecipeSchema(RecipeSchema):
