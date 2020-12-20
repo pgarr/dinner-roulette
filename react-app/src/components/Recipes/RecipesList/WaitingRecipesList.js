@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
+import AuthRequired from "../../HOC/AuthRequired";
 import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
 import NumberedPagination from "../../UI/NumberedPagination/NumberedPagination";
 import RecipesTable from "./RecipesTable/RecipesTable";
@@ -36,7 +37,7 @@ const WaitingRecipesList = ({ isAuthenticated, authToken, history }) => {
   };
 
   return (
-    <React.Fragment>
+    <AuthRequired>
       <LoadingContainer isLoading={isLoading}>
         <RecipesTable
           recipes={data.pending_recipes}
@@ -49,7 +50,7 @@ const WaitingRecipesList = ({ isAuthenticated, authToken, history }) => {
           onChangePage={pageChangedHandler}
         />
       </LoadingContainer>
-    </React.Fragment>
+    </AuthRequired>
   );
 };
 
