@@ -2,16 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { NavDropdown, Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import jwt from "jsonwebtoken";
+import { getIdentity } from "../../../shared/tokenDecode";
 
-const UserDropdown = ({ payload }) => {
+const UserDropdown = ({ identity }) => {
   let userDropdown = <Nav.Link href="/login">Zaloguj się</Nav.Link>;
-  if (payload) {
+  if (identity) {
     userDropdown = (
       <NavDropdown
         title={
           <span>
-            <FontAwesomeIcon icon="user" /> {payload.identity}
+            <FontAwesomeIcon icon="user" /> {identity}
           </span>
         }
         id="basic-nav-dropdown"
@@ -31,10 +31,7 @@ const UserDropdown = ({ payload }) => {
 
 const mapStateToProps = (state) => {
   return {
-    payload:
-      state.auth.access_token !== null
-        ? jwt.decode(state.auth.access_token)
-        : null,
+    identity: getIdentity(state.auth.access_token),
   };
 };
 

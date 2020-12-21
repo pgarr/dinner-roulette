@@ -2,7 +2,7 @@ import { delay, put, call } from "redux-saga/effects";
 
 import axios from "../../shared/axios-api";
 import * as actions from "../actions/index";
-import getPayload from "../../shared/tokenDecode";
+import { getPayload } from "../../shared/tokenDecode";
 
 export function* logoutSaga(action) {
   yield call([localStorage, "removeItem"], "access_token");

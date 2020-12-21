@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const getPayload = (token) => {
-  return jwt.decode(token);
+export const getPayload = (token) => {
+  if (token) {
+    return jwt.decode(token);
+  }
+  return {};
 };
 
 export const isExpired = (token) => {
@@ -10,4 +13,10 @@ export const isExpired = (token) => {
   return expirationDate <= new Date();
 };
 
-export default getPayload;
+export const getIdentity = (token) => {
+  const payload = getPayload(token);
+  if (payload.identity) {
+    return payload.identity;
+  }
+  return null;
+};
