@@ -15,6 +15,12 @@ class Recipe(RecipeMixin, SearchableMixin, db.Model):
     ingredient_class = RecipeIngredient
     waiting_updates = db.relationship("WaitingRecipe", uselist=False, back_populates="updated_recipe")
 
+    def __eq__(self, other):
+        if isinstance(other, Recipe):
+            return self.id == other.id
+        else:
+            return False
+
 
 class WaitingRecipeIngredient(IngredientMixin, db.Model):
     __tablename__ = 'waiting_recipe_ingredient'
@@ -35,3 +41,9 @@ class WaitingRecipe(RecipeMixin, db.Model):
 
     def reject(self):
         self.refused = True
+
+    def __eq__(self, other):
+        if isinstance(other, WaitingRecipe):
+            return self.id == other.id
+        else:
+            return False

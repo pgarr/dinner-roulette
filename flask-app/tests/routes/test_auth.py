@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, call
 
 import pytest
 from flask_jwt_extended import create_refresh_token, decode_token
@@ -195,6 +195,15 @@ def test_validate_username_and_email_occupied(test_client, users_set):
 def test_validate_no_args(test_client, users_set):
     response = test_client.post('/api/auth/validate')
     assert response.status_code == 400
+
+
+def test_validate_username_too_short(test_client, users_set):
+    response = test_client.post('/api/auth/validate', json={'username': 's'})
+
+    assert response.status_code == 200
+
+    json = response.get_json()
+    assert not json.get('username').get('checks').get('min_length')
 
 
 def test_register_occupied_username(test_client, users_set):

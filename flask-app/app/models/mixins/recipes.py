@@ -42,6 +42,13 @@ class RecipeMixin(object):
     def __repr__(self):
         return '<Recipe {}>'.format(self.title)
 
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    def __ne__(self, other):
+        equal = self.__eq__(other)
+        return not equal
+
     def add_ingredient(self, **kwargs):
         if not self.ingredients:
             self.ingredients = []

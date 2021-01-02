@@ -42,3 +42,13 @@ class User(db.Model):
         except Exception:
             return
         return User.query.get(id_)
+
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self.id == other.id
+        else:
+            return False
+
+    def __ne__(self, other):
+        equal = self.__eq__(other)
+        return not equal
