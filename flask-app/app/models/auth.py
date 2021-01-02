@@ -2,13 +2,12 @@ from time import time
 
 import jwt
 from flask import current_app
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, login
+from app import db
 
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -43,8 +42,3 @@ class User(UserMixin, db.Model):
         except Exception:
             return
         return User.query.get(id_)
-
-
-@login.user_loader
-def load_user(id_):
-    return User.query.get(int(id_))

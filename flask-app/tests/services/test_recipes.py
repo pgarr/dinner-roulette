@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 from app.models.auth import User
 from app.models.recipes import Recipe, WaitingRecipe, RecipeIngredient, WaitingRecipeIngredient
 from app.services.recipes import clone_recipe_to_waiting, init_waiting_recipe, _push_updates_to_recipe, \
-    get_user_waiting_recipes, save_recipe, reject_waiting, get_waiting_recipes, get_recipes, get_user_recipes, \
+    get_user_waiting_recipes, save_recipe, reject_waiting, get_recipes, get_user_recipes, \
     accept_waiting, get_recipe, get_waiting_recipe, get_recipe_by_title, get_all_pending_waiting_recipes
 
 

@@ -13,5 +13,3 @@ def error_response(status_code, message=None):
 
 def bad_request(message):
     return error_response(400, message)
-# TODO: 405 - method not allowed for this request zwraca błąd w html a nie json
-# TODO: 422 jw

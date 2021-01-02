@@ -5,8 +5,8 @@ from app.blueprints.api import bp
 from app.blueprints.api.errors import error_response, bad_request
 from app.blueprints.api.helpers import paginated_recipes_jsonify, save_recipe_from_schema, SearchAPIPaginatedAdapter
 from app.blueprints.api.schemas import recipe_schema, waiting_schema
-from app.services.recipes import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, get_waiting_recipes, \
-    accept_waiting, reject_waiting, init_waiting_recipe, clone_recipe_to_waiting
+from app.services.recipes import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, init_waiting_recipe, \
+    clone_recipe_to_waiting, get_user_waiting_recipes
 from app.services.search import search_recipe
 
 
@@ -55,36 +55,10 @@ def waiting_recipe(pk):  # TODO tests
 def waiting_recipes():  # TODO tests
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
-    waitings_models = get_waiting_recipes(user=current_user, page=page,
-                                          per_page=per_page)
+    waitings_models = get_user_waiting_recipes(user=current_user, page=page,
+                                               per_page=per_page)
     return paginated_recipes_jsonify(waitings_models, page, per_page, endpoint='.waiting_recipes',
                                      items_name='pending_recipes', waiting=True)
-
-
-@bp.route('/waiting/<int:pk>/accept', methods=['GET'])
-@jwt_required
-def accept(pk):  # TODO tests
-    if current_user.admin:
-        waiting_model = get_waiting_recipe(pk)
-        recipe_model = accept_waiting(waiting_model)
-        result = recipe_schema.dump(recipe_model)
-        return jsonify({"message": "Recipe accepted!",
-                        "recipe": result.data}), 200
-    else:
-        return error_response(401)
-
-
-@bp.route('/waiting/<int:pk>/reject', methods=['GET'])
-@jwt_required
-def reject(pk):  # TODO tests
-    if current_user.admin:
-        waiting_model = get_waiting_recipe(pk)
-        reject_waiting(waiting_model)
-        result = waiting_schema.dump(waiting_model)
-        return jsonify({"message": "Recipe rejected!",
-                        "rejected_recipe": result.data}), 200
-    else:
-        return error_response(401)
 
 
 @bp.route('/recipe', methods=['POST'])

@@ -2,9 +2,8 @@ import logging
 
 from elasticsearch import Elasticsearch
 from flask import Flask, current_app, request
-from flask_babel import Babel, lazy_gettext as _l
+from flask_babel import Babel
 from flask_cors import CORS
-from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -14,9 +13,6 @@ from config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
-login = LoginManager()
-login.login_view = 'auth.login'
-login.login_message = _l('Please log in to access this page.')
 mail = Mail()
 babel = Babel()
 
@@ -28,7 +24,6 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    login.init_app(app)
     mail.init_app(app)
     babel.init_app(app)
 
@@ -37,17 +32,14 @@ def create_app(config_class=Config):
     from app.blueprints.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
-    from app.blueprints.auth import bp as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
-
-    from app.blueprints.main import bp as main_bp
-    app.register_blueprint(main_bp)
-
     from app.blueprints.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
     from app.blueprints.api_auth import bp as api_auth_bp
     app.register_blueprint(api_auth_bp, url_prefix='/api/auth')
+
+    from app.blueprints.api_admin import bp as api_admin_bp
+    app.register_blueprint(api_admin_bp, url_prefix='/api/admin')
 
     # elasticsearch
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
