@@ -32,8 +32,8 @@ def my_recipes():
     return paginated_recipes_jsonify(my_models, page, per_page, endpoint='.my_recipes', items_name='recipes')
 
 
-@bp.route('/recipe/<int:pk>', methods=['GET'])
-def recipe(pk):  # TODO tests
+@bp.route('/recipes/<int:pk>', methods=['GET'])
+def recipe(pk):
     recipe_model = get_recipe(pk)
     result = recipe_schema.dump(recipe_model)
     return jsonify({'recipe': result.data})
@@ -61,7 +61,7 @@ def waiting_recipes():  # TODO tests
                                      items_name='pending_recipes', waiting=True)
 
 
-@bp.route('/recipe', methods=['POST'])
+@bp.route('/recipes', methods=['POST'])
 @jwt_required
 def create_recipe():
     if not current_user:
@@ -81,7 +81,7 @@ def create_recipe():
                     "pending_recipe": result.data}), 201
 
 
-@bp.route('/recipe/<int:pk>', methods=['PATCH'])
+@bp.route('/recipes/<int:pk>', methods=['PATCH'])
 @jwt_required
 def update_recipe(pk):  # TODO tests
     json_data = request.get_json()
