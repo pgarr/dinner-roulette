@@ -52,7 +52,7 @@ def waiting_recipe(pk):  # TODO tests
 
 @bp.route('/waiting', methods=['GET'])
 @jwt_required
-def waiting_recipes():  # TODO tests
+def waiting_recipes():
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     waitings_models = get_user_waiting_recipes(user=current_user, page=page,

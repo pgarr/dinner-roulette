@@ -233,3 +233,50 @@ def test_create_recipe_correct_data_saved(test_client, recipes_set):
     assert data.get('ingredients') == ingredients
 
     assert data.get('author') == user1.username
+
+
+def test_waiting_recipes_get_no_token(test_client, recipes_set):
+    response = test_client.get('/api/waiting')
+    assert response.status_code == 401
+
+
+def test_waiting_recipes_get_invalid_token(test_client, recipes_set):
+    not_user = User(id=7)
+
+    token = create_access_token(identity=not_user, fresh=True)
+    response = test_client.get('/api/waiting', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 401
+
+
+def test_waiting_recipes_get_ok(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.get('/api/waiting', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipes = response.get_json().get('pending_recipes')
+    assert len(recipes) == 1
+
+
+def test_waiting_recipes_get_ok_with_refused(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user2, fresh=True)
+    response = test_client.get('/api/waiting', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipes = response.get_json().get('pending_recipes')
+    assert len(recipes) == 1
+
+
+def test_waiting_recipes_get_ok_but_no_recipes(test_client, recipes_set, make_user):
+    user3 = make_user("test3", "test", "test3@test.com")
+
+    token = create_access_token(identity=user3, fresh=True)
+    response = test_client.get('/api/waiting', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipes = response.get_json().get('pending_recipes')
+    assert len(recipes) == 0
