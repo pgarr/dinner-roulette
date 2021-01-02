@@ -50,7 +50,6 @@ def fresh_login():
         return error_response(401, "Bad username or password")
 
 
-# TODO: tests min_length
 @bp.route('/validate', methods=['POST'])
 def validate():
     json = request.json

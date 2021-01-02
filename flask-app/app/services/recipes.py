@@ -94,28 +94,6 @@ def get_user_recipes(author, page, per_page):
 
 
 # TODO: tests - page is str
-# TODO: delete this fun - split to user and admin
-def get_waiting_recipes(user, page, per_page):
-    page, per_page = page_handler(page, per_page)
-
-    if user.admin:  # TODO: DRY - if else are nearly same
-        paginated = WaitingRecipe.query \
-            .filter(WaitingRecipe.refused == False) \
-            .options(load_only("id", "title", "time", "difficulty")) \
-            .order_by(asc(WaitingRecipe.last_modified)) \
-            .paginate(page, per_page, False)
-        # smth == False is not pytonic, but required for model property. Nothing else works.
-    else:
-        paginated = WaitingRecipe.query \
-            .filter(WaitingRecipe.author == user) \
-            .options(load_only("id", "title", "time", "difficulty", "refused")) \
-            .order_by(asc(WaitingRecipe.last_modified)) \
-            .paginate(page, per_page, False)
-    current_app.logger.debug('"Page %d of list of waiting recipes got for user %s' % (page, user.username))
-    return paginated
-
-
-# TODO: tests - page is str
 def get_user_waiting_recipes(user, page, per_page):
     paginated = WaitingRecipe.query \
         .filter(WaitingRecipe.author == user) \
@@ -133,7 +111,7 @@ def get_all_pending_waiting_recipes(page, per_page):
         .options(load_only("id", "title", "time", "difficulty")) \
         .order_by(asc(WaitingRecipe.last_modified)) \
         .paginate(page, per_page, False)
-    # smth == False is not pytonic, but required for model property
+    # smth == False is not pythonic, but required for model property
 
 
 def get_recipe_by_title(title):
