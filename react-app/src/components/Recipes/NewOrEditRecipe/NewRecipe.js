@@ -20,7 +20,7 @@ const NewRecipe = ({ authToken }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post("/recipe", recipe, {
+      const response = await axios.post("/recipes", recipe, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },

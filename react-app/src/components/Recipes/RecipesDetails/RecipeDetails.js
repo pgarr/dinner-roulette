@@ -7,7 +7,7 @@ import RecipeCard from "./RecipeCard/RecipeCard";
 
 const RecipeDetails = ({ match }) => {
   const [{ data, isLoading }] = useFetchApi(
-    { url: "/recipe/" + match.params.id },
+    { url: "/recipes/" + match.params.id },
     {
       recipe: {
         author: "",
