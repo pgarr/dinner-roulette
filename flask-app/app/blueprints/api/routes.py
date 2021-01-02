@@ -41,7 +41,7 @@ def recipe(pk):
 
 @bp.route('/waiting/<int:pk>', methods=['GET'])
 @jwt_required
-def waiting_recipe(pk):  # TODO tests
+def waiting_recipe(pk):
     waiting_model = get_waiting_recipe(pk)
     if current_user == waiting_model.author or current_user.admin:
         result = waiting_schema.dump(waiting_model)

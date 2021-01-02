@@ -280,3 +280,53 @@ def test_waiting_recipes_get_ok_but_no_recipes(test_client, recipes_set, make_us
     assert response.status_code == 200
     recipes = response.get_json().get('pending_recipes')
     assert len(recipes) == 0
+
+
+def test_waiting_recipe_get_no_token(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    response = test_client.get('/api/waiting/%d' % pending_model.id)
+
+    assert response.status_code == 401
+
+
+def test_waiting_recipe_get_wrong_token(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user2, fresh=True)
+    response = test_client.get('/api/waiting/%d' % pending_model.id, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 403
+
+
+def test_waiting_recipe_get_wrong_id(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=admin, fresh=True)
+    response = test_client.get('/api/waiting/12345', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 404
+
+
+def test_waiting_recipe_get_ok_user(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.get('/api/waiting/%d' % pending_model.id, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipe = response.get_json().get('pending_recipe')
+
+    assert recipe.get('id') == recipe_model.id
+
+
+def test_waiting_recipe_get_ok_admin(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=admin, fresh=True)
+    response = test_client.get('/api/waiting/%d' % pending_model.id, headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipe = response.get_json().get('pending_recipe')
+
+    assert recipe.get('id') == recipe_model.id
