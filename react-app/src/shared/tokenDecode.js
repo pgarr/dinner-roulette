@@ -9,8 +9,11 @@ export const getPayload = (token) => {
 
 export const isExpired = (token) => {
   const payload = getPayload(token);
-  const expirationDate = new Date(payload.exp * 1000);
-  return expirationDate <= new Date();
+  if (payload.exp) {
+    const expirationDate = new Date(payload.exp * 1000);
+    return expirationDate <= new Date();
+  }
+  return true;
 };
 
 export const getIdentity = (token) => {
