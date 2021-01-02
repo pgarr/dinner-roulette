@@ -3,7 +3,20 @@ import pytest
 from app import create_app, db
 from app.models.auth import User
 from app.models.recipes import Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
-from tests.utils import TestConfig
+from config import Config
+
+
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+
+    MAIL_SERVER = None
+    MAIL_PORT = None
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+
+    RECIPES_PER_PAGE = 4
+    ELASTICSEARCH_URL = None
 
 
 @pytest.fixture(scope='session')

@@ -100,7 +100,7 @@ def test_create_recipe_no_token(test_client, recipes_set):
     assert response.status_code == 401
 
 
-def test_create_recie_invalid_token(test_client, recipes_set):
+def test_create_recipe_invalid_token(test_client, recipes_set):
     not_user = User(id=7)
 
     token = create_access_token(identity=not_user, fresh=True)
@@ -150,7 +150,7 @@ def test_create_recipe_ingredients_formats_ok(test_client, recipes_set, title, a
     ingredient_data = response.get_json().get('pending_recipe').get('ingredients')[0]
 
     assert ingredient_data.get('title') == title
-    assert ingredient_data.get('amount') == (float(amount) if amount else None)
+    assert ingredient_data.get('amount') == (float(amount) if amount else '')
     assert ingredient_data.get('unit') == unit
 
 
