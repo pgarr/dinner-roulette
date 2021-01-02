@@ -25,7 +25,7 @@ def recipes():
 
 @bp.route('/recipes/my', methods=['GET'])
 @jwt_required
-def my_recipes():  # TODO tests
+def my_recipes():
     page = request.args.get('page', 1)
     per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
     my_models = get_user_recipes(author=current_user, page=page, per_page=per_page)

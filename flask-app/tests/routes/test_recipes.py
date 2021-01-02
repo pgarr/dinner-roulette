@@ -95,6 +95,42 @@ def test_recipes_get_pagination_invalid_page(test_client, recipes_set):
     assert len(recipes) == 2
 
 
+def test_my_recipes_get_no_token(test_client, recipes_set):
+    response = test_client.get('/api/recipes/my')
+    assert response.status_code == 401
+
+
+def test_my_recipes_get_invalid_token(test_client, recipes_set):
+    not_user = User(id=7)
+
+    token = create_access_token(identity=not_user, fresh=True)
+    response = test_client.get('/api/recipes/my', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 401
+
+
+def test_my_recipes_get_ok(test_client, recipes_set):
+    user1, user2, admin, recipe_model, recipe_model_2, pending_model, refused_model = recipes_set
+
+    token = create_access_token(identity=user1, fresh=True)
+    response = test_client.get('/api/recipes/my', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipes = response.get_json().get('recipes')
+    assert len(recipes) == 1
+
+
+def test_my_recipes_get_ok_but_no_recipes(test_client, recipes_set, make_user):
+    user3 = make_user("test3", "test", "test3@test.com")
+
+    token = create_access_token(identity=user3, fresh=True)
+    response = test_client.get('/api/recipes/my', headers={'Authorization': 'Bearer %s' % token})
+
+    assert response.status_code == 200
+    recipes = response.get_json().get('recipes')
+    assert len(recipes) == 0
+
+
 def test_create_recipe_no_token(test_client, recipes_set):
     response = test_client.post('/api/recipe', json={})
     assert response.status_code == 401
