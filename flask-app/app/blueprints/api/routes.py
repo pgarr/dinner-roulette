@@ -83,7 +83,7 @@ def create_recipe():
 
 @bp.route('/recipes/<int:pk>', methods=['PATCH'])
 @jwt_required
-def update_recipe(pk):  # TODO tests
+def update_recipe(pk):
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')
@@ -92,7 +92,7 @@ def update_recipe(pk):  # TODO tests
         if recipe_model.waiting_updates:
             result = waiting_schema.dump(recipe_model.waiting_updates)
             return jsonify({"message": "Recipe already has changes waiting for acceptance!",
-                            "pending_recipe": result.data}), 400
+                            "pending_recipe": result.data}), 409
         else:
             data, errors = waiting_schema.load(json_data)
             if errors:
@@ -109,7 +109,7 @@ def update_recipe(pk):  # TODO tests
 
 @bp.route('/waiting/<int:pk>', methods=['PATCH'])
 @jwt_required
-def update_waiting_recipe(pk):  # TODO tests
+def update_waiting_recipe(pk):
     json_data = request.get_json()
     if not json_data:
         return bad_request('No input data provided')

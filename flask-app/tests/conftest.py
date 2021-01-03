@@ -82,8 +82,7 @@ def make_waiting_recipe(database):
         waiting_recipe_model = WaitingRecipe(**kwargs, ingredients=[WaitingRecipeIngredient(title=ingredient['title'],
                                                                                             amount=ingredient['amount'],
                                                                                             unit=ingredient['unit']) for
-                                                                    ingredient
-                                                                    in ingredients])
+                                                                    ingredient in ingredients])
 
         database.session.add(waiting_recipe_model)
         database.session.commit()

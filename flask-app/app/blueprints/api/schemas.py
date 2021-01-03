@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, pre_load, pre_dump, post_dump
+from marshmallow import Schema, fields, pre_load, post_dump
 
 
 class RecipeIngredientSchema(Schema):
@@ -43,6 +43,7 @@ class RecipeSchema(Schema):
 
 class WaitingRecipeSchema(RecipeSchema):
     refused = fields.Boolean(dump_only=True)
+    recipe_id = fields.Int(dump_only=True)  # TODO: test that update cannot change this value
 
 
 recipe_schema = RecipeSchema()
