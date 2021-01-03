@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app
 from flask_jwt_extended import jwt_required, current_user
 
-from app.blueprints.api import bp
+from app.blueprints.api_admin import bp
 from app.blueprints.api.errors import error_response
 from app.blueprints.api.helpers import paginated_recipes_jsonify
 from app.blueprints.api.schemas import recipe_schema, waiting_schema
@@ -12,7 +12,7 @@ from app.services.search import reindex_es
 
 @bp.route('/waiting/<int:pk>/accept', methods=['GET'])
 @jwt_required
-def accept(pk):  # TODO tests
+def accept_recipe(pk):
     if current_user.admin:
         waiting_model = get_waiting_recipe(pk)
         recipe_model = accept_waiting(waiting_model)
@@ -25,7 +25,7 @@ def accept(pk):  # TODO tests
 
 @bp.route('/waiting/<int:pk>/reject', methods=['GET'])
 @jwt_required
-def reject(pk):  # TODO tests
+def reject_recipe(pk):
     if current_user.admin:
         waiting_model = get_waiting_recipe(pk)
         reject_waiting(waiting_model)
