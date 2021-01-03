@@ -8,7 +8,7 @@ from app.models.auth import User
 
 @pytest.fixture
 def mock_reset_mail(monkeypatch):
-    from app.blueprints.api_auth import routes
+    from app.blueprints.auth import routes
 
     mock = Mock()
     monkeypatch.setattr(routes, 'send_password_reset_email', mock)

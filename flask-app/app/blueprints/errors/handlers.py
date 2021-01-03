@@ -1,5 +1,5 @@
 from app import db
-from app.blueprints.api.errors import error_response as api_error_response
+from app.blueprints.recipes.errors import error_response as api_error_response
 from app.blueprints.errors import bp
 
 

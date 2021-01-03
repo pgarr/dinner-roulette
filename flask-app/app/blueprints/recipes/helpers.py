@@ -1,6 +1,6 @@
 from flask import url_for, jsonify
 
-from app.blueprints.api.schemas import waitings_schema, recipes_schema
+from app.blueprints.recipes.schemas import waitings_schema, recipes_schema
 from app.services.recipes import save_recipe
 from app.utils.helpers import page_handler
 

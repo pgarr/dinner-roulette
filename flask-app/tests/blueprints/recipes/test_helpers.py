@@ -5,7 +5,7 @@ class TestSearchPaginatedAdapter:
 
     @pytest.fixture
     def adapter_class(self, test_client):
-        from app.blueprints.api.helpers import SearchAPIPaginatedAdapter
+        from app.blueprints.recipes.helpers import SearchAPIPaginatedAdapter
         return SearchAPIPaginatedAdapter
 
     def test_pages_result_is_integer(self, adapter_class):

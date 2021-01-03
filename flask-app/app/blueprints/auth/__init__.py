@@ -3,7 +3,7 @@ from flask_jwt_extended import JWTManager
 
 from app.services.auth import get_user_by_name
 
-bp = Blueprint('api_auth', __name__)
+bp = Blueprint('auth', __name__)
 
 current_app.config['JWT_SECRET_KEY'] = current_app.config['SECRET_KEY']
 jwt = JWTManager(current_app)
@@ -20,4 +20,4 @@ def user_identity_lookup(user):
     return user.username
 
 
-from app.blueprints.api_auth import routes
+from app.blueprints.auth import routes

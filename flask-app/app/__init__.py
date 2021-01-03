@@ -32,14 +32,14 @@ def create_app(config_class=Config):
     from app.blueprints.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
-    from app.blueprints.api import bp as api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
+    from app.blueprints.recipes import bp as recipes_bp
+    app.register_blueprint(recipes_bp, url_prefix='/api')
 
-    from app.blueprints.api_auth import bp as api_auth_bp
-    app.register_blueprint(api_auth_bp, url_prefix='/api/auth')
+    from app.blueprints.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
 
-    from app.blueprints.api_admin import bp as api_admin_bp
-    app.register_blueprint(api_admin_bp, url_prefix='/api/admin')
+    from app.blueprints.admin import bp as admin_bp
+    app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
     # elasticsearch
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \

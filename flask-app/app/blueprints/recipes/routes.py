@@ -1,10 +1,10 @@
 from flask import jsonify, request, current_app
 from flask_jwt_extended import jwt_required, current_user
 
-from app.blueprints.api import bp
-from app.blueprints.api.errors import error_response, bad_request
-from app.blueprints.api.helpers import paginated_recipes_jsonify, save_recipe_from_schema, SearchAPIPaginatedAdapter
-from app.blueprints.api.schemas import recipe_schema, waiting_schema
+from app.blueprints.recipes import bp
+from app.blueprints.recipes.errors import error_response, bad_request
+from app.blueprints.recipes.helpers import paginated_recipes_jsonify, save_recipe_from_schema, SearchAPIPaginatedAdapter
+from app.blueprints.recipes.schemas import recipe_schema, waiting_schema
 from app.services.recipes import get_recipes, get_user_recipes, get_recipe, get_waiting_recipe, init_waiting_recipe, \
     clone_recipe_to_waiting, get_user_waiting_recipes
 from app.services.search import search_recipe

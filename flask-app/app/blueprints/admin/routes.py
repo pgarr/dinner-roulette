@@ -1,10 +1,10 @@
 from flask import jsonify, request, current_app
 from flask_jwt_extended import jwt_required, current_user
 
-from app.blueprints.api_admin import bp
-from app.blueprints.api.errors import error_response
-from app.blueprints.api.helpers import paginated_recipes_jsonify
-from app.blueprints.api.schemas import recipe_schema, waiting_schema
+from app.blueprints.admin import bp
+from app.blueprints.recipes.errors import error_response
+from app.blueprints.recipes.helpers import paginated_recipes_jsonify
+from app.blueprints.recipes.schemas import recipe_schema, waiting_schema
 from app.services.recipes import get_waiting_recipe, accept_waiting, \
     reject_waiting, get_all_pending_waiting_recipes
 from app.services.search import reindex_es
