@@ -8,7 +8,7 @@ from sqlalchemy import MetaData
 
 from app import db
 from app.utils.email import send_email
-from app.utils.thread_killer import GracefulKiller
+from app.utils.workers.thread_killer import GracefulKiller
 
 logger = logging.getLogger('backup')
 logger.setLevel(logging.INFO)

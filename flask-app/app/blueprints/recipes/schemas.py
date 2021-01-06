@@ -32,6 +32,7 @@ class RecipeSchema(Schema):
     preparation = fields.Str()
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
     author = fields.Nested("self", only="username", dump_only=True)
+    status = fields.Nested("self", only="name", dump_only=True)
 
     @post_dump
     def replace_nones_with_empty_strings(self, data, **kwargs):
@@ -41,13 +42,7 @@ class RecipeSchema(Schema):
                 data[key] = data[key] or ''
 
 
-class WaitingRecipeSchema(RecipeSchema):
-    refused = fields.Boolean(dump_only=True)
-    recipe_id = fields.Int(dump_only=True)  # TODO: test that update cannot change this value
-
-
 recipe_schema = RecipeSchema()
-recipes_schema = RecipeSchema(many=True, only=("id", "title", "time", "difficulty"))
-waiting_schema = WaitingRecipeSchema()
-waitings_schema = WaitingRecipeSchema(many=True, only=("id", "title", "time", "difficulty", "refused"))
+recipes_schema = RecipeSchema(many=True, only=("id", "title", "time", "difficulty", "status"))
+full_recipes_schema = RecipeSchema(many=True)
 recipe_ingredients_schema = RecipeIngredientSchema(many=True)

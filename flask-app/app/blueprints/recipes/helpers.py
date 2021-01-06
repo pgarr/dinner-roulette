@@ -1,6 +1,6 @@
 from flask import url_for, jsonify
 
-from app.blueprints.recipes.schemas import waitings_schema, recipes_schema
+from app.blueprints.recipes.schemas import recipes_schema
 from app.services.recipes import save_recipe
 from app.utils.helpers import page_handler
 
@@ -14,14 +14,11 @@ def save_recipe_from_schema(data, model):
     model.ingredients = []
     for data_ingredient in data['ingredients']:
         model.add_ingredient(**data_ingredient)
-    save_recipe(model)
+    return save_recipe(model)
 
 
-def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, waiting=False, **kwargs):
-    if waiting:
-        result = waitings_schema.dump(paginated.items)
-    else:
-        result = recipes_schema.dump(paginated.items)
+def paginated_recipes_jsonify(paginated, page, per_page, endpoint, **kwargs):
+    result = recipes_schema.dump(paginated.items)
     page, per_page = page_handler(page, per_page)
     meta = {
         'page': page,
@@ -37,7 +34,7 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, items_name, w
         'prev': url_for(endpoint, page=page - 1, per_page=per_page,
                         **kwargs) if paginated.has_prev else None
     }
-    return jsonify({items_name: result.data, '_meta': meta, '_links': links})
+    return jsonify({'recipes': result.data, '_meta': meta, '_links': links})
 
 
 class SearchAPIPaginatedAdapter:

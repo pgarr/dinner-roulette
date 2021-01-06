@@ -1,19 +1,48 @@
+import enum
+from datetime import datetime
+
 from app import db
-from app.models.mixins.recipes import IngredientMixin, RecipeMixin
 from app.models.mixins.search import SearchableMixin
 
 
-class RecipeIngredient(IngredientMixin, db.Model):
+class StatusEnum(enum.Enum):
+    refused = -1
+    pending = 0
+    accepted = 1
+
+
+class RecipeIngredient(db.Model):
     __tablename__ = 'recipe_ingredient'
 
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float)
+    unit = db.Column(db.String(20))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
 
+    def __repr__(self):
+        return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)
 
-class Recipe(RecipeMixin, SearchableMixin, db.Model):
+
+class Recipe(SearchableMixin, db.Model):
     __tablename__ = 'recipe'
+    __searchable__ = ['title']
 
-    ingredient_class = RecipeIngredient
-    waiting_updates = db.relationship("WaitingRecipe", uselist=False, back_populates="updated_recipe")
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.Integer)
+    difficulty = db.Column(db.Integer)
+    link = db.Column(db.String(1000))
+    preparation = db.Column(db.Text)
+    create_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime, index=True, onupdate=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author = db.relationship('User', back_populates='recipes')
+    ingredients = db.relationship(RecipeIngredient, cascade="all, delete-orphan")
+    status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
+
+    def __repr__(self):
+        return '<Recipe {}>'.format(self.title)
 
     def __eq__(self, other):
         if isinstance(other, Recipe):
@@ -21,29 +50,29 @@ class Recipe(RecipeMixin, SearchableMixin, db.Model):
         else:
             return False
 
+    def __ne__(self, other):
+        equal = self.__eq__(other)
+        return not equal
 
-class WaitingRecipeIngredient(IngredientMixin, db.Model):
-    __tablename__ = 'waiting_recipe_ingredient'
+    def add_ingredient(self, **kwargs):
+        if not self.ingredients:
+            self.ingredients = []
+        self.ingredients.append(RecipeIngredient(**kwargs))
 
-    recipe_id = db.Column(db.Integer, db.ForeignKey('waiting_recipe.id'))
+    def clear_empty_ingredients(self):
+        self.ingredients = list(filter(lambda ingredient: ingredient.title, self.ingredients))
 
-
-class WaitingRecipe(RecipeMixin, db.Model):
-    __tablename__ = 'waiting_recipe'
-
-    ingredient_class = WaitingRecipeIngredient
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
-    updated_recipe = db.relationship("Recipe", back_populates="waiting_updates")
-    refused = db.Column(db.Boolean, default=False)
-
-    def reset_refused(self):
-        self.refused = False
+    def accept(self):
+        self.status = StatusEnum.accepted
 
     def reject(self):
-        self.refused = True
+        self.status = StatusEnum.refused
 
-    def __eq__(self, other):
-        if isinstance(other, WaitingRecipe):
-            return self.id == other.id
-        else:
+    def reset_status(self):
+        self.status = StatusEnum.pending
+
+    # TODO: tests
+    def is_author_or_admin(self, user):
+        if user is None:
             return False
+        return user == self.author or user.admin

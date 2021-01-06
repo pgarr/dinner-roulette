@@ -2,7 +2,7 @@ import pytest
 
 from app import create_app, db
 from app.models.auth import User
-from app.models.recipes import Recipe, RecipeIngredient, WaitingRecipe, WaitingRecipeIngredient
+from app.models.recipes import Recipe, RecipeIngredient
 from config import Config
 
 
@@ -77,25 +77,16 @@ def make_recipe(database):
 
 
 @pytest.fixture
-def make_waiting_recipe(database):
-    def _make_waiting_recipe(ingredients=(), **kwargs):
-        waiting_recipe_model = WaitingRecipe(**kwargs, ingredients=[WaitingRecipeIngredient(title=ingredient['title'],
-                                                                                            amount=ingredient['amount'],
-                                                                                            unit=ingredient['unit']) for
-                                                                    ingredient in ingredients])
-
-        database.session.add(waiting_recipe_model)
-        database.session.commit()
-
-        return waiting_recipe_model
-
-    return _make_waiting_recipe
-
-
-@pytest.fixture
 def users_set(make_user):
     user1 = make_user("test", "test", "test@test.com")
     user2 = make_user("test2", "test", "test2@test.com")
     admin = make_user("admin", "test", "admin@test.com")
 
     return user1, user2, admin
+
+
+@pytest.fixture
+def ext_users_set(users_set, make_user):
+    user1, user2, admin = users_set
+    user3 = make_user("test3", "test", "test3@test.com")
+    return user1, user2, user3, admin

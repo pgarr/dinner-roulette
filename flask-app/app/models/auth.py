@@ -14,6 +14,7 @@ class User(db.Model):
     username = db.Column(db.String(100), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    recipes = db.relationship('Recipe', back_populates='author')
 
     @property
     def admin(self):

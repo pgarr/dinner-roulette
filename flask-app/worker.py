@@ -1,5 +1,5 @@
 from app import create_app
-from app.utils.backup import BackupScheduler
+from app.utils.workers.backup import BackupScheduler
 
 if __name__ == "__main__":
     app = create_app()
