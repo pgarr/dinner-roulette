@@ -3,6 +3,7 @@ from unittest.mock import Mock, call
 import pytest
 from flask_jwt_extended import create_refresh_token, decode_token
 
+from app import prefix
 from app.models.auth import User
 
 
@@ -27,7 +28,7 @@ def mock_reset_mail(monkeypatch):
                           ('TEST', 'test', 401),
                           ('Test', 'test', 401)])
 def test_login(test_client, users_set, username, password, code):
-    response = test_client.post('/api/auth/login', json={'username': username, 'password': password})
+    response = test_client.post(prefix + '/auth/login', json={'username': username, 'password': password})
     assert response.status_code == code
 
     json = response.get_json()
@@ -40,7 +41,7 @@ def test_login(test_client, users_set, username, password, code):
 
 
 def test_login_user_is_not_admin(test_client, users_set):
-    response = test_client.post('/api/auth/login', json={'username': 'test', 'password': 'test'})
+    response = test_client.post(prefix + '/auth/login', json={'username': 'test', 'password': 'test'})
 
     assert response.status_code == 200
 
@@ -51,7 +52,7 @@ def test_login_user_is_not_admin(test_client, users_set):
 
 
 def test_login_admin_is_admin(test_client, users_set):
-    response = test_client.post('/api/auth/login', json={'username': 'admin', 'password': 'test'})
+    response = test_client.post(prefix + '/auth/login', json={'username': 'admin', 'password': 'test'})
 
     assert response.status_code == 200
 
@@ -63,7 +64,7 @@ def test_login_admin_is_admin(test_client, users_set):
 
 def test_login_no_password(test_client, users_set):
     username = 'test'
-    response = test_client.post('/api/auth/login', json={'username': username})
+    response = test_client.post(prefix + '/auth/login', json={'username': username})
     assert response.status_code == 401
 
     json = response.get_json()
@@ -73,7 +74,7 @@ def test_login_no_password(test_client, users_set):
 
 def test_login_no_username(test_client, users_set):
     password = 'test'
-    response = test_client.post('/api/auth/login', json={'password': password})
+    response = test_client.post(prefix + '/auth/login', json={'password': password})
     assert response.status_code == 401
 
     json = response.get_json()
@@ -82,7 +83,7 @@ def test_login_no_username(test_client, users_set):
 
 
 def test_login_no_json(test_client, users_set):
-    response = test_client.post('/api/auth/login')
+    response = test_client.post(prefix + '/auth/login')
     assert response.status_code == 400
 
 
@@ -97,7 +98,7 @@ def test_login_no_json(test_client, users_set):
                                                       ('TEST', 'test', 401),
                                                       ('Test', 'test', 401)])
 def test_fresh_login(test_client, users_set, username, password, code):
-    response = test_client.post('/api/auth/fresh-login', json={'username': username, 'password': password})
+    response = test_client.post(prefix + '/auth/fresh-login', json={'username': username, 'password': password})
     assert response.status_code == code
 
     json = response.get_json()
@@ -111,7 +112,7 @@ def test_fresh_login(test_client, users_set, username, password, code):
 
 def test_fresh_login_no_password(test_client, users_set):
     username = 'test'
-    response = test_client.post('/api/auth/fresh-login', json={'username': username})
+    response = test_client.post(prefix + '/auth/fresh-login', json={'username': username})
     assert response.status_code == 401
 
     json = response.get_json()
@@ -121,7 +122,7 @@ def test_fresh_login_no_password(test_client, users_set):
 
 def test_fresh_login_no_username(test_client, users_set):
     password = 'test'
-    response = test_client.post('/api/auth/fresh-login', json={'password': password})
+    response = test_client.post(prefix + '/auth/fresh-login', json={'password': password})
     assert response.status_code == 401
 
     json = response.get_json()
@@ -130,12 +131,12 @@ def test_fresh_login_no_username(test_client, users_set):
 
 
 def test_fresh_login_no_json(test_client, users_set):
-    response = test_client.post('/api/auth/fresh-login')
+    response = test_client.post(prefix + '/auth/fresh-login')
     assert response.status_code == 400
 
 
 def test_refresh_no_token(test_client, users_set):
-    response = test_client.post('/api/auth/refresh')
+    response = test_client.post(prefix + '/auth/refresh')
     assert response.status_code == 401
 
     json = response.get_json()
@@ -147,7 +148,7 @@ def test_refresh_correct_token(test_client, users_set):
     user1, user2, admin = users_set
     refresh_token = create_refresh_token(identity=user1)
 
-    response = test_client.post('/api/auth/refresh', headers={'Authorization': 'Bearer %s' % refresh_token})
+    response = test_client.post(prefix + '/auth/refresh', headers={'Authorization': 'Bearer %s' % refresh_token})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -157,7 +158,7 @@ def test_refresh_correct_token(test_client, users_set):
 def test_validate_no_username(test_client, users_set):
     user1, user2, admin = users_set
 
-    response = test_client.post('/api/auth/validate', json={'email': 'sadadfa'})
+    response = test_client.post(prefix + '/auth/validate', json={'email': 'sadadfa'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -165,7 +166,7 @@ def test_validate_no_username(test_client, users_set):
 
 
 def test_validate_no_email(test_client, users_set):
-    response = test_client.post('/api/auth/validate', json={'username': 'sadadfa'})
+    response = test_client.post(prefix + '/auth/validate', json={'username': 'sadadfa'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -173,7 +174,7 @@ def test_validate_no_email(test_client, users_set):
 
 
 def test_validate_username_and_email_free(test_client, users_set):
-    response = test_client.post('/api/auth/validate', json={'email': 'newtest@test.pl', 'username': 'asdasf'})
+    response = test_client.post(prefix + '/auth/validate', json={'email': 'newtest@test.pl', 'username': 'asdasf'})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -184,7 +185,7 @@ def test_validate_username_and_email_free(test_client, users_set):
 def test_validate_username_and_email_occupied(test_client, users_set):
     user1, user2, admin = users_set
 
-    response = test_client.post('/api/auth/validate', json={'email': user1.email, 'username': user2.username})
+    response = test_client.post(prefix + '/auth/validate', json={'email': user1.email, 'username': user2.username})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -193,12 +194,12 @@ def test_validate_username_and_email_occupied(test_client, users_set):
 
 
 def test_validate_no_args(test_client, users_set):
-    response = test_client.post('/api/auth/validate')
+    response = test_client.post(prefix + '/auth/validate')
     assert response.status_code == 400
 
 
 def test_validate_username_too_short(test_client, users_set):
-    response = test_client.post('/api/auth/validate', json={'username': 's'})
+    response = test_client.post(prefix + '/auth/validate', json={'username': 's'})
 
     assert response.status_code == 200
 
@@ -208,7 +209,7 @@ def test_validate_username_too_short(test_client, users_set):
 
 def test_register_occupied_username(test_client, users_set):
     user1, user2, admin = users_set
-    response = test_client.post('/api/auth/register',
+    response = test_client.post(prefix + '/auth/register',
                                 json={'username': user1.username, 'email': 'test12423@test.pl', 'password': 'password'})
 
     assert response.status_code == 422
@@ -219,7 +220,7 @@ def test_register_occupied_username(test_client, users_set):
 
 def test_register_occupied_email(test_client, users_set):
     user1, user2, admin = users_set
-    response = test_client.post('/api/auth/register',
+    response = test_client.post(prefix + '/auth/register',
                                 json={'username': 'user1244123', 'email': user1.email, 'password': 'password'})
 
     assert response.status_code == 422
@@ -230,7 +231,7 @@ def test_register_occupied_email(test_client, users_set):
 
 def test_register_empty_username(test_client, users_set):
     user1, user2, admin = users_set
-    response = test_client.post('/api/auth/register',
+    response = test_client.post(prefix + '/auth/register',
                                 json={'username': '', 'email': 'test12423@test.pl', 'password': 'password'})
 
     assert response.status_code == 422
@@ -241,7 +242,7 @@ def test_register_empty_username(test_client, users_set):
 
 def test_register_empty_email(test_client, users_set):
     user1, user2, admin = users_set
-    response = test_client.post('/api/auth/register',
+    response = test_client.post(prefix + '/auth/register',
                                 json={'username': 'user3254234', 'email': '', 'password': 'password'})
 
     assert response.status_code == 422
@@ -252,7 +253,7 @@ def test_register_empty_email(test_client, users_set):
 
 def test_register_empty_password(test_client, users_set):
     user1, user2, admin = users_set
-    response = test_client.post('/api/auth/register',
+    response = test_client.post(prefix + '/auth/register',
                                 json={'username': 'user3254234', 'email': 'test4324324@test.pl', 'password': ''})
 
     assert response.status_code == 422
@@ -264,7 +265,7 @@ def test_register_empty_password(test_client, users_set):
 def test_register_201(test_client, users_set):
     user1, user2, admin = users_set
     new_user_data = {'username': 'user3254234', 'email': 'test2341234@test.pl', 'password': 'password'}
-    response = test_client.post('/api/auth/register', json=new_user_data)
+    response = test_client.post(prefix + '/auth/register', json=new_user_data)
 
     assert response.status_code == 201
 
@@ -276,13 +277,13 @@ def test_register_201(test_client, users_set):
 
 
 def test_register_no_json(test_client):
-    response = test_client.post('/api/auth/register')
+    response = test_client.post(prefix + '/auth/register')
 
     assert response.status_code == 400
 
 
 def test_reset_password_request_no_json(test_client):
-    response = test_client.post('/api/auth/reset_password')
+    response = test_client.post(prefix + '/auth/reset_password')
 
     assert response.status_code == 400
 
@@ -290,7 +291,7 @@ def test_reset_password_request_no_json(test_client):
 def test_reset_password_request_correct_email(test_client, users_set, mock_reset_mail):
     user1, user2, admin = users_set
 
-    response = test_client.post('/api/auth/reset_password', json={'email': user1.email})
+    response = test_client.post(prefix + '/auth/reset_password', json={'email': user1.email})
 
     assert response.status_code == 202
     mock_reset_mail.assert_called_once_with(user1)
@@ -299,7 +300,7 @@ def test_reset_password_request_correct_email(test_client, users_set, mock_reset
 def test_reset_password_request_wrong_email(test_client, users_set, mock_reset_mail):
     user1, user2, admin = users_set
 
-    response = test_client.post('/api/auth/reset_password', json={'email': 'test423535@test.com'})
+    response = test_client.post(prefix + '/auth/reset_password', json={'email': 'test423535@test.com'})
 
     assert response.status_code == 422
     mock_reset_mail.assert_not_called()
@@ -309,7 +310,7 @@ def test_reset_password_no_json(test_client, users_set):
     user1, user2, admin = users_set
 
     token = user1.get_reset_password_token()
-    response = test_client.post('/api/auth/reset_password/' + token)
+    response = test_client.post(prefix + '/auth/reset_password/' + token)
 
     assert response.status_code == 400
 
@@ -318,7 +319,7 @@ def test_reset_password_empty_password(test_client, users_set):
     user1, user2, admin = users_set
 
     token = user1.get_reset_password_token()
-    response = test_client.post('/api/auth/reset_password/' + token, json={'password': ''})
+    response = test_client.post(prefix + '/auth/reset_password/' + token, json={'password': ''})
 
     assert response.status_code == 422
 
@@ -330,7 +331,7 @@ def test_reset_password_202(test_client, users_set):
     user1, user2, admin = users_set
 
     token = user1.get_reset_password_token()
-    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+    response = test_client.post(prefix + '/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
     assert response.status_code == 200
 
@@ -341,7 +342,7 @@ def test_reset_password_invalid_token(test_client, users_set):
     not_user = User(id=7)
 
     token = not_user.get_reset_password_token()
-    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+    response = test_client.post(prefix + '/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
     assert response.status_code == 401
 
@@ -353,7 +354,7 @@ def test_reset_password_expired_token(test_client, users_set):
     user1, user2, admin = users_set
 
     token = user1.get_reset_password_token(expires_in=-1000)
-    response = test_client.post('/api/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
+    response = test_client.post(prefix + '/auth/reset_password/' + token, json={'password': 'sdadsffsdf'})
 
     assert response.status_code == 401
 

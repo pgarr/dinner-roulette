@@ -16,6 +16,8 @@ migrate = Migrate()
 mail = Mail()
 babel = Babel()
 
+prefix = '/api/v1'
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -33,13 +35,13 @@ def create_app(config_class=Config):
     app.register_blueprint(errors_bp)
 
     from app.blueprints.recipes import bp as recipes_bp
-    app.register_blueprint(recipes_bp, url_prefix='/api')
+    app.register_blueprint(recipes_bp, url_prefix=prefix)
 
     from app.blueprints.auth import bp as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(auth_bp, url_prefix=prefix + '/auth')
 
     from app.blueprints.admin import bp as admin_bp
-    app.register_blueprint(admin_bp, url_prefix='/api/admin')
+    app.register_blueprint(admin_bp, url_prefix=prefix + '/admin')
 
     # elasticsearch
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \

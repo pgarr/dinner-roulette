@@ -3,6 +3,7 @@ import datetime
 import pytest
 from flask_jwt_extended import create_access_token
 
+from app import prefix
 from app.models.recipes import StatusEnum
 
 
@@ -44,7 +45,7 @@ def recipes_users_set(ext_users_set, make_recipe):
 def test_accept_recipe_no_token(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
-    response = test_client.get('/api/admin/recipes/%d/accept' % pending1.id)
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % pending1.id)
     assert response.status_code == 401
 
 
@@ -52,7 +53,7 @@ def test_accept_recipe_no_admin(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=user1, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/accept' % pending1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % pending1.id,
                                headers={'Authorization': 'Bearer %s' % token})
     assert response.status_code == 401
 
@@ -61,7 +62,7 @@ def test_accept_recipe_200_when_pending(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/accept' % pending1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % pending1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -73,7 +74,7 @@ def test_accept_recipe_200_when_accepted(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/accept' % accepted1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % accepted1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -85,7 +86,7 @@ def test_accept_recipe_200_when_refused(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/accept' % rejected1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % rejected1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -99,7 +100,7 @@ def test_accept_recipe_wrong_id(test_client, recipes_users_set):
     not_id = 1111111
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/accept' % not_id,
+    response = test_client.get(prefix + '/admin/recipes/%d/accept' % not_id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 404
@@ -108,7 +109,7 @@ def test_accept_recipe_wrong_id(test_client, recipes_users_set):
 def test_reject_recipe_no_token(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
-    response = test_client.get('/api/admin/recipes/%d/reject' % pending1.id)
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % pending1.id)
 
     assert response.status_code == 401
 
@@ -117,7 +118,7 @@ def test_reject_recipe_no_admin(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=user1, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/reject' % pending1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % pending1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 401
@@ -127,7 +128,7 @@ def test_reject_recipe_200_when_pending(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/reject' % pending1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % pending1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -139,7 +140,7 @@ def test_reject_recipe_200_when_accepted(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/reject' % accepted1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % accepted1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -151,7 +152,7 @@ def test_reject_recipe_200_when_refused(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/reject' % rejected1.id,
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % rejected1.id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
@@ -165,14 +166,14 @@ def test_reject_recipe_wrong_id(test_client, recipes_users_set):
     not_id = 1111111
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/%d/reject' % not_id,
+    response = test_client.get(prefix + '/admin/recipes/%d/reject' % not_id,
                                headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 404
 
 
 def test_pending_recipes_no_token(test_client, recipes_users_set):
-    response = test_client.get('/api/admin/recipes/pending')
+    response = test_client.get(prefix + '/admin/recipes/pending')
 
     assert response.status_code == 401
 
@@ -181,7 +182,7 @@ def test_pending_recipes_no_admin(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=user1, fresh=True)
-    response = test_client.get('/api/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
+    response = test_client.get(prefix + '/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 401
 
@@ -190,7 +191,7 @@ def test_pending_recipes_200(test_client, recipes_users_set):
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
+    response = test_client.get(prefix + '/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
     recipes = response.get_json().get('recipes')
@@ -201,7 +202,7 @@ def test_pending_recipes_sorted_from_oldest_updated(test_client, recipes_users_s
     user1, user2, user3, admin, pending1, pending2, accepted1, accepted2, rejected1, rejected2 = recipes_users_set
 
     token = create_access_token(identity=admin, fresh=True)
-    response = test_client.get('/api/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
+    response = test_client.get(prefix + '/admin/recipes/pending', headers={'Authorization': 'Bearer %s' % token})
 
     assert response.status_code == 200
     recipes = response.get_json().get('recipes')
