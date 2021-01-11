@@ -21,6 +21,7 @@ class RecipeIngredientSchema(Schema):
         for key in keys:
             if key in data.keys():
                 data[key] = data[key] or ''
+        return data
 
 
 class RecipeSchema(Schema):
@@ -31,8 +32,8 @@ class RecipeSchema(Schema):
     link = fields.Str()
     preparation = fields.Str()
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
-    author = fields.Nested("self", only="username", dump_only=True)
-    status = fields.Nested("self", only="name", dump_only=True)
+    author = fields.Function(serialize=lambda obj: obj.author.username, dump_only=True)
+    status = fields.Function(serialize=lambda obj: obj.status.name, dump_only=True)
 
     @post_dump
     def replace_nones_with_empty_strings(self, data, **kwargs):
@@ -40,6 +41,7 @@ class RecipeSchema(Schema):
         for key in keys:
             if key in data.keys():
                 data[key] = data[key] or ''
+        return data
 
 
 recipe_schema = RecipeSchema()

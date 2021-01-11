@@ -17,7 +17,7 @@ def accept(pk):
         accepted_recipe = accept_recipe(recipe)
         result = recipe_schema.dump(accepted_recipe)
         return jsonify({"message": "Recipe accepted!",
-                        "recipe": result.data}), 200
+                        "recipe": result}), 200
     else:
         return error_response(401)
 
@@ -30,7 +30,7 @@ def reject(pk):
         accepted_recipe = reject_recipe(recipe)
         result = recipe_schema.dump(accepted_recipe)
         return jsonify({"message": "Recipe rejected!",
-                        "recipe": result.data}), 200
+                        "recipe": result}), 200
     else:
         return error_response(401)
 
@@ -45,6 +45,7 @@ def pending_recipes():
         return paginated_recipes_jsonify(recipes, page, per_page, endpoint='.pending_recipes')
     else:
         return error_response(401)
+
 
 @bp.route('/search/reindex')
 @jwt_required

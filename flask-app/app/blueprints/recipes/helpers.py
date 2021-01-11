@@ -34,7 +34,7 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, **kwargs):
         'prev': url_for(endpoint, page=page - 1, per_page=per_page,
                         **kwargs) if paginated.has_prev else None
     }
-    return jsonify({'recipes': result.data, '_meta': meta, '_links': links})
+    return jsonify({'recipes': result, '_meta': meta, '_links': links})
 
 
 class SearchAPIPaginatedAdapter:
