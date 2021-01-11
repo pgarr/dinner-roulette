@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, pre_load, post_dump
+from marshmallow import Schema, fields, pre_load, post_dump, EXCLUDE
 
 
 class RecipeIngredientSchema(Schema):
@@ -6,6 +6,9 @@ class RecipeIngredientSchema(Schema):
     title = fields.Str(required=True)
     amount = fields.Float(allow_none=True)
     unit = fields.Str()
+
+    class Meta:
+        unknown = EXCLUDE
 
     @pre_load
     def replace_empty_strings_with_nones(self, data, **kwargs):
@@ -34,6 +37,9 @@ class RecipeSchema(Schema):
     ingredients = fields.Nested(RecipeIngredientSchema, many=True, required=True)
     author = fields.Function(serialize=lambda obj: obj.author.username, dump_only=True)
     status = fields.Function(serialize=lambda obj: obj.status.name, dump_only=True)
+
+    class Meta:
+        unknown = EXCLUDE
 
     @post_dump
     def replace_nones_with_empty_strings(self, data, **kwargs):
