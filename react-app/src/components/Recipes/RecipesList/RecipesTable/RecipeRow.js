@@ -1,9 +1,9 @@
 import React from "react";
 
 import DifficultySymbol from "../../../UI/DifficultySymbol/DifficultySymbol";
-import RefusedBadge from "../../../UI/RefusedBadge/RefusedBadge";
+import StatusBadge from "../../../UI/StatusBadge/StatusBadge";
 
-const Recipe = ({ index, title, time, difficulty, clicked, refused }) => {
+const RecipeRow = ({ index, title, time, difficulty, clicked, status }) => {
   return (
     <tr onClick={clicked}>
       <th scope="row">{index}</th>
@@ -12,13 +12,13 @@ const Recipe = ({ index, title, time, difficulty, clicked, refused }) => {
       <td>
         {difficulty ? <DifficultySymbol difficulty={difficulty} /> : null}
       </td>
-      {refused !== null && (
+      {status !== null && (
         <td>
-          <RefusedBadge refused={refused} />
+          <StatusBadge status={status} />
         </td>
       )}
     </tr>
   );
 };
 
-export default Recipe;
+export default RecipeRow;

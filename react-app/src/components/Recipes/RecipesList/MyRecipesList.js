@@ -23,7 +23,7 @@ const MyRecipesList = ({ isAuthenticated, authToken, history }) => {
   );
 
   const recipeSelectedHandler = (id) => {
-    history.push({ pathname: "/recipes/" + id });
+    history.push({ pathname: "/myrecipes/" + id });
   };
 
   const pageChangedHandler = (page) => {
@@ -42,6 +42,7 @@ const MyRecipesList = ({ isAuthenticated, authToken, history }) => {
         <RecipesTable
           recipes={data.recipes}
           onSelectRecipe={recipeSelectedHandler}
+          showStatus
         />
         <NumberedPagination
           activePage={data._meta.page}

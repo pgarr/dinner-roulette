@@ -2,11 +2,11 @@ import React, { useReducer } from "react";
 
 import RecipeForm from "../RecipeForm/RecipeForm";
 import recipeReducer from "../../utils/recipeReducer";
-import { newPendingRecipe } from "../../utils/baseRecipeObjects";
+import { newRecipe } from "../../utils/baseRecipeObjects";
 
 const InnerEditRecipe = ({ initRecipe, loading, patchRecipe }) => {
   const [recipe, dispatchRecipe] = useReducer(recipeReducer, {
-    ...newPendingRecipe(),
+    ...newRecipe(),
     ...initRecipe,
   });
 

@@ -9,7 +9,7 @@ import Toolbar from "../Toolbar/Toolbar";
 const Layout = ({ children }) => (
   <Container fluid>
     <Row>
-      <Col>
+      <Col className={styles.NavbarContainer}>
         <Toolbar />
       </Col>
     </Row>

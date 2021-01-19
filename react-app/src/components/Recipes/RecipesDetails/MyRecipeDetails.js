@@ -1,23 +1,30 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Button, Col, Row } from "react-bootstrap";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
-import RecipeCard from "./RecipeCard/RecipeCard";
-import RefusedBadge from "../../UI/RefusedBadge/RefusedBadge";
 import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
+import RecipeCard from "./RecipeCard/RecipeCard";
 import AuthRequired from "../../HOC/AuthRequired";
-import { newPendingRecipe } from "../utils/baseRecipeObjects";
 
-const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
+const MyRecipeDetails = ({ isAuthenticated, authToken, match }) => {
   const [{ data, isLoading }] = useFetchApi(
     {
-      url: "/waiting/" + match.params.id,
+      url: "/recipes/" + match.params.id,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     },
     {
-      pending_recipe: newPendingRecipe(),
+      recipe: {
+        author: "",
+        difficulty: 0,
+        ingredients: [],
+        link: "",
+        preparation: "",
+        time: 0,
+        title: "",
+      },
     },
     isAuthenticated
   );
@@ -25,8 +32,12 @@ const WaitingRecipeDetails = ({ isAuthenticated, authToken, match }) => {
   return (
     <AuthRequired>
       <LoadingContainer isLoading={isLoading}>
-        <RefusedBadge refused={data.pending_recipe.refused} />
-        <RecipeCard recipe={data.pending_recipe} />
+        <Row>
+          <Col>
+            <Button variant="primary">Edytuj</Button>
+          </Col>
+        </Row>
+        <RecipeCard recipe={data.recipe} />
       </LoadingContainer>
     </AuthRequired>
   );
@@ -38,5 +49,4 @@ const mapStateToProps = (state) => {
     authToken: state.auth.access_token,
   };
 };
-
-export default connect(mapStateToProps)(WaitingRecipeDetails);
+export default connect(mapStateToProps)(MyRecipeDetails);

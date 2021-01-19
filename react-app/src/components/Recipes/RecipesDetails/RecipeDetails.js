@@ -25,7 +25,6 @@ const RecipeDetails = ({ match }) => {
     <LoadingContainer isLoading={isLoading}>
       {/* <Row>
         <Col>
-          <Button variant="primary">Edytuj</Button>{" "}
           <ButtonGroup aria-label="">
             <Button variant="success">Akceptuj</Button>
             <Button variant="danger">Odrzuć</Button>

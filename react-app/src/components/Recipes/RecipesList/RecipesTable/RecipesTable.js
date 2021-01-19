@@ -1,9 +1,9 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-import Recipe from "./RecipeRow";
+import RecipeRow from "./RecipeRow";
 
-const RecipesTable = ({ recipes, onSelectRecipe, showPendingStatus }) => {
+const RecipesTable = ({ recipes, onSelectRecipe, showStatus }) => {
   return (
     <Table hover>
       <thead>
@@ -12,18 +12,18 @@ const RecipesTable = ({ recipes, onSelectRecipe, showPendingStatus }) => {
           <th scope="col">Nazwa</th>
           <th scope="col">Czas</th>
           <th scope="col">Trudność</th>
-          {showPendingStatus && <th scope="col">Status</th>}
+          {showStatus && <th scope="col">Status</th>}
         </tr>
       </thead>
       <tbody>
         {recipes.map((recipe, index) => {
           return (
-            <Recipe
+            <RecipeRow
               index={index + 1}
               {...recipe}
               key={recipe.id}
               clicked={() => onSelectRecipe(recipe.id)}
-              refused={showPendingStatus ? recipe.refused : null}
+              status={showStatus ? recipe.status : null}
             />
           );
         })}

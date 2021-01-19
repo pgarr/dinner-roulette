@@ -4,6 +4,7 @@ import RangeSlider from "react-bootstrap-range-slider";
 
 import styles from "./RecipeForm.module.css";
 import IngredientsListForm from "./IngredientsListForm/IngredientsListForm";
+import DifficultyPicker from "../../../UI/DifficultyPicker/DifficultyPicker";
 
 const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
   return (
@@ -48,14 +49,12 @@ const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
         </Col>
         <Col lg={4}>
           <Form.Group controlId="formDifficulty">
-            <Form.Label>Trudność przygotowania (1-5)</Form.Label>
-            <Form.Control
-              type="text"
-              value={recipe.difficulty}
-              onChange={(event) =>
+            <Form.Label>Trudność przygotowania</Form.Label>
+            <DifficultyPicker
+              onChange={(value) =>
                 dispatchRecipe({
                   type: "CHANGE",
-                  data: { difficulty: event.target.value },
+                  data: { difficulty: value },
                 })
               }
               disabled={loading}

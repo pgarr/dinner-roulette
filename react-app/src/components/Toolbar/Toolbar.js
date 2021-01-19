@@ -3,20 +3,21 @@ import { Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import UserDropdown from "./UserDropdown/UserDropdown";
-import SearchWidget from "../Search/SearchWidget";
 
 const Toolbar = () => (
-  <Navbar bg="dark" variant="dark" expand="lg">
+  <Navbar collapseOnSelect bg="dark" variant="dark" expand="lg">
     <Navbar.Brand href="/">Cookbook</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
+    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+    <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
+        <Nav.Link href="/recipes">Przepisy</Nav.Link>
         <Nav.Link href="/newrecipe">
           <FontAwesomeIcon icon="plus" /> Dodaj przepis
         </Nav.Link>
+      </Nav>
+      <Nav>
         <UserDropdown />
       </Nav>
-      <SearchWidget />
     </Navbar.Collapse>
   </Navbar>
 );

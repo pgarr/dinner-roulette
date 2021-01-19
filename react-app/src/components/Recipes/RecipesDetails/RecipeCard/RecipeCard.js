@@ -21,8 +21,7 @@ const RecipeCard = ({ recipe }) => {
       <Row>
         {recipe.time ? (
           <Col xs={2}>
-            <FontAwesomeIcon icon="clock" />
-            {recipe.time}'
+            <FontAwesomeIcon icon="clock" /> {recipe.time}'
           </Col>
         ) : null}
         {recipe.difficulty ? (
