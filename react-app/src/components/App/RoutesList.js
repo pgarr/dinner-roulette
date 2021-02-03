@@ -12,6 +12,7 @@ import MyRecipeDetails from "../Recipes/RecipesDetails/MyRecipeDetails";
 import ResetPassword from "../Auth/ResetPassword/ResetPassword";
 import SetPassword from "../Auth/ResetPassword/SetPassword";
 import NewRecipe from "../Recipes/NewOrEditRecipe/NewRecipe";
+import EditRecipe from "../Recipes/NewOrEditRecipe/EditRecipe";
 
 const RoutesList = () => {
   return (
@@ -26,6 +27,7 @@ const RoutesList = () => {
       <Route path="/resetrequest" component={ResetPassword} />
       <Route path="/reset_password/:token" component={SetPassword} />
       <Route path="/newrecipe" component={NewRecipe} />
+      <Route path="/editrecipe/:id" component={EditRecipe} />
       <Route path="/" exact component={Home} />
       <Redirect to="/" />
     </Switch>

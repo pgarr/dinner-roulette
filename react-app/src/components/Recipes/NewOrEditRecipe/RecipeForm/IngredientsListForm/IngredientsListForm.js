@@ -1,7 +1,6 @@
 import React from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
-// eslint-disable-next-line no-unused-vars
 import styles from "./IngredientsListForm.module.css";
 
 const IngredientsListForm = ({
@@ -15,49 +14,43 @@ const IngredientsListForm = ({
     <React.Fragment>
       <Row>
         <Col lg={6} md={6} sm={6}>
-          <Form.Label>Nazwa</Form.Label>
+          <Form.Label className={styles.IngredientLabel}>Nazwa</Form.Label>
         </Col>
         <Col lg={2} md={2} sm={2}>
-          <Form.Label>Ilość</Form.Label>
+          <Form.Label className={styles.IngredientLabel}>Ilość</Form.Label>
         </Col>
         <Col lg={2} md={2} sm={2}>
-          <Form.Label>Jednostka</Form.Label>
+          <Form.Label className={styles.IngredientLabel}>Jednostka</Form.Label>
         </Col>
       </Row>
       {ingredients.map((ingredient) => {
         return (
-          <Row key={ingredient.id}>
-            <Col lg={6} md={6} sm={6}>
-              <Form.Control
-                type="text"
-                value={ingredient.title}
-                onChange={(event) =>
-                  handleChange(ingredient.id, { title: event.target.value })
-                }
-                disabled={disabled}
-              />
-            </Col>
-            <Col lg={2} md={2} sm={2}>
-              <Form.Control
-                type="number"
-                value={ingredient.amount}
-                onChange={(event) =>
-                  handleChange(ingredient.id, { amount: event.target.value })
-                }
-                disabled={disabled}
-              />
-            </Col>
-            <Col lg={2} md={2} sm={2}>
-              <Form.Control
-                type="text"
-                value={ingredient.unit}
-                onChange={(event) =>
-                  handleChange(ingredient.id, { unit: event.target.value })
-                }
-                disabled={disabled}
-              />
-            </Col>
-            <Col lg={2} md={2} sm={2}>
+          <InputGroup className="mb-1 ">
+            <Form.Control
+              type="text"
+              value={ingredient.title}
+              onChange={(event) =>
+                handleChange(ingredient.id, { title: event.target.value })
+              }
+              disabled={disabled}
+            />
+            <Form.Control
+              type="number"
+              value={ingredient.amount}
+              onChange={(event) =>
+                handleChange(ingredient.id, { amount: event.target.value })
+              }
+              disabled={disabled}
+            />
+            <Form.Control
+              type="text"
+              value={ingredient.unit}
+              onChange={(event) =>
+                handleChange(ingredient.id, { unit: event.target.value })
+              }
+              disabled={disabled}
+            />
+            <InputGroup.Append>
               <Button
                 variant="danger"
                 onClick={(event) => {
@@ -68,8 +61,8 @@ const IngredientsListForm = ({
               >
                 X
               </Button>
-            </Col>
-          </Row>
+            </InputGroup.Append>
+          </InputGroup>
         );
       })}
       <Row>

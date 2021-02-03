@@ -7,7 +7,7 @@ const DifficultySymbol = ({ difficulty }) => {
   return (
     <span>
       {[...Array(difficulty)].map((e, i) => (
-        <FullChefHat />
+        <FullChefHat key={i} />
       ))}
     </span>
   );

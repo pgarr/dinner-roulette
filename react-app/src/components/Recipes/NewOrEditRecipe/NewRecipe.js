@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -15,6 +15,13 @@ const NewRecipe = ({ authToken }) => {
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // New Recipe should have 1 empty ingredient
+  useEffect(() => {
+    dispatchRecipe({
+      type: "ADD_INGREDIENT",
+    });
+  }, []);
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -27,7 +34,7 @@ const NewRecipe = ({ authToken }) => {
       });
       dispatchRecipe({
         type: "CHANGE",
-        data: { id: response.data.pending_recipe.id },
+        data: { id: response.data.recipe.id },
       });
       toast.info(
         "Przepis będzie widoczny dla innych użytkowników po zatwierdzeniu przez administratora."
@@ -40,7 +47,7 @@ const NewRecipe = ({ authToken }) => {
   };
 
   if (saved && recipe.id) {
-    return <Redirect to={"/pendingrecipes/" + recipe.id} />;
+    return <Redirect to={"/myrecipes/" + recipe.id} />;
   }
 
   return (

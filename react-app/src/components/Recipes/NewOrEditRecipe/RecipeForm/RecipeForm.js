@@ -9,25 +9,25 @@ import DifficultyPicker from "../../../UI/DifficultyPicker/DifficultyPicker";
 const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
   return (
     <Form onSubmit={onSubmit}>
-      <Form.Group controlId="formTitle">
-        <Form.Label>Nazwa przepisu</Form.Label>
-        <Form.Control
-          required
-          type="text"
-          value={recipe.title}
-          onChange={(event) =>
-            dispatchRecipe({
-              type: "CHANGE",
-              data: { title: event.target.value },
-            })
-          }
-          disabled={loading}
-        />
-      </Form.Group>
       <Row className={styles.TopForm}>
-        <Col lg={4}>
+        <Col md={6}>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Tytuł</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              value={recipe.title}
+              onChange={(event) =>
+                dispatchRecipe({
+                  type: "CHANGE",
+                  data: { title: event.target.value },
+                })
+              }
+              disabled={loading}
+            />
+          </Form.Group>
           <Form.Group controlId="formTime">
-            <Form.Label>Czas przygotowania (minuty)</Form.Label>
+            <Form.Label>Czas (minuty)</Form.Label>
             <RangeSlider
               type="range"
               value={recipe.time}
@@ -46,10 +46,8 @@ const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
               disabled={loading}
             />
           </Form.Group>
-        </Col>
-        <Col lg={4}>
           <Form.Group controlId="formDifficulty">
-            <Form.Label>Trudność przygotowania</Form.Label>
+            <Form.Label>Poziom trudności</Form.Label>
             <DifficultyPicker
               onChange={(value) =>
                 dispatchRecipe({
@@ -57,13 +55,12 @@ const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
                   data: { difficulty: value },
                 })
               }
+              initialValue={recipe.difficulty}
               disabled={loading}
             />
           </Form.Group>
         </Col>
-      </Row>
-      <Row>
-        <Col lg={6} sm={12}>
+        <Col lg={6}>
           <h2>Składniki</h2>
           <IngredientsListForm
             ingredients={recipe.ingredients}
@@ -79,7 +76,9 @@ const RecipeForm = ({ dispatchRecipe, loading, onSubmit, recipe }) => {
             disabled={loading}
           />
         </Col>
-        <Col lg={6} sm={12}>
+      </Row>
+      <Row>
+        <Col>
           <Form.Group controlId="formPrep">
             <Form.Label>Przygotowanie</Form.Label>
             <Form.Control

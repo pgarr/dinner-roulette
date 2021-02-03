@@ -3,21 +3,14 @@ import React from "react";
 
 import useFetchApi from "../../../shared/customHooks/useFetchApi";
 import LoadingContainer from "../../HOC/LoadingContainer/LoadingContainer";
+import { newRecipe } from "../utils/baseRecipeObjects";
 import RecipeCard from "./RecipeCard/RecipeCard";
 
 const RecipeDetails = ({ match }) => {
   const [{ data, isLoading }] = useFetchApi(
     { url: "/recipes/" + match.params.id },
     {
-      recipe: {
-        author: "",
-        difficulty: 0,
-        ingredients: [],
-        link: "",
-        preparation: "",
-        time: 0,
-        title: "",
-      },
+      recipe: newRecipe(),
     }
   );
 
