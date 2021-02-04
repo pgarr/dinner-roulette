@@ -35,25 +35,3 @@ def paginated_recipes_jsonify(paginated, page, per_page, endpoint, **kwargs):
                         **kwargs) if paginated.has_prev else None
     }
     return jsonify({'recipes': result, '_meta': meta, '_links': links})
-
-
-class SearchAPIPaginatedAdapter:
-    """Adapter between search result and paginated_recipes_jsonify"""
-
-    def __init__(self, items, page, per_page, total):
-        self.items = items
-        self.page = int(page)
-        self.total = int(total)
-        self.per_page = int(per_page)
-
-    @property
-    def pages(self):
-        return -(-self.total // self.per_page)
-
-    @property
-    def has_next(self):
-        return self.page < self.pages
-
-    @property
-    def has_prev(self):
-        return self.page > 1

@@ -2,7 +2,6 @@ import enum
 from datetime import datetime
 
 from app import db
-from app.models.mixins.search import SearchableMixin
 
 
 class StatusEnum(enum.Enum):
@@ -24,7 +23,7 @@ class RecipeIngredient(db.Model):
         return '<RecipeIngredient {} from {}>'.format(self.title, self.recipe_id)
 
 
-class Recipe(SearchableMixin, db.Model):
+class Recipe(db.Model):
     __tablename__ = 'recipe'
     __searchable__ = ['title']
 

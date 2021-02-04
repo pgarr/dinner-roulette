@@ -6,7 +6,6 @@ from app.blueprints.recipes.errors import error_response
 from app.blueprints.recipes.helpers import paginated_recipes_jsonify
 from app.blueprints.recipes.schemas import recipe_schema
 from app.services.recipes import get_pending_recipes, get_recipe, accept_recipe, reject_recipe
-from app.services.search import reindex_es
 
 
 @bp.route('/recipes/<int:pk>/accept', methods=['GET'])
@@ -45,12 +44,3 @@ def pending_recipes():
         return paginated_recipes_jsonify(recipes, page, per_page, endpoint='.pending_recipes')
     else:
         return error_response(401)
-
-
-@bp.route('/search/reindex')
-@jwt_required
-def reindex():  # TODO tests
-    if current_user.admin:
-        reindex_es()
-        return jsonify({'message': 'Done!'}), 200
-    return error_response(401)

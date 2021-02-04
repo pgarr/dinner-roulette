@@ -1,6 +1,5 @@
 import logging
 
-from elasticsearch import Elasticsearch
 from flask import Flask, current_app, request
 from flask_babel import Babel
 from flask_cors import CORS
@@ -42,10 +41,6 @@ def create_app(config_class=Config):
 
     from app.blueprints.admin import bp as admin_bp
     app.register_blueprint(admin_bp, url_prefix=prefix + '/admin')
-
-    # elasticsearch
-    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
-        if app.config['ELASTICSEARCH_URL'] else None
 
     # loggers
     module_loggers = ['sqlalchemy', 'backup']

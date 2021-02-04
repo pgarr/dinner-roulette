@@ -4,12 +4,10 @@ from marshmallow import ValidationError
 
 from app.blueprints.recipes import bp
 from app.blueprints.recipes.errors import error_response, bad_request
-from app.blueprints.recipes.helpers import paginated_recipes_jsonify, save_recipe_from_schema, \
-    SearchAPIPaginatedAdapter
+from app.blueprints.recipes.helpers import paginated_recipes_jsonify, save_recipe_from_schema
 from app.blueprints.recipes.schemas import recipe_schema
 from app.models.recipes import StatusEnum
 from app.services.recipes import get_accepted_recipes, get_user_recipes, get_recipe, init_recipe
-from app.services.search import search_recipe
 
 
 @bp.route('/', methods=['GET'])
@@ -83,13 +81,3 @@ def update_recipe(pk):
                         "recipe": result}), 200
     else:
         return error_response(401)
-
-
-@bp.route('/search', methods=['GET'])
-def search():  # TODO tests
-    q = request.args.get('q', '')
-    page = request.args.get('page', 1)
-    per_page = request.args.get('per_page', current_app.config['RECIPES_PER_PAGE'])
-    recipe_models, total = search_recipe(q, page, per_page)
-    paginated = SearchAPIPaginatedAdapter(recipe_models, page, per_page, total)
-    return paginated_recipes_jsonify(paginated, page, per_page, endpoint='.search', items_name='recipes', q=q)
