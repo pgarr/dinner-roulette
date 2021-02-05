@@ -4,7 +4,7 @@ import pytest
 from flask_jwt_extended import create_access_token
 
 from app import prefix
-from app.models.recipes import StatusEnum
+from app.models.recipe import StatusEnum
 
 
 @pytest.fixture

@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, current_user
 from app.blueprints.admin import bp
 from app.blueprints.recipes.errors import error_response
 from app.blueprints.recipes.helpers import paginated_recipes_jsonify
-from app.blueprints.recipes.schemas import recipe_schema
+from app.schemas.recipe import recipe_schema
 from app.services.recipes import get_pending_recipes, get_recipe, accept_recipe, reject_recipe
 
 

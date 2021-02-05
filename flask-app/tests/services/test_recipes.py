@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from werkzeug.exceptions import NotFound
 
-from app.models.recipes import Recipe, RecipeIngredient, StatusEnum
+from app.models.recipe import Recipe, RecipeIngredient, StatusEnum
 from app.services.recipes import init_recipe, save_recipe, get_recipe, get_accepted_recipes, get_user_recipes, \
     get_pending_recipes, get_recipe_by_title, get_full_all_recipes
 

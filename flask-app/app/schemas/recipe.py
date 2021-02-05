@@ -50,7 +50,12 @@ class RecipeSchema(Schema):
         return data
 
 
+class FullRecipe(RecipeSchema):
+    create_date = fields.DateTime()
+    last_modified = fields.DateTime()
+
+
 recipe_schema = RecipeSchema()
 recipes_schema = RecipeSchema(many=True, only=("id", "title", "time", "difficulty", "status"))
-full_recipes_schema = RecipeSchema(many=True)
+full_recipes_schema = FullRecipe(many=True)
 recipe_ingredients_schema = RecipeIngredientSchema(many=True)

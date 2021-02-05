@@ -1,8 +1,8 @@
 import pytest
 
 from app import create_app, db
-from app.models.auth import User
-from app.models.recipes import Recipe, RecipeIngredient
+from app.models.user import User
+from app.models.recipe import Recipe, RecipeIngredient
 from config import Config
 
 

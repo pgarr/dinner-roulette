@@ -3,7 +3,7 @@ from sqlalchemy import desc, asc
 from sqlalchemy.orm import load_only
 
 from app import db
-from app.models.recipes import Recipe, StatusEnum
+from app.models.recipe import Recipe, StatusEnum
 from app.utils.helpers import page_handler
 
 
@@ -86,5 +86,4 @@ def reject_recipe(model):
 
 def get_full_all_recipes():
     recipes = Recipe.query.all()
-    current_app.logger.debug('Full recipes got')
     return recipes

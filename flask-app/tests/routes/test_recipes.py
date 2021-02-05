@@ -5,8 +5,8 @@ from flask import current_app
 from flask_jwt_extended import create_access_token
 
 from app import prefix
-from app.models.auth import User
-from app.models.recipes import StatusEnum
+from app.models.user import User
+from app.models.recipe import StatusEnum
 
 
 @pytest.fixture

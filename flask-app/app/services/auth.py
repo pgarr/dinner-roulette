@@ -1,5 +1,5 @@
 from app import db
-from app.models.auth import User
+from app.models.user import User
 
 
 def get_user_by_name(username):
@@ -28,3 +28,8 @@ def verify_reset_password_token(token):
 def set_new_password(user, password):
     user.set_password(password)
     db.session.commit()
+
+
+# TODO: Tests
+def get_all_users():
+    return User.query.all()

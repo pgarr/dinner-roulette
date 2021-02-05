@@ -4,7 +4,7 @@ import pytest
 from flask_jwt_extended import create_refresh_token, decode_token
 
 from app import prefix
-from app.models.auth import User
+from app.models.user import User
 
 
 @pytest.fixture

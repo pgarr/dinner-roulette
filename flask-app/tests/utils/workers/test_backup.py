@@ -18,16 +18,8 @@ def backup_scheduler(database):
     return BackupScheduler(10000)
 
 
-def test_backup_users_created_and_other_tables_are_empty(test_client, database, backup_scheduler, users_set):
-    result = backup_scheduler.dump_backup()
-
-    pattern = user_pattern + r' \"recipe\": \[\], \"recipe_ingredient\": \[\]}'
-
-    match = re.fullmatch(pattern, result)
-    assert match
-
-
-def test_backup_users_created_and_populated_all_tables(test_client, database, backup_scheduler, users_set, make_recipe):
+@pytest.fixture
+def recipes_set(test_client, database, users_set, make_recipe):
     user1, user2, admin = users_set
 
     recipe_model = make_recipe(title='test', time=1, difficulty=1, link='http://test.com', preparation='test',
@@ -40,6 +32,22 @@ def test_backup_users_created_and_populated_all_tables(test_client, database, ba
                                  last_modified=datetime.datetime(2019, 11, 1),
                                  ingredients=[{'title': 'test1', 'amount': 2, 'unit': 'kg'},
                                               {'title': 'test2', 'amount': 2, 'unit': 'dag'}])
+
+    return user1, user2, admin, recipe_model, recipe_model_2
+
+
+def test_backup_users_created_and_other_tables_are_empty(test_client, database, backup_scheduler, users_set):
+    result = backup_scheduler.dump_backup()
+
+    pattern = user_pattern + r' \"recipe\": \[\], \"recipe_ingredient\": \[\]}'
+
+    match = re.fullmatch(pattern, result)
+    assert match
+
+
+def test_backup_users_created_and_populated_all_tables(test_client, database, backup_scheduler, recipes_set,
+                                                       make_recipe):
+    user1, user2, admin, recipe1, recipe2 = recipes_set
 
     result = backup_scheduler.dump_backup()
 

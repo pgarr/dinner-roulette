@@ -1,4 +1,4 @@
-from app.models.recipes import Recipe, RecipeIngredient, StatusEnum
+from app.models.recipe import Recipe, RecipeIngredient, StatusEnum
 
 
 def test_add_ingredient_parameters():

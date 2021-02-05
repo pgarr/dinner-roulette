@@ -5,8 +5,8 @@ from marshmallow import ValidationError
 from app.blueprints.recipes import bp
 from app.blueprints.recipes.errors import error_response, bad_request
 from app.blueprints.recipes.helpers import paginated_recipes_jsonify, save_recipe_from_schema
-from app.blueprints.recipes.schemas import recipe_schema
-from app.models.recipes import StatusEnum
+from app.schemas.recipe import recipe_schema
+from app.models.recipe import StatusEnum
 from app.services.recipes import get_accepted_recipes, get_user_recipes, get_recipe, init_recipe
 
 
