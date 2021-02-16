@@ -8,6 +8,7 @@ pipeline {
     environment {
         HOME = '${WORKSPACE}'
         CI = 'true' 
+        NPM_CONFIG_CACHE = '${WORKSPACE}/.npm'
     }
     stages {
         stage('Build FrontEnd') {
