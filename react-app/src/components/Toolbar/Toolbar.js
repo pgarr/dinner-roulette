@@ -1,43 +1,23 @@
 import React from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  Nav,
-  Navbar,
-  NavDropdown,
-} from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Toolbar = (props) => (
-  <Navbar bg="dark" variant="dark" expand="lg">
-    <Navbar.Brand href="#home">Cookbook</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
+import UserDropdown from "./UserDropdown/UserDropdown";
+
+const Toolbar = () => (
+  <Navbar collapseOnSelect bg="dark" variant="dark" expand="lg">
+    <Navbar.Brand href="/">Cookbook</Navbar.Brand>
+    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+    <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href="#home">
+        <Nav.Link href="/recipes">Przepisy</Nav.Link>
+        <Nav.Link href="/newrecipe">
           <FontAwesomeIcon icon="plus" /> Dodaj przepis
         </Nav.Link>
-        <NavDropdown
-          title={
-            <span>
-              <FontAwesomeIcon icon="user" /> User
-            </span>
-          }
-          id="basic-nav-dropdown"
-        >
-          <NavDropdown.Item href="#action/3.1">Moje przepisy</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.2">
-            Oczekujące przepisy
-          </NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item href="#action/3.3">Wyloguj się</NavDropdown.Item>
-        </NavDropdown>
       </Nav>
-      <Form inline>
-        <FormControl type="text" placeholder="Szukaj" className="mr-sm-2" />
-        <Button variant="outline-info">Szukaj</Button>
-      </Form>
+      <Nav>
+        <UserDropdown />
+      </Nav>
     </Navbar.Collapse>
   </Navbar>
 );

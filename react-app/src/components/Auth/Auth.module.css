@@ -1,0 +1,9 @@
+.ButtonsRow {
+  margin-top: 20px;
+}
+
+.ButtonsRow a {
+  padding: 1px;
+  font-size: smaller;
+  margin-right: 5px;
+}

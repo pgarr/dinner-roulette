@@ -1,0 +1,139 @@
+from flask import jsonify, request
+from flask_jwt_extended import create_access_token, jwt_refresh_token_required, get_current_user
+
+from app.blueprints.recipes.errors import bad_request, error_response
+from app.blueprints.auth import bp
+from app.blueprints.auth.helpers import get_fresh_jwt_token, send_password_reset_email
+from app.services.auth import create_user, get_user_by_email, verify_reset_password_token, set_new_password
+from app.utils.validators import validate_email, validate_username, validate_password
+
+
+@bp.route('/login', methods=['POST'])
+def login():
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    payload = get_fresh_jwt_token(username, password, with_refresh_token=True)
+    if payload:
+        return jsonify(payload), 200
+    else:
+        return error_response(401, "Bad username or password")
+
+
+@bp.route('/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    user = get_current_user()
+    ret = {
+        'access_token': create_access_token(identity=user, fresh=False)
+    }
+    return jsonify(ret), 200
+
+
+@bp.route('/fresh-login', methods=['POST'])
+def fresh_login():
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    payload = get_fresh_jwt_token(username, password, with_refresh_token=False)
+    if payload:
+        return jsonify(payload), 200
+    else:
+        return error_response(401, "Bad username or password")
+
+
+@bp.route('/validate', methods=['POST'])
+def validate():
+    json = request.json
+    if json:
+        email = json.get('email', None)
+        username = json.get('username', None)
+    else:
+        return bad_request("Lack of required payload data")
+
+    payload = {}
+
+    if email is not None:
+        is_valid, check_dict = validate_email(email)
+        payload['email'] = {'valid': is_valid, 'checks': check_dict}
+    if username is not None:
+        is_valid, check_dict = validate_username(username)
+        payload['username'] = {'valid': is_valid, 'checks': check_dict}
+    return jsonify(payload), 200
+
+
+@bp.route('/register', methods=['POST'])
+def register():
+    json = request.json
+    if json:
+        username = json.get('username', '')
+        password = json.get('password', '')
+        email = json.get('email', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    payload = {}
+
+    is_email_valid, email_check_dict = validate_email(email)
+    payload['email'] = {'valid': is_email_valid, 'checks': email_check_dict}
+
+    is_username_valid, username_check_dict = validate_username(username)
+    payload['username'] = {'valid': is_username_valid, 'checks': username_check_dict}
+
+    is_password_valid, password_check_dict = validate_password(password)
+    payload['password'] = {'valid': is_password_valid, 'checks': password_check_dict}
+
+    if is_email_valid & is_password_valid & is_username_valid:
+        create_user(username, email, password)
+        status_code = 201
+    else:
+        status_code = 422
+
+    return jsonify(payload), status_code
+
+
+@bp.route('/reset_password', methods=['POST'])
+def reset_password_request():
+    json = request.json
+    if json:
+        email = json.get('email', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    user = get_user_by_email(email)
+
+    if user:
+        send_password_reset_email(user)
+        return jsonify({'message': 'Done!'}), 202
+    else:
+        return error_response(422, "Email address not registered")
+
+
+@bp.route('/reset_password/<token>', methods=['POST'])
+def reset_password(token):
+    json = request.json
+    if json:
+        password = json.get('password', '')
+    else:
+        return bad_request("Lack of required payload data")
+
+    user = verify_reset_password_token(token)
+    if not user:
+        return error_response(401, 'Invalid token')
+
+    is_password_valid, password_check_dict = validate_password(password)
+
+    if is_password_valid:
+        set_new_password(user, password)
+        return jsonify({'message': 'Done!'}), 200
+    else:
+        payload = {'password': {'valid': is_password_valid, 'checks': password_check_dict}}
+        return jsonify(payload), 422
