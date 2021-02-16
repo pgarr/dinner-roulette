@@ -13,7 +13,9 @@ pipeline {
     stages {
         stage('Build FrontEnd') {
             steps {
+                sh 'pwd'
                 dir('react-app') {
+                sh 'pwd'
                     sh 'npm install'
                 }
             }
