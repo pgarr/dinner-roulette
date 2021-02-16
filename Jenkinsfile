@@ -16,7 +16,6 @@ pipeline {
                 sh 'pwd'
                 dir('react-app') {
                 sh 'pwd'
-                    sh 'npm install'
                 }
             }
         }
