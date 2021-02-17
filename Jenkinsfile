@@ -27,7 +27,7 @@ pipeline {
         stage('Test Backend') { 
             steps {
                 dir('react-app') {
-                    sh 'python pytest'
+                    sh 'pytest'
                 }
             }
         }
