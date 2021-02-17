@@ -26,8 +26,8 @@ pipeline {
         }
         stage('Test Backend') { 
             steps {
-                dir('react-app') {
-                    sh 'pytest'
+                dir('flask-app') {
+                    sh 'python -m pytest'
                 }
             }
         }
