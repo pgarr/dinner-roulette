@@ -5,6 +5,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 
+def get_app_admins():
+    admins_string = os.environ.get('APP_ADMINS')
+    try:
+        return admins_string.split(',')
+    except AttributeError:
+        return []
+
+
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'very-hard-to-guess'
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -19,17 +27,10 @@ class Config:
     ADMINS = [os.environ.get('MAIL_ADDRESS')]
     LANGUAGES = ['en', 'pl']
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
-    APP_ADMINS = self.get_app_admins()
+    APP_ADMINS = get_app_admins()
     BACKUP_SCHEDULE = os.environ.get('BACKUP_SCHEDULE') or None
     RECIPES_PER_PAGE = 15
 
     FRONT_URL = os.environ.get('FRONT_URL')
     RESET_PASSWORD_TOKEN_EXPIRES_IN = os.environ.get(
-        'RESET_PASSWORD_TOKEN_EXPIRES_IN') or 15*600
-
-    def get_app_admins(self):
-        admins_string = os.environ.get('APP_ADMINS')
-        try:
-            return admins_string.split(',')
-        except AttributeError:
-            return []
+        'RESET_PASSWORD_TOKEN_EXPIRES_IN') or 15 * 600
