@@ -13,7 +13,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('flask-app') {
-                    sh 'pip install -r requirements.txt'
+                    sh 'pip install -r requirements-tests.txt'
                 }
             }
         }
