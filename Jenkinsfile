@@ -8,14 +8,13 @@ pipeline {
     environment {
         HOME = '${WORKSPACE}'
         CI = 'true' 
-        NPM_CONFIG_CACHE = '${WORKSPACE}/.npm'
+        // NPM_CONFIG_CACHE = '${WORKSPACE}/.npm'
     }
     stages {
         stage('Build FrontEnd') {
             steps {
-                sh 'pwd'
                 dir('react-app') {
-                sh 'pwd'
+                    sh 'npm build'
                 }
             }
         }
