@@ -7,7 +7,9 @@ pipeline {
     }
     environment {
         HOME = '.'
-        CI = 'true' 
+        CI = 'true'
+        APP_ADMINS='admin'
+        FLASK_ENV='development'
     }
     stages {
         stage('Build Backend') {
