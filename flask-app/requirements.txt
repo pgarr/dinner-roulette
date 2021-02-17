@@ -17,4 +17,4 @@ gunicorn==20.0.4
 certifi==2020.12.05
 
 #requirements for tests
-# pytest==6.2.1
+pytest==6.2.1

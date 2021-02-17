@@ -6,14 +6,35 @@ pipeline {
         }
     }
     environment {
-        HOME = '${WORKSPACE}'
+        HOME = '.'
         CI = 'true' 
     }
     stages {
-        stage('Build FrontEnd') {
+        stage('Build Backend') {
+            steps {
+                dir('flask-app') {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('Build Frontend') {
             steps {
                 dir('react-app') {
                     sh 'npm install'
+                }
+            }
+        }
+        stage('Test Backend') { 
+            steps {
+                dir('react-app') {
+                    sh 'python pytest'
+                }
+            }
+        }
+        stage('Test Frontend') { 
+            steps {
+                dir('react-app') {
+                    sh 'npm test'
                 }
             }
         }
