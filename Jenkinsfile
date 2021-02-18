@@ -14,7 +14,11 @@ pipeline {
     stages {
         stage('Build Backend') {
             steps {
+                dir('Jenkinsscripts') {
+                    sh 'python make_requirements.py'
+                }
                 dir('flask-app') {
+                    sh 'pip install -r requirements-jenkins.txt'
                     sh 'pip install -r requirements-tests.txt'
                 }
             }
