@@ -1,0 +1,2 @@
+# additional dependencies required for tests execution
+pytest==6.2.1
