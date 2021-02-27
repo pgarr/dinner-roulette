@@ -9,10 +9,11 @@ Backend is created in Python, uses Flask and SQLAlchemy.
 
 # Requirements
 App is developed and tested on:
-Python 3.7
-Node v12.16
+
+Python 3.7 & Node v12.16
 
 requirements.txt and requirements-tests.txt in \flask-app folder contains Python dependencies for running and testing backend.
+
 package.json in \react-app folder contains Node.js dependencies and devDependencies for running and testing frontend.
 
 # Useful commands
