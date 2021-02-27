@@ -1,6 +1,4 @@
-# dinner-roulette
-
-## What's this?
+# What's this?
 
 Web app to store dishes recipes.
 It has users who create recipes and admin who accepts them before they are visible for others.
@@ -9,8 +7,17 @@ Project contains separated frontend and backend RESTful API.
 Frontend is created in React.js.
 Backend is created in Python, uses Flask and SQLAlchemy.
 
-## Useful commands.
+# Requirements
+App is developed and tested on:
+Python 3.7
+Node v12.16
 
+requirements.txt and requirements-tests.txt in \flask-app folder contains Python dependencies for running and testing backend.
+package.json in \react-app folder contains Node.js dependencies and devDependencies for running and testing frontend.
+
+# Useful commands
+
+## BACKEND
 ### Push only flask-app folder to Heroku.
 
   --git subtree push --prefix flask-app heroku master
